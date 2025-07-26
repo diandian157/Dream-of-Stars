@@ -1968,7 +1968,17 @@ export async function precontent(config, pack) {
     }
     //笮融增强
     if (lib.config.extension_星之梦_zrEnhance) {
-        Object.assign(lib.skill.mbfutu, {
+        lib.skill.mbfutu = {
+            audio: 8,
+            logAudio: (event, player, name, target, costResult) => {
+                return (costResult.cost_data == "black" ? [1, 2] : [3, 4]).map(i => `mbfutu${i}.mp3`);
+            },
+            trigger: {
+                global: "phaseEnd",
+            },
+            filter(event, player) {
+                return ["damage", "recover"].some(name => get.info("mbfutu")?.isMax(player, name));
+            },
             isMax(player, name) {
                 let count = current => {
                     let history = _status.globalHistory?.[_status.globalHistory.length - 1]?.everything,
@@ -1989,7 +1999,78 @@ export async function precontent(config, pack) {
                 };
                 return count(player) >= 0 && !game.hasPlayer(current => count(current) > count(player));
             },
-        });
+            marktext: "业",
+            intro: {
+                name: "业",
+                name2: "业",
+                content: "expansion",
+                markcount: "expansion",
+            },
+            async cost(event, trigger, player) {
+                let list = ["damage", "recover"].filter(name => get.info(event.skill)?.isMax(player, name)),
+                    map = {
+                        damage: "black",
+                        recover: "red",
+                    };
+                list = list.map(i => map[i]);
+                event.result = await player
+                    .chooseBool(get.prompt(event.skill))
+                    .set("prompt2", `将牌堆顶首张${list.map(i => get.translation(i)).join("和")}牌置于武将牌上，称为“业”`)
+                    .forResult();
+                event.result.cost_data = list;
+            },
+            async content(event, trigger, player) {
+                const colors = event.cost_data,
+                    cards = [];
+                for (let color of colors) {
+                    const card = get.cardPile2(card => get.color(card) == color);
+                    if (card) {
+                        cards.push(card);
+                    }
+                }
+                if (cards?.length) {
+                    const next = player.addToExpansion(cards, "gain2");
+                    next.gaintag.add(event.name);
+                    await next;
+                }
+            },
+            group: "mbfutu_defend",
+            subSkill: {
+                defend: {
+                    trigger: {
+                        player: "damageBegin3",
+                    },
+                    audio: "mbfutu",
+                    logAudio: () => [5, 6, 7, 8].map(i => `mbfutu${i}.mp3`),
+                    filter(event, player) {
+                        return player.hasExpansions("mbfutu");
+                    },
+                    async cost(event, trigger, player) {
+                        const { bool, links } = await player
+                            .chooseButton([`###${get.prompt("mbfutu")}###弃置一张业并防止此伤害`, player.getExpansions("mbfutu")])
+                            .set("eff", get.damageEffect(player, trigger.source, player))
+                            .set("ai", button => {
+                                const { player, eff } = get.event();
+                                if (eff >= 0) {
+                                    return 0;
+                                }
+                                return player.getExpansions("mbfutu")?.filter(card => {
+                                    return get.color(card) == get.color(button.link);
+                                })?.length;
+                            })
+                            .forResult();
+                        event.result = {
+                            bool: bool,
+                            cards: links,
+                        };
+                    },
+                    async content(event, trigger, player) {
+                        await player.loseToDiscardpile(event.cards);
+                        trigger.cancel();
+                    },
+                },
+            },
+        };
     }
     //虚拟偶像增强
     if (lib.config.extension_星之梦_vtbEnhance) {
