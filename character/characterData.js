@@ -96,7 +96,7 @@ let lmCharacter = {//武将信息
     old_ol_sb_yl_luzhi: ["male", "qun", 4, ["old_olsibing", "old_olliance"], ["character:ol_sb_yl_luzhi", "die:ol_sb_yl_luzhi"]],
     old_ol_liubiao: ["male", "qun", 3, ["old_olzishou", "old_olzongshi"], ["character:ol_liubiao", "die:ol_liubiao"]],
     old_kongshu: ["female", "qun", 3, ["olleiluan", "olfuchao"], ["character:kongshu", "die:kongshu"]],
-    old_ol_madai: ["male", "shu", 4, ["mashu", "olqianxi"], ["character:ol_madai", "die:kol_madai"]],
+    old_ol_madai: ["male", "shu", 4, ["mashu", "old_olqianxi"], ["character:ol_madai", "die:kol_madai"]],
 
     //十周年
     old_re_zhangchunhua: ["female", "wei", 3, ["rejueqing", "reshangshi"], ["character:re_zhangchunhua", "die:re_zhangchunhua"]],
@@ -152,24 +152,6 @@ let lmCharacter = {//武将信息
     //改
     wangtaowangyue: ["female", "shu", 3, ["huguan", "yaopei", "mingluan"], ["die:ext:星之梦/audio/die:2"]],
     lm_old_caocao: ["male", "shen", 3, ["lmjunkguixin", "feiying"], ["character:old_caocao", "die:old_caocao"]],
-    // lm_sb_menghuo: ["male", "shu", 4, ["sbhuoshou", "lmsbzaiqi", "twqiushou"], ["character:sb_menghuo", "die:sb_menghuo", "zhu", "doublegroup:shu:qun"]],
-    // lm_sb_xiahoudun: ["male", "wei", 4, ["lmsbganglie", "sbqingjian"], ["character:sb_xiahoudun", "die:sb_xiahoudun", "name:夏侯|惇"]],
-    // lm_sb_jiangwei: ["male", "shu", 4, ["sbtiaoxin", "lmsbzhiji"], ["character:sb_jiangwei", "die:sb_jiangwei"]],
-    // lm_re_fazheng: ["male", "shu", 3, ["twenyuan", "rexuanhuo"], ["character:re_fazheng", "die:re_fazheng"]],
-    // lm_re_caopi: ["male", "wei", 3, ["rexingshang", "lmfangzhu", "songwei"], ["character:re_caopi", "die:re_caopi", "zhu"]],
-    // lm_re_zhangjiao: ["male", "qun", 3, ["xinleiji", "xinguidao", "minihuangtian"], ["character:re_zhangjiao", "die:re_zhangjiao", "zhu"]],
-    // lm_re_sunxiu: ["male", "wu", 3, ["miniyanzhu", "minixingxue", "xinzhaofu"], ["character:re_sunxiu", "die:re_sunxiu", "zhu"]],
-    // lm_re_liuchen: ["male", "shu", 4, ["minizhanjue", "miniqinwang"], ["character:re_liuchen", "die:re_liuchen", "zhu"]],
-    // lm_sunliang: ["male", "wu", 3, ["minikuizhu", "minichezheng", "nzry_lijun"], ["character:sunliang", "die:sunliang", "zhu"]],
-    // lm_zhangxiu: ["male", "qun", 4, ["drlt_xiongluan", "drlt_congjian", "nsfuge", "twjuxiang"], ["character:zhangxiu", "die:zhangxiu", "zhu"]],
-    // lm_yl_yuanshu: ["male", "qun", 4, ["lmyongsi", "drlt_weidi"], ["character:yl_yuanshu", "die:yl_yuanshu", "zhu"]],
-    // lm_liuyu: ["male", "qun", 2, ["xinzhige", "lmzongzuo", "twchongwang"], ["character:liuyu", "die:liuyu", "zhu"]],
-    // lm_liuyao: ["male", "qun", 4, ["lmkannan", "twniju"], ["character:liuyao", "die:liuyao", "zhu"]],
-    // lm_zhanglu: ["male", "qun", 3, ["miniyishe", "minibushi", "minimidao", "twshijun"], ["character:zhanglu", "die:zhanglu", "zhu"]],
-    // lm_liuxie: ["male", "qun", 3, ["minitianming", "minimizhao", "twzhuiting"], ["character:liuxie", "die:liuxie", "zhu"]],
-    // lm_tw_mateng: ["male", "qun", 4, ["mashu", "twxiongzheng", "xiongyi", "twluannian"], ["character:tw_mateng", "die:tw_mateng", "zhu"]],
-    // lm_jsrg_hansui: ["male", "qun", 4, ["jsrgniluan", "jsrghuchou", "olxiaoxi", "jsrgjiemeng"], ["character:jsrg_hansui", "die:jsrg_hansui", "zhu"]],
-    // lm_lvbu: ["male", "qun", 4, ["gz_wushuang", "new_liyu", "yjqingjiao"], ["character:re_lvbu", "die:re_lvbu", "zhu"]],
 
     //神武
     sw_guanyu: ["male", "shen", 5, ["wushen", "new_wuhun", "shenwuzaishi"], ["character:shen_guanyu", "die:shen_guanyu", "shu"]],
