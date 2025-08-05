@@ -1835,6 +1835,7 @@ let lmCharacter = {
             subfrequent: ["draw"],
             enable: "phaseUse",
             usable: 1,
+            locked: false,
             filter(event, player) {
                 if (!player.countCards("he")) return false;
                 for (var i of lib.inpile) {
