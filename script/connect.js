@@ -214,6 +214,7 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 	//连续交互
 	get.nodeintro = function (node, simple, evt) {
 		var uiintro = ui.create.dialog("hidden", "notouchscroll");
+		uiintro.setAttribute("id", "nodeintro");
 		if (node.classList.contains("player") && !node.name) {
 			return uiintro;
 		}
@@ -397,6 +398,7 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 							intronode.link = node;
 							intronode.func = lib.skill[skills[i]].clickable;
 							intronode.classList.add("pointerdiv");
+							intronode.listen(() => uiintro.close());
 							intronode.listen(ui.click.skillbutton);
 						}
 					} else {
@@ -516,9 +518,9 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 						if (!showCardIntro) {
 							html = ui.create.button(js[i], "blank").outerHTML;
 						}
-						uiintro.add('<div><div class="skill">' + html + "</div><div>" + lib.translate[js[i].viewAs] + "：" + lib.translate[js[i].viewAs + "_info"] + "</div></div>");
+						uiintro.add(`<div><div class="skill">${html}</div><div>${lib.translate[js[i].viewAs]}：${lib.card[js[i].viewAs]?.cardPrompt?.(js[i], node) || lib.translate[`${js[i].viewAs}_info`]}</div></div>`);
 					} else {
-						uiintro.add('<div><div class="skill">' + js[i].outerHTML + "</div><div>" + lib.translate[js[i].name + "_info"] + "</div></div>");
+						uiintro.add(`<div><div class="skill">${js[i].outerHTML}</div><div>${lib.translate[js[i].name]}：${lib.card[js[i].name]?.cardPrompt?.(js[i], node) || lib.translate[`${js[i].name}_info`]}</div></div>`);
 					}
 					uiintro.content.lastChild.querySelector(".skill>.card").style.transform = "";
 				}
@@ -827,8 +829,16 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 				}
 			}
 			if (typeof info.mark == "function") {
-				var stint = info.mark(uiintro, player.storage[node.skill], player);
-				if (stint) {
+				var stint = info.mark(uiintro, player.storage[node.skill], player, evt, node.skill);
+				if (stint instanceof Promise) {
+					uiintro.hide();
+					stint.then(() => {
+						uiintro.show();
+						if (evt) {
+							lib.placePoppedDialog(uiintro, evt);
+						}
+					});
+				} else if (stint) {
 					var placetext = uiintro.add('<div class="text" style="display:inline">' + stint + "</div>");
 					if (!stint.startsWith('<div class="skill"')) {
 						uiintro._place_text = placetext;
@@ -840,6 +850,9 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 					// 	uiintro.add('<div class="text">'+stint+'</div>');
 					// }
 				}
+				/*if (evt) {
+					lib.placePoppedDialog(uiintro, evt);
+				}*/
 			} else {
 				var stint = get.storageintro(info.content, player.storage[node.skill], player, uiintro, node.skill);
 				if (stint) {
