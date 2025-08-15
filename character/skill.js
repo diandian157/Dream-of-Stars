@@ -556,6 +556,7 @@ let lmCharacter = {
             trigger: { global: "roundStart", player: "phaseEnd" },
             inherit: "junkguixin",
         },
+
         //界张角
         minihuangtian: {
             audio: "huangtian2",
@@ -13454,6 +13455,92 @@ let lmCharacter = {
                 },
             },
         },
+        //族荀爽
+        old_clanyangji: {
+            trigger: {
+                player: "phaseZhunbeiBegin",
+                global: "phaseEnd",
+            },
+            filter(event, player) {
+                if (event.name === "phase" && !game.hasGlobalHistory("changeHp", evt => evt.player === player && evt.num !== 0)) {
+                    return false;
+                }
+                return player.countCards("h");
+            },
+            async content(event, trigger, player) {
+                let cards = player.getCards("h").filter(card => get.color(card, player) == "black" && player.hasUseTarget(card)),
+                    lastCard;
+                await player.showHandcards(`${get.translation(player)}发动了〖佯疾〗`);
+                while (!player.hasHistory("sourceDamage", evt => evt.getParent(4) === event) && player.getCards("h").some(card => cards.includes(card) && player.hasUseTarget(card))) {
+                    const { result } = await player
+                        .chooseToUse(function (card, player, event) {
+                            if (get.itemtype(card) != "card" || !get.event("cardsx").includes(card) || get.position(card) != "h") {
+                                return false;
+                            }
+                            return lib.filter.filterCard.apply(this, arguments);
+                        }, "佯疾：请使用一张黑色手牌")
+                        .set("targetRequired", true)
+                        .set("complexSelect", true)
+                        .set("filterTarget", function (card, player, target) {
+                            return lib.filter.filterTarget.apply(this, arguments);
+                        })
+                        .set("cardsx", cards)
+                        .set("forced", true)
+                        .set("addCount", false);
+                    if (result?.cards?.length) {
+                        const card = result.cards[0];
+                        lastCard = card;
+                        cards.remove(card);
+                    } else {
+                        break;
+                    }
+                }
+                const target = _status.currentPhase;
+                if (lastCard && get.suit(lastCard, player) == "spade" && (!get.owner(lastCard) || get.position(lastCard) !== "h") && target?.isIn() && target.canAddJudge(get.autoViewAs({ name: "lebu" }, lastCard))) {
+                    await target.addJudge({ name: "lebu" }, lastCard);
+                }
+            },
+        },
+        old_clandandao: {
+            trigger: { player: "judgeAfter" },
+            forced: true,
+            filter(event, player) {
+                return _status.currentPhase?.isIn();
+            },
+            content() {
+                const target = _status.currentPhase;
+                if (!target?.isIn()) {
+                    return;
+                }
+                target.addTempSkill(event.name + "_add");
+                target.addMark(event.name + "_add", 3, false);
+            },
+            subSkill: {
+                add: {
+                    charlotte: true,
+                    onremove: true,
+                    mark: true,
+                    markimage: "image/card/handcard.png",
+                    intro: {
+                        content: "手牌上限+#",
+                    },
+                    mod: { maxHandcard: (player, num) => num + player.countMark("old_clandandao_add") },
+                },
+            },
+        },
+        old_clanqingli: {
+            trigger: { global: "phaseEnd" },
+            forced: true,
+            filter(event, player) {
+                return player.countCards("h") < player.getHandcardLimit();
+            },
+            async content(event, trigger, player) {
+                const num = Math.min(player.getHandcardLimit() - player.countCards("h"), 5);
+                if (num > 0) {
+                    await player.draw(num);
+                }
+            },
+        },
         //任婉
         old_dcjuanji: {
             trigger: {
@@ -21463,6 +21550,14 @@ let lmCharacter = {
         old_ol_liuzhang_prefix: "旧",
         old_olfengwei: "奉蔚",
         old_olfengwei_info: "锁定技，每轮开始时，你摸至多四张牌。若你有本轮获得的“奉蔚”牌，则你受到牌造成的伤害+1。",
+        old_clan_xunshuang: "旧族荀爽",
+        old_clan_xunshuang_prefix: "旧|族",
+        old_clanyangji: "佯疾",
+        old_clanyangji_info: "准备阶段，或你体力值变化过的回合结束时，你可以展示所有手牌，然后依次使用其中的黑色牌，直到你以此法无法使用或造成伤害。然后若以此法使用的最后一张为黑桃牌，你将之作为【乐不思蜀】置于当前回合角色的判定区。",
+        old_clandandao: "耽道",
+        old_clandandao_info: "锁定技，你判定后，当前回合角色本回合手牌上限+3。",
+        old_clanqingli: "清励",
+        old_clanqingli_info: "锁定技，每回合结束时，你将手牌摸至手牌上限（至多摸5张）。",
 
         old_re_caorui: "旧界曹叡",
         old_re_caorui_prefix: "旧|界",
