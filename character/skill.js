@@ -10535,19 +10535,35 @@ let lmCharacter = {
                 global: ["equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter"],
             },
             filter(event, player) {
-                if (player.countCards("h") != 1 || typeof get.number(player.getCards("h")[0], player) != "number") return false;
-                if (player.hasSkill("old_hezhong_0") && player.hasSkill("old_hezhong_1")) return false;
-                if (event.getg) return event.getg(player).length;
-                var evt = event.getl(player);
-                return evt && evt.player == player && evt.hs && evt.hs.length > 0;
+                if (player.countCards("h") != 1 || typeof get.number(player.getCards("h")[0], player) != "number") {
+                    return false;
+                }
+                if (player.hasSkill("old_hezhong_0") && player.hasSkill("old_hezhong_1")) {
+                    return false;
+                }
+                let gain = 0,
+                    lose = 0;
+                if (event.getg) {
+                    gain = event.getg(player).length;
+                }
+                if (event.getl) {
+                    lose = event.getl(player).hs.length;
+                }
+                return gain != lose;
             },
             prompt2(event, player) {
-                var str = "展示最后一张手牌并摸一张牌";
+                let str = "展示最后一张手牌并摸一张牌";
                 if (!player.hasSkill("old_hezhong_0") || !player.hasSkill("old_hezhong_0")) {
                     str += "，然后令本回合使用点数";
-                    if (!player.hasSkill("old_hezhong_0")) str += "大于";
-                    if (!player.hasSkill("old_hezhong_0") && !player.hasSkill("old_hezhong_0")) str += "或";
-                    if (!player.hasSkill("old_hezhong_1")) str += "小于";
+                    if (!player.hasSkill("old_hezhong_0")) {
+                        str += "大于";
+                    }
+                    if (!player.hasSkill("old_hezhong_0") && !player.hasSkill("old_hezhong_0")) {
+                        str += "或";
+                    }
+                    if (!player.hasSkill("old_hezhong_1")) {
+                        str += "小于";
+                    }
                     str += get.number(player.getCards("h")[0], player);
                     str += "的普通锦囊牌额外结算一次";
                 }
@@ -10561,22 +10577,25 @@ let lmCharacter = {
                 "step 1";
                 player.draw();
                 "step 2";
-                if (player.hasSkill("old_hezhong_0")) event._result = { index: 1 };
-                else if (player.hasSkill("old_hezhong_1")) event._result = { index: 0 };
-                else {
+                if (player.hasSkill("old_hezhong_0")) {
+                    event._result = { index: 1 };
+                } else if (player.hasSkill("old_hezhong_1")) {
+                    event._result = { index: 0 };
+                } else {
                     player
                         .chooseControl()
                         .set("choiceList", ["本回合使用点数大于" + num + "的普通锦囊牌额外结算一次", "本回合使用点数小于" + num + "的普通锦囊牌额外结算一次"])
                         .set("ai", () => {
                             var player = _status.event.player;
-                            var num = _status.event.player;
+                            var num = _status.event.num;
                             if (
                                 player.getCards("h").reduce(function (num, card) {
                                     return num + (get.number(card, player) || 0);
                                 }, 0) >
                                 num * 2
-                            )
+                            ) {
                                 return 0;
+                            }
                             return 1;
                         })
                         .set("num", num);
@@ -10593,30 +10612,37 @@ let lmCharacter = {
                     marktext: "＞",
                     intro: {
                         markcount: list => {
-                            var list2 = [1, 11, 12, 13];
                             return list.reduce((str, num) => {
-                                if (list2.includes(num)) return str + ["A", "J", "Q", "K"][list2.indexOf(num)];
-                                return str + parseFloat(num);
+                                return str + get.strNumber(num);
                             }, "");
                         },
-                        content: "使用点数大于$的普通锦囊牌额外结算一次",
+                        content: "本回合使用的点数大于$的普通锦囊牌额外结算一次",
                     },
                     audio: "hezhong",
                     trigger: { player: "useCard" },
                     filter(event, player) {
-                        if (get.type(event.card) != "trick") return false;
+                        if (get.type(event.card) != "trick") {
+                            return false;
+                        }
+                        if (!event.targets.length) {
+                            return false;
+                        }
                         var num = get.number(event.card, player);
                         return typeof num == "number" && player.getStorage("old_hezhong_0").some(numx => num > numx);
                     },
                     forced: true,
+                    // usable: 1,
                     content() {
+                        // player.unmarkSkill("old_hezhong_0");
                         trigger.effectCount++;
                         game.log(trigger.card, "额外结算一次");
                     },
                     ai: {
                         effect: {
-                            player(card, player, target) {
-                                if (card.name == "tiesuo") return "zerotarget";
+                            player_use(card, player, target) {
+                                if (card.name == "tiesuo" && (!player.storage.counttrigger || !player.storage.counttrigger.old_hezhong_0)) {
+                                    return "zerotarget";
+                                }
                             },
                         },
                     },
@@ -10627,30 +10653,37 @@ let lmCharacter = {
                     marktext: "<",
                     intro: {
                         markcount: list => {
-                            var list2 = [1, 11, 12, 13];
                             return list.reduce((str, num) => {
-                                if (list2.includes(num)) return str + ["A", "J", "Q", "K"][list2.indexOf(num)];
-                                return str + parseFloat(num);
+                                return str + get.strNumber(num);
                             }, "");
                         },
-                        content: "使用点数小于$的普通锦囊牌额外结算一次",
+                        content: "本回合使用的点数小于$的普通锦囊牌额外结算一次",
                     },
                     audio: "hezhong",
                     trigger: { player: "useCard" },
                     filter(event, player) {
-                        if (get.type(event.card) != "trick") return false;
+                        if (get.type(event.card) != "trick") {
+                            return false;
+                        }
+                        if (!event.targets.length) {
+                            return false;
+                        }
                         var num = get.number(event.card, player);
                         return typeof num == "number" && player.getStorage("old_hezhong_1").some(numx => num < numx);
                     },
                     forced: true,
+                    // usable: 1,
                     content() {
+                        // player.unmarkSkill("old_hezhong_1");
                         trigger.effectCount++;
                         game.log(trigger.card, "额外结算一次");
                     },
                     ai: {
                         effect: {
-                            player(card, player, target) {
-                                if (card.name == "tiesuo") return "zerotarget";
+                            player_use(card, player, target) {
+                                if (card.name == "tiesuo" && (!player.storage.counttrigger || !player.storage.counttrigger.old_hezhong_1)) {
+                                    return "zerotarget";
+                                }
                             },
                         },
                     },
@@ -17641,7 +17674,7 @@ let lmCharacter = {
             },
             direct: true,
             locked: false,
-            content: function () {
+            content() {
                 "step 0"
                 var list = lib.skill.old_bushi.getBushi(player);
                 list = list.map(function (i) {
@@ -17726,7 +17759,7 @@ let lmCharacter = {
                         var list = lib.skill.old_bushi.getBushi(player);
                         return (list[0] == get.suit(event.card));
                     },
-                    content: function () {
+                    content() {
                         trigger.addCount = false;
                         var stat = player.getStat().card, name = trigger.card.name;
                         if (stat[name] && typeof stat[name] == "number") stat[name]--;
@@ -17744,7 +17777,7 @@ let lmCharacter = {
                         var list = lib.skill.old_bushi.getBushi(player);
                         return list[1] == get.suit(event.card);
                     },
-                    content: function () {
+                    content() {
                         player.draw(2);
                     },
                     sub: true,
@@ -17763,7 +17796,7 @@ let lmCharacter = {
                     },
                     forced: true,
                     locked: false,
-                    content: function () {
+                    content() {
                         var list = lib.skill.old_bushi.getBushi(player);
                         var card = get.cardPile(function (card) {
                             return get.suit(card, false) == list[3];
@@ -17786,7 +17819,7 @@ let lmCharacter = {
                 if (name == "damageBegin1") return range < 3;
                 return range > 3 && event.num > 1;
             },
-            content: function () {
+            content() {
                 if (event.triggername == "damageBegin1") trigger.num++;
                 else trigger.num = 1;
             },
