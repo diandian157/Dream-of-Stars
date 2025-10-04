@@ -331,11 +331,11 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 						} else {
 							forbidstr += "（双将禁用）<br>";
 						}
-						forbidstr += get.skillInfoTranslation(skills[i], node) + "</div></div>";
+						forbidstr += get.skillInfoTranslation(skills[i], node, false) + "</div></div>";
 						uiintro.add(forbidstr);
 					} else if (!skills2.includes(skills[i])) {
 						if (lib.skill[skills[i]].preHidden && get.mode() == "guozhan") {
-							uiintro.add('<div><div class="skill" style="opacity:0.5">' + translation + '</div><div><span style="opacity:0.5">' + get.skillInfoTranslation(skills[i], node) + '</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div></div></div>');
+							uiintro.add('<div><div class="skill" style="opacity:0.5">' + translation + '</div><div><span style="opacity:0.5">' + get.skillInfoTranslation(skills[i], node, false) + '</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div></div></div>');
 							var underlinenode = uiintro.content.lastChild.querySelector(".underlinenode");
 							if (_status.prehidden_skills.includes(skills[i])) {
 								underlinenode.classList.remove("on");
@@ -343,11 +343,11 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 							underlinenode.link = skills[i];
 							underlinenode.listen(ui.click.hiddenskill);
 						} else {
-							uiintro.add('<div style="opacity:0.5"><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node) + "</div></div>");
+							uiintro.add('<div style="opacity:0.5"><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node, false) + "</div></div>");
 						}
 					} else if (lib.skill[skills[i]].temp || !node.skills.includes(skills[i]) || lib.skill[skills[i]].thundertext) {
 						if (lib.skill[skills[i]].frequent || lib.skill[skills[i]].subfrequent) {
-							uiintro.add('<div><div class="skill thundertext thunderauto">' + translation + '</div><div class="thundertext thunderauto">' + get.skillInfoTranslation(skills[i], node) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div></div>');
+							uiintro.add('<div><div class="skill thundertext thunderauto">' + translation + '</div><div class="thundertext thunderauto">' + get.skillInfoTranslation(skills[i], node, false) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div></div>');
 							var underlinenode = uiintro.content.lastChild.querySelector(".underlinenode");
 							if (lib.skill[skills[i]].frequent) {
 								if (lib.config.autoskilllist.includes(skills[i])) {
@@ -367,10 +367,10 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 							underlinenode.link = skills[i];
 							underlinenode.listen(ui.click.autoskill2);
 						} else {
-							uiintro.add('<div><div class="skill thundertext thunderauto">' + translation + '</div><div class="thundertext thunderauto">' + get.skillInfoTranslation(skills[i], node) + "</div></div>");
+							uiintro.add('<div><div class="skill thundertext thunderauto">' + translation + '</div><div class="thundertext thunderauto">' + get.skillInfoTranslation(skills[i], node, false) + "</div></div>");
 						}
 					} else if (lib.skill[skills[i]].frequent || lib.skill[skills[i]].subfrequent) {
-						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div></div>');
+						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node, false) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div></div>');
 						var underlinenode = uiintro.content.lastChild.querySelector(".underlinenode");
 						if (lib.skill[skills[i]].frequent) {
 							if (lib.config.autoskilllist.includes(skills[i])) {
@@ -390,7 +390,7 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 						underlinenode.link = skills[i];
 						underlinenode.listen(ui.click.autoskill2);
 					} else if (lib.skill[skills[i]].clickable && node.isIn() && node.isUnderControl(true)) {
-						var intronode = uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div></div></div>').querySelector(".skillbutton");
+						var intronode = uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node, false) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div></div></div>').querySelector(".skillbutton");
 						if (!_status.gameStarted || (lib.skill[skills[i]].clickableFilter && !lib.skill[skills[i]].clickableFilter(node))) {
 							intronode.classList.add("disabled");
 							intronode.style.opacity = 0.5;
@@ -402,7 +402,7 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 							intronode.listen(ui.click.skillbutton);
 						}
 					} else {
-						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node) + "</div></div>");
+						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], node, false) + "</div></div>");
 					}
 					if (lib.translate[skills[i] + "_append"]) {
 						uiintro._place_text = uiintro.add('<div class="text">' + lib.translate[skills[i] + "_append"] + "</div>");
@@ -1227,7 +1227,7 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 							}
 						}
 
-						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i]) + "</div></div>");
+						uiintro.add('<div><div class="skill">' + translation + "</div><div>" + get.skillInfoTranslation(skills[i], null, false) + "</div></div>");
 
 						if (lib.translate[skills[i] + "_append"]) {
 							uiintro._place_text = uiintro.add('<div class="text">' + lib.translate[skills[i] + "_append"] + "</div>");
