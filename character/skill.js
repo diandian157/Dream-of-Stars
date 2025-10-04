@@ -8846,6 +8846,106 @@ let lmCharacter = {
                 },
             },
         },
+        //手杀SP曹操
+        old_mblingfa: {
+            audio: "mblingfa",
+            trigger: { global: "roundStart" },
+            filter(event, player) {
+                return game.roundNumber < 3 || player.hasSkill("old_mblingfa", null, false, false);
+            },
+            prompt2(event, player) {
+                switch (game.roundNumber) {
+                    case 1:
+                        return "本轮其他角色使用【杀】时，若其有牌，则其需弃置一张牌，否则你对其造成1点伤害";
+                    case 2:
+                        return "本轮其他角色使用【桃】结算结束后，若其有牌，则其需交给你一张牌，否则你对其造成1点伤害";
+                    default: {
+                        const skills = lib.skill["old_mblingfa"].derivation.filter(i => !player.hasSkill(i, null, false, false));
+                        return `失去【${get.translation("old_mblingfa")}】${skills.length > 0 ? `并获得${(skills.map(i => `【${get.translation(i)}】`).join("、"))}` : ""}`;
+                    }
+                }
+            },
+            async content(event, trigger, player) {
+                switch (game.roundNumber) {
+                    case 1:
+                        player.line(game.filterPlayer(current => current != player).sortBySeat());
+                        player.addTempSkill(`${event.name}_sha`, "roundStart");
+                        break;
+                    case 2:
+                        player.line(game.filterPlayer(current => current != player).sortBySeat());
+                        player.addTempSkill(`${event.name}_tao`, "roundStart");
+                        break;
+                    default:
+                        await player.changeSkills(lib.skill[event.name].derivation, [event.name]);
+                        break;
+                }
+            },
+            derivation: ["new_rejianxiong"],
+            subSkill: {
+                sha: {
+                    charlotte: true,
+                    audio: "mblingfa",
+                    trigger: { global: "useCard" },
+                    filter(event, player) {
+                        return player != event.player && event.card.name == "sha" && event.player.countCards("he") > 0;
+                    },
+                    forced: true,
+                    logTarget: "player",
+                    content() {
+                        "step 0";
+                        game.delayx();
+                        trigger.player
+                            .chooseToDiscard("he", "令法：弃置一张牌，或受到来自" + get.translation(player) + "的1点伤害")
+                            .set("goon", get.damageEffect(trigger.player, player, trigger.player) < 0)
+                            .set("ai", function (card) {
+                                if (!_status.event.goon) {
+                                    return 0;
+                                }
+                                return 8 - get.value(card);
+                            });
+                        "step 1";
+                        if (!result.bool) {
+                            trigger.player.damage();
+                        }
+                    },
+                    mark: true,
+                    marktext: '<span style="text-decoration: line-through;">杀</span>',
+                    intro: { content: "其他角色使用【杀】时，若其有牌，则其需弃置一张牌，否则你对其造成1点伤害。" },
+                },
+                tao: {
+                    charlotte: true,
+                    audio: "old_mblingfa",
+                    trigger: { global: "useCardAfter" },
+                    filter(event, player) {
+                        return player != event.player && event.card.name == "tao" && event.player.countCards("he") > 0;
+                    },
+                    forced: true,
+                    logTarget: "player",
+                    content() {
+                        "step 0";
+                        game.delayx();
+                        trigger.player
+                            .chooseCard("he", "令法：交给" + get.translation(player) + "一张牌，否则受到来自其的1点伤害")
+                            .set("goon", get.damageEffect(trigger.player, player, trigger.player) < 0)
+                            .set("ai", function (card) {
+                                if (!_status.event.goon) {
+                                    return 0;
+                                }
+                                return 8 - get.value(card);
+                            });
+                        "step 1";
+                        if (!result.bool) {
+                            trigger.player.damage();
+                        } else {
+                            trigger.player.give(result.cards, player);
+                        }
+                    },
+                    mark: true,
+                    marktext: '<span style="text-decoration: line-through;">桃</span>',
+                    intro: { content: "其他角色使用【桃】结算结束后，若其有牌，则其需交给你一张牌，否则你对其造成1点伤害。" },
+                },
+            },
+        },
         //族荀采
         oldx_clanlieshi: {
             audio: "clanlieshi",
@@ -17279,7 +17379,7 @@ let lmCharacter = {
                 },
                 select() {
                     const player = get.player();
-                    return [1, 2 + player.getDamagedHp()];
+                    return [2, 2 + player.getDamagedHp()];
                 },
                 backup(links) {
                     return {
@@ -22776,6 +22876,8 @@ let lmCharacter = {
         old_mb_caocao: "旧手杀SP曹操",
         old_mb_caocao_ab: "旧SP曹操",
         old_mb_caocao_prefix: "旧|SP",
+        old_mblingfa: "令法",
+        old_mblingfa_info: "①第一轮开始时，你可令本轮其他角色使用【杀】时，若其有牌，则其需弃置一张牌，否则你对其造成1点伤害。②第二轮游戏开始时，你可令本轮其他角色使用【桃】结算结束后，若其有牌，则其需交给你一张牌，否则你对其造成1点伤害。③非前两轮游戏开始时，你可以失去〖令法〗并获得〖奸雄〗。",
 
         oldx_clan_xuncai: "旧族荀采",
         oldx_clan_xuncai_prefix: "旧|族",
@@ -22959,6 +23061,9 @@ let lmCharacter = {
         old_clantanque_info: "每回合限一次。当你使用牌结算结束后，你可以对一名体力值为X且不为0的角色造成1点伤害（X为此牌点数与你上一张使用的牌的点数之差）。",
         old_clanshengmo: "剩墨",
         old_clanshengmo_info: "当你需要使用一张未以此法使用过的基本牌时，你可以获得一张于本回合进入弃牌堆且点数不为这些牌中最大且不为这些牌中最小的牌，视为你使用需要使用的牌。",
+        old_strong_caochong: "旧曹冲",
+        old_strong_caochong_ab: "旧冲儿",
+        old_strong_caochong_prefix: "旧",
 
         old_re_caorui: "旧界曹叡",
         old_re_caorui_prefix: "旧|界",
@@ -23134,6 +23239,8 @@ let lmCharacter = {
         old_v_machao_prefix: "旧|威",
         old_dczhongtao: "众讨",
         old_dczhongtao_info: "①出牌阶段限一次，你可以选择至多X+2种花色（X为你已损失的体力值），然后随机获得场上、弃牌堆或牌堆中你选择花色的各一张牌。②当你于回合内使用三种类别的牌后，此技能视为未发动过。",
+        old_wufu: "旧伍孚",
+        old_wufu_prefix: "旧",
 
         old_tw_huojun: "旧TW霍峻",
         old_tw_huojun_ab: "旧霍峻",

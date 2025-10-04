@@ -68,7 +68,7 @@ let lmCharacter = {//武将信息
     old_mb_chenzhi: ["male", "shu", 4, ["mbquanchong", "mbrenxing"], ["character:mb_chenzhi"], "die:mb_chenzhi"],
     old_mb_luyusheng: ["female", "wu", 3, ["old_mbrunwei", "old_mbshuanghuai"], ["character:mb_luyusheng", "die:mb_luyusheng"]],
     old_guoyuan: ["male", "wei", 3, ["mbqingdao", "old_mbxiugeng", "old_mbchenshe"], ["character:guoyuan", "die:guoyuan"]],
-    old_mb_caocao: ["male", "qun", 4, ["mblingfa", "twzhian"], ["character:mb_caocao", "die:mb_caocao"]],
+    old_mb_caocao: ["male", "qun", 4, ["old_mblingfa", "twzhian"], ["character:mb_caocao", "die:mb_caocao"]],
     //OL
     oldx_clan_xuncai: ["female", "qun", 3, ["oldx_clanlieshi", "oldx_clandianzhan", "clanhuanyin", "clandaojie"], ["character:clan_xuncai", "die:clan_xuncai", "clan:颍川荀氏"]],
     old_clan_zhonghui: ["male", "wei", "3/4", ["old_clanyuzhi", "old_clanxieshu", "clanbaozu"], ["character:clan_zhonghui", "die:clan_zhonghui", "clan:颍川钟氏", "die:3"]],
@@ -102,6 +102,7 @@ let lmCharacter = {//武将信息
     old_clan_xunshuang: ["male", "qun", 3, ["old_clanyangji", "old_clandandao", "old_clanqingli", "clandaojie"], ["character:clan_xunshuang", "die:clan_xunshuang", "clan:颍川荀氏"]],
     old_clan_yangxiu: ["male", "wei", 3, ["old_clanjiewu", "old_clangaoshi", "clanquhuo"], ["character:clan_yangxiu", "die:clan_yangxiu", "clan:弘农杨氏"]],
     old_clan_wangmingshan: ["male", "wei", 3, ["old_clantanque", "old_clanshengmo", "clanzhongliu"], ["character:clan_wangmingshan", "die:clan_wangmingshan", "clan:太原王氏"]],
+    old_strong_caochong: ["male", "wei", 4, ["strongduanti", "stronglianwu", "olchengxiang"], ["character:strong_caochong", "die:strong_caochong"]],
     //十周年
     old_re_zhangchunhua: ["female", "wei", 3, ["rejueqing", "reshangshi"], ["character:re_zhangchunhua", "die:re_zhangchunhua"]],
     old_re_caorui: ["male", "wei", 3, ["huituo", "remingjian", "rexingshuai"], ["character:re_caorui", "re_caorui", "zhu"]],
@@ -134,7 +135,7 @@ let lmCharacter = {//武将信息
     old_lukai: ["male", "wu", 4, ["old_bushi", "old_zhongzhuang"], ["character:lukai", "die:lukai"]],
     oldx_zhangqiying: ["female", "qun", 3, ["old_falu", "old_dianhua", "old_zhenyi"], ["character:zhangqiying", "die:zhangqiying"]],
     old_v_machao: ["male", "qun", 4, ["old_dczhongtao", "dcjizhan"], ["character:v_machao", "die:v_machao"]],
-
+    old_wufu: ["male", "qun", 4, ["dczhonge", "dcjuekai"], ["character:wufu", "die:wufu"]],
     //海外
     old_tw_huojun: ["male", "shu", 4, ["twsidai", "old_twjieyu"], ["character:tw_huojun", "die:tw_huojun"]],
     old_tw_guohuai: ["male", "wei", 4, ["old_twjingce", "old_yuzhang"], ["character:tw_guohuai", "die:tw_guohuai"]],
