@@ -15,7 +15,7 @@ let lmCharacter = {//切换皮肤
         ["pot_taishici_shadow4", ["die:pot_taishici"]],
     ],
     old_pot_yuji: [["pot_yuji_shadow", []]],
-    old_dc_sb_xunyu: [["dc_sb_xunyu_shadow", []]],
+    old_dc_sb_xunyu: [["dc_sb_xunyu_shadow", ["tempname:dc_sb_xunyu_shadow"]]],
     old_pot_weiyan: [
         ["pot_weiyan_achieve", []],
         ["pot_weiyan_fail", []],

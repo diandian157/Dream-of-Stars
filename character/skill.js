@@ -9260,7 +9260,6 @@ let lmCharacter = {
                 combo: "old_chuyuan",
             },
         },
-        olfangquan_shen_caopi: { audio: 1 },
         //族荀采
         oldx_clanlieshi: {
             audio: "clanlieshi",
@@ -18155,7 +18154,7 @@ let lmCharacter = {
             group: ["old_dcsbshimou_change"],
             subSkill: {
                 change: {
-                    audio: "old_dcsbshimou",
+                    audio: "dcsbshimou",
                     audioname: ["dc_sb_xunyou_shadow"],
                     trigger: {
                         global: "phaseBefore",

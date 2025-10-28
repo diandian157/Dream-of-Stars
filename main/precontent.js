@@ -1953,145 +1953,46 @@ export async function precontent(config, pack) {
         lib.translate.vtbshanwu_info = "当其他角色成为【杀】的第一个目标时，你可以弃置一张【闪】，然后取消此【杀】的所有目标。当你成为其他角色使用【杀】或普通锦囊牌的目标后，你可以打出一张【闪】令此牌对你无效，然后你摸一张牌。你可以将一张装备牌当作【闪】使用或打出。";
     }
     //语音修改
-    lib.skill.rerende = {
+    lib.skill.olfangquan = {
         audio: 2,
-        audioname: ["gz_jun_liubei"],
-        audioname2: { shen_caopi: "rerende_shen_caopi", old_shen_caopi: "rerende_shen_caopi", sw_caopi: "rerende_shen_caopi" },
-        enable: "phaseUse",
+        audioname2: { shen_caopi: "caopi_xingdong", old_shen_caopi: "caopi_xingdong" },
+        trigger: { player: "phaseUseBefore" },
         filter(event, player) {
-            return player.countCards("h") && game.hasPlayer(current => get.info("rerende").filterTarget(null, player, current));
+            return player.countCards("h") > 0 && !player.hasSkill("olfangquan3");
         },
-        filterTarget(card, player, target) {
-            if (player == target) {
-                return false;
-            }
-            return !player.getStorage("rerende_targeted").includes(target);
-        },
-        filterCard: true,
-        selectCard: [1, Infinity],
-        allowChooseAll: true,
-        discard: false,
-        lose: false,
-        delay: false,
-        check(card) {
-            if (ui.selected.cards.length && ui.selected.cards[0].name == "du") {
-                return 0;
-            }
-            if (!ui.selected.cards.length && card.name == "du") {
-                return 20;
-            }
-            var player = get.owner(card);
-            if (ui.selected.cards.length >= Math.max(2, player.countCards("h") - player.hp)) {
-                return 0;
-            }
-            if (player.hp == player.maxHp || player.countMark("rerende") < 0 || player.countCards("h") <= 1) {
-                var players = game.filterPlayer();
-                for (var i = 0; i < players.length; i++) {
-                    if (players[i].hasSkill("haoshi") && !players[i].isTurnedOver() && !players[i].hasJudge("lebu") && get.attitude(player, players[i]) >= 3 && get.attitude(players[i], player) >= 3) {
-                        return 11 - get.value(card);
+        direct: true,
+        content() {
+            "step 0";
+            var fang = player.countMark("olfangquan2") == 0 && player.hp >= 2 && player.countCards("h") <= player.hp + 2;
+            player
+                .chooseBool(get.prompt2("olfangquan"))
+                .set("ai", function () {
+                    if (!_status.event.fang) {
+                        return false;
                     }
-                }
-                if (player.countCards("h") > player.hp) {
-                    return 10 - get.value(card);
-                }
-                if (player.countCards("h") > 2) {
-                    return 6 - get.value(card);
-                }
-                return -1;
-            }
-            return 10 - get.value(card);
-        },
-        async content(event, trigger, player) {
-            const { target, cards, name } = event;
-            player.addTempSkill(name + "_targeted", "phaseUseAfter");
-            player.markAuto(name + "_targeted", [target]);
-            let num = 0;
-            player.getHistory("lose", evt => {
-                if (evt.getParent(2).name == name && evt.getParent("phaseUse") == event.getParent(3)) {
-                    num += evt.cards.length;
-                }
-            });
-            if (!player.storage[event.name]) {
-                player.when({ player: "phaseUseEnd" }).step(async () => {
-                    player.clearMark(event.name, false);
-                });
-            }
-            player.addMark(event.name, num + cards.length, false);
-            await player.give(cards, target);
-            const list = get.inpileVCardList(info => {
-                return info[0] == "basic" && player.hasUseTarget(new lib.element.VCard({ name: info[2], nature: info[3], isCard: true }), null, true);
-            });
-            if (num < 2 && num + cards.length > 1 && list.length) {
-                const { result } = await player.chooseButton(["是否视为使用一张基本牌？", [list, "vcard"]]).set("ai", button => {
-                    return get.player().getUseValue({ name: button.link[2], nature: button.link[3], isCard: true });
-                });
-                if (!result?.links?.length) {
-                    return;
-                }
-                await player.chooseUseTarget(get.autoViewAs({ name: result.links[0][2], nature: result.links[0][3], isCard: true }), true);
-            }
-        },
-        ai: {
-            fireAttack: true,
-            order(skill, player) {
-                if (player.hp < player.maxHp && player.countMark("rerende") < 2 && player.countCards("h") > 1) {
-                    return 10;
-                }
-                return 4;
-            },
-            result: {
-                target(player, target) {
-                    if (target.hasSkillTag("nogain")) {
-                        return 0;
-                    }
-                    if (ui.selected.cards.length && ui.selected.cards[0].name == "du") {
-                        if (target.hasSkillTag("nodu")) {
-                            return 0;
+                    return game.hasPlayer(function (target) {
+                        if (target.hasJudge("lebu") || target == player) {
+                            return false;
                         }
-                        return -10;
-                    }
-                    if (target.hasJudge("lebu")) {
-                        return 0;
-                    }
-                    var nh = target.countCards("h");
-                    var np = player.countCards("h");
-                    if (player.hp == player.maxHp || player.countMark("rerende") < 0 || player.countCards("h") <= 1) {
-                        if (nh >= np - 1 && np <= player.hp && !target.hasSkill("haoshi")) {
-                            return 0;
+                        if (get.attitude(player, target) > 4) {
+                            return get.threaten(target) / Math.sqrt(target.hp + 1) / Math.sqrt(target.countCards("h") + 1) > 0;
                         }
-                    }
-                    return Math.max(1, 5 - nh);
-                },
-            },
-            effect: {
-                target_use(card, player, target) {
-                    if (player == target && get.type(card) == "equip") {
-                        if (player.countCards("e", { subtype: get.subtype(card) })) {
-                            if (game.hasPlayer(current => current != player && get.attitude(player, current) > 0)) {
-                                return 0;
-                            }
-                        }
-                    }
-                },
-            },
-            threaten: 0.8,
-        },
-        marktext: "仁",
-        onremove: true,
-        intro: {
-            content: "本阶段已仁德牌数：#",
-            onunmark: true,
-        },
-        subSkill: {
-            targeted: {
-                onremove: true,
-                charlotte: true,
-            },
+                        return false;
+                    });
+                })
+                .set("fang", fang);
+            "step 1";
+            if (result.bool) {
+                player.logSkill("olfangquan");
+                trigger.cancel();
+                player.addTempSkill("olfangquan2");
+                player.addMark("olfangquan2", 1, false);
+            }
         },
     };
     lib.skill.rezhiheng = {
         audio: 2,
-        audioname2: { shen_caopi: "rezhiheng_shen_caopi", new_simayi: "rezhiheng_new_simayi", jsrg_sunce: "rezhiheng_jsrg_sunce", old_shen_caopi: "rezhiheng_shen_caopi", sw_caopi: "rezhiheng_shen_caopi" },
+        audioname2: { shen_caopi: "rezhiheng_shen_caopi", new_simayi: "rezhiheng_new_simayi", jsrg_sunce: "rezhiheng_jsrg_sunce" },
         mod: {
             aiOrder(player, card, num) {
                 if (num <= 0 || get.itemtype(card) !== "card" || get.type(card) !== "equip") return num;
@@ -2174,98 +2075,6 @@ export async function precontent(config, pack) {
             threaten: 1.55,
         },
     };
-    lib.skill.olluanji = {
-        inherit: "luanji",
-        audioname2: { shen_caopi: "olluanji_shen_caopi", old_shen_caopi: "olluanji_shen_caopi", sw_caopi: "olluanji_shen_caopi" },
-        audio: 2,
-        line: false,
-        group: "olluanji_remove",
-        check(card) {
-            return 7 - get.value(card);
-        },
-    };
-    lib.skill.new_rejianxiong = {
-        audio: "rejianxiong",
-        audioname: ["shen_caopi", "mb_caocao"],
-        audioname2: { caoying: "lingren_jianxiong", old_shen_caopi: "rejianxiong_shen_caopi", sw_caopi: "rejianxiong_shen_caopi" },//, old_mb_caocao: "rejianxiong_mb_caocao"
-        content() {
-            "step 0";
-            if (get.itemtype(trigger.cards) == "cards" && get.position(trigger.cards[0], true) == "o") {
-                player.gain(trigger.cards, "gain2");
-            }
-            player.draw("nodelay");
-        },
-        ai: {
-            maixie: true,
-            maixie_hp: true,
-            effect: {
-                target(card, player, target) {
-                    if (player.hasSkillTag("jueqing", false, target)) {
-                        return [1, -1];
-                    }
-                    if (get.tag(card, "damage") && player != target) {
-                        var cards = card.cards,
-                            evt = _status.event;
-                        if (evt.player == target && card.name == "damage" && evt.getParent().type == "card") {
-                            cards = evt.getParent().cards.filterInD();
-                        }
-                        if (target.hp <= 1) {
-                            return;
-                        }
-                        if (get.itemtype(cards) != "cards") {
-                            return;
-                        }
-                        for (var i of cards) {
-                            if (get.name(i, target) == "tao") {
-                                return [1, 4.5];
-                            }
-                        }
-                        if (get.value(cards, target) >= 7 + target.getDamagedHp()) {
-                            return [1, 2.5];
-                        }
-                        return [1, 0.6];
-                    }
-                },
-            },
-        },
-    };
-    lib.skill.olfangquan = {
-        audio: 2,
-        audioname2: { shen_caopi: "caopi_xingdong", old_shen_caopi: "caopi_xingdong" },
-        trigger: { player: "phaseUseBefore" },
-        filter(event, player) {
-            return player.countCards("h") > 0 && !player.hasSkill("olfangquan3");
-        },
-        direct: true,
-        content() {
-            "step 0";
-            var fang = player.countMark("olfangquan2") == 0 && player.hp >= 2 && player.countCards("h") <= player.hp + 2;
-            player
-                .chooseBool(get.prompt2("olfangquan"))
-                .set("ai", function () {
-                    if (!_status.event.fang) {
-                        return false;
-                    }
-                    return game.hasPlayer(function (target) {
-                        if (target.hasJudge("lebu") || target == player) {
-                            return false;
-                        }
-                        if (get.attitude(player, target) > 4) {
-                            return get.threaten(target) / Math.sqrt(target.hp + 1) / Math.sqrt(target.countCards("h") + 1) > 0;
-                        }
-                        return false;
-                    });
-                })
-                .set("fang", fang);
-            "step 1";
-            if (result.bool) {
-                player.logSkill("olfangquan");
-                trigger.cancel();
-                player.addTempSkill("olfangquan2");
-                player.addMark("olfangquan2", 1, false);
-            }
-        },
-    };
     //荆周瑜雄姿语音
     lib.skill.jxxiongzi = {
         audio: "sbyingzi",
@@ -2288,14 +2097,5 @@ export async function precontent(config, pack) {
                 return num + player.hp;
             },
         },
-    };
-    //冲儿称象
-    lib.skill.olchengxiang = {
-        audioname: ["strong_caochong", "old_strong_caochong"],
-        inherit: "chengxiang",
-        getIndex(event, player) {
-            return event.num;
-        },
-        intro: { content: "下次发动【称象】多亮出$张牌" },
     };
 }
