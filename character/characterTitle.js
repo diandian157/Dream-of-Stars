@@ -82,6 +82,7 @@ let lmCharacter = {//武将称号
     old_ol_pengyang: "翻然轻举",
     old_sp_sunce: "壮武命世",
     old_ol_yufan: "狂直之士",
+    old_ol_chengpu: "三朝虎臣",
     old_zhugejin: "武侯遗秀",
     old_ruiji: "柔荑弄钺",
     old_xurong: "玄菟战魔",
@@ -134,6 +135,7 @@ let lmCharacter = {//武将称号
     old_v_machao: "雄烈盖世",
     old_wufu: "忠虹贯日",
     old_dc_sb_hulie: "暗舆平叛",
+    old_chengui: "弄虎如婴",
     //海外
     old_tw_huojun: "葭萌铁狮",
     old_tw_guohuai: "屡破羌胡",

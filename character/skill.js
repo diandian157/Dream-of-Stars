@@ -11271,106 +11271,106 @@ let lmCharacter = {
             ai: { expose: 0.2 },
         },
         //程普
-        // olchunlao: {
-        //     audio: "chunlao",
-        //     audioname: ["xin_chengpu"],
-        //     trigger: { global: ["loseAfter", "loseAsyncAfter"] },
-        //     filter(event, player) {
-        //         if (event.type != "discard" || event.getlx === false) return false;
-        //         return game.hasPlayer(target => {
-        //             if (![player.getPrevious(), player, player.getNext()].includes(target)) return false;
-        //             return event.getl(target)?.cards2?.some(i => i.name == "sha" && get.position(i) == "d");
-        //         });
-        //     },
-        //     forced: true,
-        //     locked: false,
-        //     content() {
-        //         player
-        //             .addToExpansion(
-        //                 game
-        //                     .filterPlayer(target => {
-        //                         if (![player.getPrevious(), player, player.getNext()].includes(target)) return false;
-        //                         return trigger.getl(target)?.cards2?.some(i => i.name == "sha" && get.position(i) == "d");
-        //                     })
-        //                     .map(target => {
-        //                         return trigger.getl(target).cards2.filter(i => i.name == "sha" && get.position(i) == "d");
-        //                     })
-        //                     .flat()
-        //                     .unique(),
-        //                 "gain2"
-        //             )
-        //             .gaintag.add("olchunlao");
-        //     },
-        //     ai: {
-        //         effect: {
-        //             player_use(card, player, target) {
-        //                 if (_status.currentPhase != player) return;
-        //                 if (card.name == "sha" && !player.getExpansions("olchunlao").length && target.hp > 1) {
-        //                     return "zeroplayertarget";
-        //                 }
-        //             },
-        //         },
-        //     },
-        //     intro: {
-        //         content: "expansion",
-        //         markcount: "expansion",
-        //     },
-        //     onremove(player, skill) {
-        //         var cards = player.getExpansions(skill);
-        //         if (cards.length) player.loseToDiscardpile(cards);
-        //     },
-        //     group: ["olchunlao_save", "olchunlao_gain"],
-        //     subSkill: {
-        //         save: {
-        //             inherit: "chunlao2",
-        //             filter(event, player) {
-        //                 return event.type == "dying" && event.dying && event.dying.hp <= 0 && player.getExpansions("olchunlao").length;
-        //             },
-        //             async content(event, trigger, player) {
-        //                 const target = event.targets[0];
-        //                 const {
-        //                     result: { bool, links },
-        //                 } = await player.chooseCardButton(get.translation("olchunlao"), player.getExpansions("olchunlao"), true);
-        //                 if (bool) {
-        //                     player.logSkill("olchunlao", target);
-        //                     await player.loseToDiscardpile(links);
-        //                     event.type = "dying";
-        //                     await target.useCard({ name: "jiu", isCard: true }, target);
-        //                 }
-        //             },
-        //             ai: {
-        //                 save: true,
-        //                 skillTagFilter(player) {
-        //                     return player.getExpansions("olchunlao").length;
-        //                 },
-        //                 order: 6,
-        //                 result: { target: 1 },
-        //             },
-        //         },
-        //         gain: {
-        //             audio: "chunlao",
-        //             audioname: ["xin_chengpu"],
-        //             trigger: { global: "loseHpEnd" },
-        //             filter(event, player) {
-        //                 return player.getExpansions("olchunlao").length;
-        //             },
-        //             async cost(event, trigger, player) {
-        //                 const cards = player.getExpansions("olchunlao");
-        //                 event.result = await player
-        //                     .chooseButton(["###" + get.prompt("olchunlao") + "###获得至多两张“醇”？", cards], [1, 2])
-        //                     .set("ai", button => {
-        //                         const player = get.event().player;
-        //                         return player.hasSha() ? 0 : get.value(button.link);
-        //                     })
-        //                     .forResult();
-        //                 if (event.result.bool) event.result.cards = event.result.links;
-        //             },
-        //             async content(event, trigger, player) {
-        //                 await player.gain(event.cards, player, "give");
-        //             },
-        //         },
-        //     },
-        // },
+        old_olchunlao: {
+            audio: "chunlao",
+            audioname: ["xin_chengpu"],
+            trigger: { global: ["loseAfter", "loseAsyncAfter"] },
+            filter(event, player) {
+                if (event.type != "discard" || event.getlx === false) return false;
+                return game.hasPlayer(target => {
+                    if (![player.getPrevious(), player, player.getNext()].includes(target)) return false;
+                    return event.getl(target)?.cards2?.some(i => i.name == "sha" && get.position(i) == "d");
+                });
+            },
+            forced: true,
+            locked: false,
+            content() {
+                player
+                    .addToExpansion(
+                        game
+                            .filterPlayer(target => {
+                                if (![player.getPrevious(), player, player.getNext()].includes(target)) return false;
+                                return trigger.getl(target)?.cards2?.some(i => i.name == "sha" && get.position(i) == "d");
+                            })
+                            .map(target => {
+                                return trigger.getl(target).cards2.filter(i => i.name == "sha" && get.position(i) == "d");
+                            })
+                            .flat()
+                            .unique(),
+                        "gain2"
+                    )
+                    .gaintag.add("old_olchunlao");
+            },
+            ai: {
+                effect: {
+                    player_use(card, player, target) {
+                        if (_status.currentPhase != player) return;
+                        if (card.name == "sha" && !player.getExpansions("old_olchunlao").length && target.hp > 1) {
+                            return "zeroplayertarget";
+                        }
+                    },
+                },
+            },
+            intro: {
+                content: "expansion",
+                markcount: "expansion",
+            },
+            onremove(player, skill) {
+                var cards = player.getExpansions(skill);
+                if (cards.length) player.loseToDiscardpile(cards);
+            },
+            group: ["old_olchunlao_save", "old_olchunlao_gain"],
+            subSkill: {
+                save: {
+                    inherit: "chunlao2",
+                    filter(event, player) {
+                        return event.type == "dying" && event.dying && event.dying.hp <= 0 && player.getExpansions("old_olchunlao").length;
+                    },
+                    async content(event, trigger, player) {
+                        const target = event.targets[0];
+                        const {
+                            result: { bool, links },
+                        } = await player.chooseCardButton(get.translation("old_olchunlao"), player.getExpansions("old_olchunlao"), true);
+                        if (bool) {
+                            player.logSkill("old_olchunlao", target);
+                            await player.loseToDiscardpile(links);
+                            event.type = "dying";
+                            await target.useCard({ name: "jiu", isCard: true }, target);
+                        }
+                    },
+                    ai: {
+                        save: true,
+                        skillTagFilter(player) {
+                            return player.getExpansions("old_olchunlao").length;
+                        },
+                        order: 6,
+                        result: { target: 1 },
+                    },
+                },
+                gain: {
+                    audio: "chunlao",
+                    audioname: ["xin_chengpu"],
+                    trigger: { global: "loseHpEnd" },
+                    filter(event, player) {
+                        return player.getExpansions("old_olchunlao").length;
+                    },
+                    async cost(event, trigger, player) {
+                        const cards = player.getExpansions("old_olchunlao");
+                        event.result = await player
+                            .chooseButton(["###" + get.prompt("old_olchunlao") + "###获得至多两张“醇”？", cards], [1, 2])
+                            .set("ai", button => {
+                                const player = get.event().player;
+                                return player.hasSha() ? 0 : get.value(button.link);
+                            })
+                            .forResult();
+                        if (event.result.bool) event.result.cards = event.result.links;
+                    },
+                    async content(event, trigger, player) {
+                        await player.gain(event.cards, player, "give");
+                    },
+                },
+            },
+        },
         old_qiaoli: {
             audio: "qiaoli",
             enable: "phaseUse",
@@ -15148,6 +15148,172 @@ let lmCharacter = {
                         skillTagFilter(player, tag, arg) {
                             return arg && arg.card && arg.target && arg.target.hasSkill("old_dcaichen") && ui.cardPile.childNodes.length < 40 && get.suit(arg.card) === "spade";
                         },
+                    },
+                },
+            },
+        },
+        //贱·陈珪 搬自活动武将
+        old_yingtu: {
+            audio: "dcyingtu",
+            trigger: { global: ["gainAfter", "loseAsyncAfter"] },
+            filter(event, player) {
+                return lib.skill.dcyingtu.filterx(event, player, player.getPrevious());
+            },
+            logTarget: (evnet, player) => player.getPrevious(),
+            check(event, player) {
+                return lib.skill.dcyingtu.check(player, player.getPrevious());
+            },
+            content() {
+                "step 0"
+                var target = player.getPrevious();
+                var num = trigger.getg(target).length;
+                event.num = num;
+                player.gainPlayerCard(target, true, "he", num);
+                "step 1"
+                var he = player.getCards("he");
+                if (he.length) {
+                    var target = player.getNext();
+                    event.target = target;
+                    if (he.length <= num) event._result = { bool: true, cards: he };
+                    else player.chooseCard("he", true, num, "交给" + get.translation(target) + get.cnNumber(num) + "张牌");
+                }
+                else event.finish();
+                "step 2"
+                if (result.bool) {
+                    player.line(target);
+                    player.give(result.cards, target);
+                }
+            },
+            group: "old_yingtu_next",
+            global: "old_yingtu_ai",
+            subSkill: {
+                next: {
+                    audio: "dcyingtu",
+                    trigger: { global: "useCardToPlayer" },
+                    filter(event, player) {
+                        if (event.player != player.getNext() || !event.isFirstTarget) return false;
+                        if (event.card.name != "sha" && event.card.name != "juedou") return false;
+                        return !event.targets.includes(player) && !event.targets.includes(player.getPrevious()) && event.player.canUse(event.card, player.getPrevious(), false);
+                    },
+                    logTarget: (evnet, player) => player.getNext(),
+                    line: false,
+                    check(event, player) {
+                        var sum = event.targets.reduce((num, target) => {
+                            return num + get.effect(target, event.card, event.player, player);
+                        }, 0);
+                        return sum < get.effect(player.getPrevious(), event.card, event.player, player);
+                    },
+                    prompt2(event, player) {
+                        return "将" + get.translation(event.card) + "转移给" + get.translation(player.getPrevious());
+                    },
+                    content() {
+                        "step 0"
+                        var targets = trigger.targets.slice();
+                        player.line2([player.getNext(), player.getPrevious()]);
+                        trigger.targets.removeArray(targets);
+                        trigger.getParent().triggeredTargets1.removeArray(targets);
+                        trigger.untrigger();
+                        trigger.targets.push(player.getPrevious());
+                        "step 1"
+                        game.delayx();
+                    },
+                },
+                ai: {
+                    ai: {
+                        effect: {
+                            player_use(card, player, target) {
+                                if (!player.getPrevious().hasSkill("old_yingtu")) return;
+                                if (card.name != "sha" && card.name != "juedou") return;
+                                var range;
+                                var select = get.copy(get.info(card).selectTarget);
+                                if (select == undefined) {
+                                    if (get.info(card).filterTarget == undefined) return false;
+                                    range = [1, 1];
+                                }
+                                else if (typeof select == "number") range = [select, select];
+                                else if (get.itemtype(select) == "select") range = select;
+                                else if (typeof select == "function") range = select(card, player);
+                                game.checkMod(card, player, range, "selectTarget", player);
+                                var targets = game.filterPlayer(targetx => player.canUse(card, targetx));
+                                if (range[1] != -1) {
+                                    targets = targets.filter(targetx => get.effect(targetx, card, player, player) > 0);
+                                    targets.sort((a, b) => get.effect(b, card, player, player) - get.effect(a, card, player, player));
+                                    targets = targets.slice(0, range[1]);
+                                }
+                                if (targets.includes(player.getPrevious().getPrevious())) return;
+                                var sum = targets.reduce((num, targetx) => {
+                                    return num + get.effect(targetx, card, player, player.getPrevious());
+                                }, 0);
+                                if (sum < get.effect(player.getPrevious().getPrevious(), card, player, player.getPrevious())) return "zeroplayertarget";
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        old_congshi: {
+            global: "old_congshi_use",
+            audio: "dccongshi",
+            trigger: { global: "damageSource" },
+            filter(event, player) {
+                if (!event.card || !event.card.old_congshi || player.isHealthy()) return false;
+                return event.card.old_congshi[player.playerid] && event.card.old_congshi[player.playerid].includes(event.player);
+            },
+            forced: true,
+            content() {
+                player.recover();
+            },
+            subSkill: {
+                use: {
+                    mod: {
+                        targetInRange(card, player, target) {
+                            if (_status.CongShiCheck || !player.isMaxHp()) return;
+                            if (!target.getPrevious().hasSkill("old_congshi") && !target.getNext().hasSkill("old_congshi")) return;
+                            return true;
+                        },
+                    },
+                    trigger: { player: "useCard1" },
+                    filter(event, player) {
+                        if (!event.targets || !event.targets.length || !player.isMaxHp()) return false;
+                        var targets = event.targets.filter(target => target.getPrevious().hasSkill("old_congshi") || target.getNext().hasSkill("old_congshi"));
+                        if (!targets.length) return false;
+                        return targets.some(target => {
+                            if (!player.canUse(event.card, target)) return false;
+                            _status.CongShiCheck = true;
+                            if (!player.canUse(event.card, target)) {
+                                delete _status.CongShiCheck;
+                                return true;
+                            }
+                            else {
+                                delete _status.CongShiCheck;
+                                return false;
+                            }
+                        });
+                    },
+                    firstDo: true,
+                    priority: 11 + 45 + 14,
+                    forced: true,
+                    popup: false,
+                    content() {
+                        var targetx = trigger.targets.filter(target => {
+                            if (!target.getPrevious().hasSkill("old_congshi") && !target.getNext().hasSkill("old_congshi")) return false;
+                            if (!player.canUse(trigger.card, target)) return false;
+                            _status.CongShiCheck = true;
+                            if (!player.canUse(trigger.card, target)) {
+                                delete _status.CongShiCheck;
+                                return true;
+                            }
+                            else {
+                                delete _status.CongShiCheck;
+                                return false;
+                            }
+                        });
+                        var targets = game.filterPlayer(current => {
+                            if (!targetx.some(target => current == target.getPrevious() || current == target.getNext())) return false;
+                            return current.hasSkill("old_congshi");
+                        });
+                        trigger.card.old_congshi = {};
+                        targets.forEach(target => trigger.card.old_congshi[target.playerid] = targetx.filter(current => current == target.getPrevious() || current == target.getNext()));
                     },
                 },
             },
@@ -23657,8 +23823,11 @@ let lmCharacter = {
         old_ol_wangyi_prefix: "旧|界",
         old_olzhenlie: "贞烈",
         old_olzhenlie_info: "当你成为其他角色使用的【杀】或非延时锦囊牌的目标后，你可以失去一点体力令此牌对你无效，然后选择一项：1，获得使用者的一张牌；2，发动一次【秘计】。",
-        // olchunlao: "醇醪",
-        // olchunlao_info: "①当你或你的上下家的【杀】因弃置进入弃牌堆后，你将位于弃牌堆的这些牌称为“醇”置于武将牌上。②一名角色处于濒死状态时，你可以将一张“醇”置入弃牌堆，然后令其视为使用一张【酒】。③当一名角色失去体力后，你可以获得至多两张“醇”。",
+        old_ol_chengpu: "旧OL界程普",
+        old_ol_chengpu_ab: "旧界程普",
+        old_ol_chengpu_prefix: "旧|界",
+        old_olchunlao: "醇醪",
+        old_olchunlao_info: "①当你或你的上下家的【杀】因弃置进入弃牌堆后，你将位于弃牌堆的这些牌称为“醇”置于武将牌上。②一名角色处于濒死状态时，你可以将一张“醇”置入弃牌堆，然后令其视为使用一张【酒】。③当一名角色失去体力后，你可以获得至多两张“醇”。",
         old_ol_xuelingyun: "旧OL薛灵芸",
         old_ol_xuelingyun_ab: "旧薛灵芸",
         old_ol_xuelingyun_prefix: "旧",
@@ -23898,6 +24067,12 @@ let lmCharacter = {
         old_dcsbchuanyu_info: "①每轮开始时，你可摸一张牌然后交给一名角色一张牌，称为「舆」。②每当「舆」因使用进入弃牌堆时，你可将其交给本轮未获得过「舆」的一名角色。③每轮结束时，你可令本轮所有获得过「舆」的角色依次视为对你指定的一名角色使用【杀】(不限距离），然后弃置所有「舆」。",
         old_dcsbyitou: "倚投",
         old_dcsbyitou_info: "其他角色的出牌阶段开始时，若其手牌数为全场最多，你可将所有手牌交给该角色，直到你的下回合开始，该角色造成伤害后，你摸一张牌。",
+        old_chengui: "旧陈珪",
+        old_chengui_prefix: "旧",
+        old_yingtu: "营图",
+        old_yingtu_info: "①当你的上家于摸牌阶段外获得牌后，你可以获得其等量的牌，然后将等量的牌交给你的下家。②当你的下家使用【杀】或【决斗】指定第一个目标时，若目标角色不包含你和你的上家，则你可以取消此牌的所有目标，然后将此牌目标改为你的上家。",
+        old_congshi: "从势",
+        old_congshi_info: "锁定技。①体力值最大的角色对你的上家和下家使用牌无距离限制。②有角色使用因〖从势①〗增加距离的牌对你的上家或下家造成伤害后，你回复1点体力。",
 
         old_tw_huojun: "旧TW霍峻",
         old_tw_huojun_ab: "旧霍峻",
@@ -23938,10 +24113,6 @@ let lmCharacter = {
         old_twxiongxi_info: "每回合每名角色限一次，出牌阶段，你可以弃置X张牌对一名其他角色造成1点伤害（X为你的暴虐值与暴虐值上限之差）。",
         old_twxiongjun: "凶军",
         old_twxiongjun_info: "锁定技，当你造成伤害后，所有拥有【凶军】的角色摸一张牌。",
-        // old_xia_tongyuan: "旧侠童渊",
-        // old_xia_tongyuan_prefix: "旧|侠",
-        // old_twchuanshu: "传术",
-        // old_twchuanshu_info: "准备阶段，你可以选择一名角色。直到你的下回合开始，其获得以下效果：1.当其拼点牌亮出时，此牌点数+3；2.其使用的下一张【杀】对除你外的角色造成伤害时，此伤害+1；3.若其不为你，其使用的下一张【杀】结算结束后，你摸等同于其因此【杀】造成的伤害值数的牌。",
         old_xia_zhaoe: "旧赵娥",
         old_xia_zhaoe_prefix: "旧",
         old_twyanshi: "言誓",
