@@ -39,7 +39,7 @@ let lmCharacter = {//武将切换
     shenpei: ["old_shenpei"],
     majun: ["old_yj_majun"],
     nanhualaoxian: ["old_ol_nanhualaoxian"],
-    dengai: ["old_ol_sb_dengai", "old_dc_sb_dengai"],
+    dengai: ["old_ol_sb_dengai", "oldx_ol_sb_dengai", "old_dc_sb_dengai"],
     zhangliao: ["old_sb_zhangliao"],
     luxun: ["old_dc_sb_luxun"],
     guojia: ["old_sb_guojia"],
