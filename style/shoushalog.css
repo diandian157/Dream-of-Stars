@@ -18,7 +18,7 @@
 	width: calc(50% - 230px);
 	height: calc(100% - 452px); /*100消了四层。*/
 	left: calc(50% + 60px);
-	top: 184px;
+	top: 190px;
 	overflow: hidden;
 	font-family: "shousha" !important;
 	z-index: 10;

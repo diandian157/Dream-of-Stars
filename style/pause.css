@@ -265,6 +265,10 @@
 #sidebar > div {
 	font-family: "shousha";
 }
+#sidebar > div,
+#sidebar3 > div {
+	margin: 5px;
+}
 /* 卡牌名称 */
 #sidebar > div > .yellowtext {
 	color: rgb(255, 255, 25);

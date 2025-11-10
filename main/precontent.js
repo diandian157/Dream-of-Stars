@@ -642,7 +642,7 @@ export async function precontent(config, pack) {
     lib.arenaReady.push(function () {
         lib.connectCharacterPack.add("星之梦");
     });
-    if (!_status.postReconnect.lingmengziyong_pack) _status.postReconnect.lingmengziyong_pack = [function (pack) {
+    if (!_status.postReconnect.lingmeng_pack) _status.postReconnect.lingmeng_pack = [function (pack) {
         lib.translate.星之梦_character_config = "星之梦";
         lib.characterPack["星之梦"] = pack;
         for (let key in pack) lib.character[key] = pack[key];
@@ -650,7 +650,7 @@ export async function precontent(config, pack) {
         lib.connectCharacterPack.add("星之梦");
         lib.config.characters.add("星之梦");
     }, lib.characterPack["星之梦"]];
-    if (!_status.postReconnect.lingmengziyong_translate) _status.postReconnect.lingmengziyong_translate = [function (translates) {
+    if (!_status.postReconnect.lingmeng_translate) _status.postReconnect.lingmeng_translate = [function (translates) {
         lib.translate.星之梦_character_config = "星之梦";
         for (let key in translates) lib.translate[key] = translates[key];
     }, character.translate];

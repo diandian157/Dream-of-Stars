@@ -65,6 +65,10 @@ let lmCharacter = {//武将称号
     old_guoyuan: "清介有守",
     old_mb_caocao: "峥嵘而立",
     old_pot_lusu: "廓开大计",
+    old_mb_mengda: "怠军反复",
+    old_pot_xinxianying: "明鉴致节",
+    old_sb_jiangwei: "见危授命",
+    old_mb_zhangyan: "轻勇骇势",
     //OL
     old_shen_caopi: "诰天仰颂",
     oldx_clan_xuncai: "怀刃自誓",
@@ -101,6 +105,7 @@ let lmCharacter = {//武将称号
     old_clan_yangxiu: "皓首邀终始",
     old_clan_wangmingshan: "擅书多艺",
     old_strong_caochong: "端阳撼象",
+    old_ol_sb_dengai: "曜威奋武",
     //十周年
     old_re_zhangchunhua: "冷血皇后",
     old_re_caorui: "天姿的明君",
@@ -136,6 +141,7 @@ let lmCharacter = {//武将称号
     old_wufu: "忠虹贯日",
     old_dc_sb_hulie: "暗舆平叛",
     old_chengui: "弄虎如婴",
+    old_dc_sb_luxun: "渊谋谦略",
     //海外
     old_tw_huojun: "葭萌铁狮",
     old_tw_guohuai: "屡破羌胡",

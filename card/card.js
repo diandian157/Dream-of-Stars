@@ -706,7 +706,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             return history.getParent() == trigger;
                         })
                         .sortBySeat(_status.currentPhase);
-                    ("step 1");
+                    "step 1";
                     var target = event.targets.shift();
                     event.target = target;
                     if (target.isIn()) {
@@ -780,7 +780,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             if (!player.needsToDiscard()) return 0;
                             return 1;
                         });
-                    ("step 1");
+                    "step 1";
                     if (result.control == "cancel2") {
                         event.finish();
                         return;
@@ -855,7 +855,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             if (_status.event.goon) return 7.5 - get.value(card);
                             return 0;
                         });
-                    ("step 1");
+                    "step 1";
                     if (result.bool) trigger.target.addTempSkill("xingtianpojunfu2");
                 },
             },
@@ -903,7 +903,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             if (target.countDiscardableCards(_status.event.player, "he") >= _status.event.getParent().num) att = att * 2;
                             return -att;
                         });
-                    ("step 1");
+                    "step 1";
                     if (result.bool) {
                         var target = result.targets[0];
                         player.logSkill("jinwuluorigong", target);
@@ -1244,14 +1244,14 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             "targets",
                             game.filterPlayer(current => current.getHistory("gain").length)
                         ).logSkill = "fh_yinyueqiang_skill";
-                    ("step 1");
+                    "step 1";
                     if (result.bool) game.delayx();
                 },
             },
             huyi_skill: {
                 equipSkill: true,
                 trigger: {
-                    source: "damageBegin3",
+                    source: "damageBegin2",
                 },
                 filter(event) {
                     return event.card && event.card.name == "sha" && event.hasNature("linked");
@@ -1268,7 +1268,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                             if (att > 0) att /= 1.2;
                             return Math.abs(att);
                         });
-                    ("step 1");
+                    "step 1";
                     if (result.bool) {
                         var targets = result.targets.sortBySeat();
                         targets.forEach(i => i.link(true));

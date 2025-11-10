@@ -30,5 +30,18 @@ let lmCharacter = {//动态翻译
         else str2 = `<span class=thundertext>${str2}</span>`;
         return `转换技，游戏开始可自选阴阳状态，出牌阶段限一次，你可令一名{${str1}；${str2}}将手牌调整至体力上限（至多摸五张）并视为使用一张仅指定单目标的普通锦囊牌（此牌牌名与目标由你指定）。若以此法摸牌，此牌可额外增加一个目标；若以此法弃牌，此牌额外结算一次。`;
     },
+    old_dcsbjunmou(player) {
+        const bool = player.storage.old_dcsbjunmou;
+        let yang = "此牌视为无次数限制的火【杀】",
+            yin = "重铸此牌并横置一名角色";
+        if (bool) {
+            yin = `<span class="bluetext">${yin}</span>`;
+        } else {
+            yang = `<span class="firetext">${yang}</span>`;
+        }
+        const start = `转换技。①游戏开始时，你可以转换此技能状态；②一张牌结算结束后，若此牌的目标包括你，你可以摸一张牌并选择一张手牌，`,
+            end = "。";
+        return `${start}阳：${yang}；阴：${yin}${end}`;
+    },
 };
 export const dynamicTranslate = lmCharacter;

@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from '../../../noname.js'
+import { lib, game, ui, get, ai, _status } from "../../../noname.js"
 export async function content(config, pack) {
 	//联机不执行
 	if (lib.rank) {
@@ -45,7 +45,7 @@ export async function content(config, pack) {
 		var addRank = function (rank) {
 			if (!lib.rank) return;
 			for (var i in rank) {
-				if (i == 'rarity') continue;
+				if (i == "rarity") continue;
 				lib.rank[i].addArray(rank[i]);
 			}
 			if (rank.rarity && lib.rank.rarity) {
@@ -68,33 +68,33 @@ export async function content(config, pack) {
 		}
 	}
 	if (lib.config.extensions && game.getFileList && game.readFile && game.writeFile) { //添加交互素材
-		game.getFileList('extension/星之梦/copy/throw_emotion/', (folders, files) => {
-			game.getFileList('image/emotion/throw_emotion/', (targetFolders, targetFiles) => {
+		game.getFileList("extension/星之梦/copy/throw_emotion/", (folders, files) => {
+			game.getFileList("image/emotion/throw_emotion/", (targetFolders, targetFiles) => {
 				for (let img of files) {
 					if (targetFiles.includes(img)) continue;
 					game.readFile(
-						'extension/星之梦/copy/throw_emotion/' + img,
+						"extension/星之梦/copy/throw_emotion/" + img,
 						(data) => {
-							game.writeFile(data, 'image/emotion/throw_emotion/', img, () => { });
+							game.writeFile(data, "image/emotion/throw_emotion/", img, () => { });
 						},
 						(err) => {
-							alert('复制『星之梦』交互素材时出现问题：\n' + err);
+							alert("复制『星之梦』交互素材时出现问题：\n" + err);
 						}
 					);
 				}
 			});
 		});
-		game.getFileList('extension/星之梦/copy/effect/', (folders, files) => {
-			game.getFileList('audio/effect/', (targetFolders, targetFiles) => {
+		game.getFileList("extension/星之梦/copy/effect/", (folders, files) => {
+			game.getFileList("audio/effect/", (targetFolders, targetFiles) => {
 				for (let audio of files) {
 					if (targetFiles.includes(audio)) continue;
 					game.readFile(
-						'extension/星之梦/copy/effect/' + audio,
+						"extension/星之梦/copy/effect/" + audio,
 						(data) => {
-							game.writeFile(data, 'audio/effect/', audio, () => { });
+							game.writeFile(data, "audio/effect/", audio, () => { });
 						},
 						(err) => {
-							alert('复制『星之梦』交互素材时出现问题：\n' + err);
+							alert("复制『星之梦』交互素材时出现问题：\n" + err);
 						}
 					);
 				}
