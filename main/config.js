@@ -307,7 +307,7 @@ export let config = {
 	zxEnhance: {
 		name: "增强【郑玄】",
 		init: true,
-		intro: "开启后，将斗地主郑玄数值调整为与其他模式相同。",
+		intro: "开启后，将郑玄，水果忍者的斗地主数值调整为与其他模式相同。",
 	},
 	zrEnhance: {
 		name: "增强【笮融】",
