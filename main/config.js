@@ -37,7 +37,7 @@ export let config = {
 	zdyjdrcq: {
 		//搬运自搬运自用
 		name: "自动一键导入重启",
-		intro: '开启后每次重启自动执行一键导入重启功能：只需将一至多个解压好的扩展文件夹（注意检查文件夹名和内部文件结构是否正确）放入<br><span style="color:#0086FF">游戏目录</span>/extension/<br>内，重启后即可自动完成扩展导入。',
+		intro: "开启后每次重启自动执行一键导入重启功能：只需将一至多个解压好的扩展文件夹（注意检查文件夹名和内部文件结构是否正确）放入<br><span style='color:#0086FF'>游戏目录</span>/extension/<br>内，重启后即可自动完成扩展导入。",
 		init: true,
 	},
 	yjdrcqgn: {
@@ -51,11 +51,6 @@ export let config = {
 		name: "<font size='4'>---------美化相关---------</font>",
 		clear: true,
 	},
-	// zhuanhuanji: {
-	// 	name: "转换技修正",
-	// 	init: true,
-	// 	intro: "开启后，将修正转换技的阴阳描述。",
-	// },
 	tphaseTip: {
 		//修改自联机修改与手杀ui
 		name: "阶段提示",
@@ -74,8 +69,8 @@ export let config = {
 	shoushalog: {
 		//搬运自手杀ui
 		init: true,
-		intro: "开启后，屏幕中间出现手杀样式的出牌记录栏",
-		name: "手杀出牌记录栏",
+		name: "手杀出牌记录",
+		intro: "开启后，屏幕中间显示手杀样式的出牌记录",
 		onclick: function () {
 			if (lib.config.extension_星之梦_shoushalog == false) {
 				game.saveConfig("extension_星之梦_shoushalog", true);
@@ -87,6 +82,11 @@ export let config = {
 			}
 			game.reload();
 		},
+	},
+	conciselog: {
+		name: "精简历史记录",
+		init: true,
+		intro: "开启后，将精简化屏幕中间显示的出牌记录",
 	},
 	pause: {
 		//搬运自武将美化
@@ -166,7 +166,7 @@ export let config = {
 	lianji: {
 		name: "联机功能",
 		init: true,
-		intro: "包括单人开房，连续交互等。",
+		intro: "包括单人开房，连续交互，特殊字体等。",
 	},
 	emotionsize: {
 		name: "聊天图片尺寸",
@@ -186,80 +186,7 @@ export let config = {
 			150: "150*150",
 		},
 	},
-	// addquickVoice: {
-	// 	//搬运自联机修改
-	// 	name: "添加快捷短语",
-	// 	onclick() {
-	// 		if (ui.addquickVoice) return;
-	// 		const menu = ui.create.div(".quickVoiceDiv", ui.window);
-	// 		ui.addquickVoice = menu;
-	// 		const addList = ui.create.div(".addList", menu);
-	// 		const ul = document.createElement("ul");
-	// 		addList.appendChild(ul);
-	// 		lib.quickVoice.forEach(i => {
-	// 			const li = document.createElement("li");
-	// 			li.innerHTML = i;
-	// 			ul.appendChild(li);
-	// 			li.addEventListener("click", function () {
-	// 				if (this === addList.lastLi) return;
-	// 				addList.lastLi.classList.remove("active");
-	// 				this.classList.add("active");
-	// 				addList.lastLi = this;
-	// 			});
-	// 		});
-	// 		addList.lastLi = ul.firstElementChild;
-	// 		addList.lastLi.classList.add("active");
-	// 		const buttons = [
-	// 			[
-	// 				"点击添加",
-	// 				() => {
-	// 					const _li = document.createElement("li");
-	// 					ul.appendChild(_li);
-	// 					_li.contentEditable = true;
-	// 					_li.focus();
-	// 					_li.onblur = function () {
-	// 						lib.config.NewQuickVoice.push(this.innerHTML);
-	// 						game.saveConfig("NewQuickVoice", lib.config.NewQuickVoice);
-	// 						_li.contentEditable = false;
-	// 					};
-	// 				},
-	// 			],
-	// 			[
-	// 				"播放",
-	// 				function () {
-	// 					game.me.say(addList.lastLi.innerHTML);
-	// 				},
-	// 			],
-	// 			[
-	// 				"删除",
-	// 				function () {
-	// 					lib.config.NewQuickVoice.remove(addList.lastLi.innerHTML);
-	// 					addList.lastLi.remove();
-	// 					game.saveConfig("NewQuickVoice", lib.config.NewQuickVoice);
-	// 					addList.lastLi = ul.firstElementChild;
-	// 					addList.lastLi.classList.add("active");
-	// 				},
-	// 			],
-	// 			[
-	// 				"关闭",
-	// 				() => {
-	// 					ui.addquickVoice.remove();
-	// 					delete ui.addquickVoice;
-	// 				},
-	// 			],
-	// 		];
-	// 		buttons.forEach((b, i) => {
-	// 			const button = document.createElement("button");
-	// 			button.innerHTML = b[0];
-	// 			button.classList.add("addQuickVoice", "index" + i);
-	// 			button.style.right = i * 100 + "px";
-	// 			button.addEventListener("click", b[1]);
-	// 			addList.appendChild(button);
-	// 		});
-	// 	},
-	// 	init: false,
-	// 	clear: true,
-	// },
+
 	fgx3: {//搬运自活动武将
 		name: "<font size='4'>---------游戏播报---------</font>",
 		clear: true,
@@ -324,14 +251,4 @@ export let config = {
 		init: false,
 		intro: "开启后，将增强小闪与小乐。",
 	},
-	// AIHD:{//搬运AI互动与说话
-	// 	name:"AI互动",
-	// 	intro:"开启此项，AI(包含玩家)一定概率将于特定时机进行发言、互动。(有可能会卡死不推荐打开)",
-	// 	init:"0",
-	// 	item: {
-	// 		"0": "关闭",
-	// 		"1": "普通模式",
-	// 		//"2": "增强模式",
-	// 	},
-	// },
 };

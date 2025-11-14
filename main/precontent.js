@@ -1,21 +1,24 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js"
 import { character } from "../character/index.js";
 import { skill } from "../character/skill.js";
+import { } from "../js/pause.js";
+import { } from "../js/connect.js";
+import { } from "../js/broadcast.js";
 export async function precontent(config, pack) {
     {
         //本体版本检测
         let noname = lib.version.split(".").slice(2),
-            min = [17],
+            min = [4],
             len = Math.min(noname.length, min.length),
             status = false;
-        if (lib.version.slice(0, 5) === "1.10.")
+        if (lib.version.slice(0, 8) === "1.10.17.")
             for (let i = 0; i < len; i++) {
                 if (Number(noname[i]) < min[i]) {
                     status = "您的无名杀版本太低";
                     break;
                 }
             }
-        else status = "检测到游戏大版本号与本扩展支持版本号不同";
+        else status = "检测到游戏版本号与本扩展支持版本号不同";
         if (typeof status === "string") {
             alert(status + "，为避免版本不兼容产生不必要的问题，已为您关闭《星之梦》，稍后重启游戏");
             game.saveExtensionConfig("星之梦", "enable", false);
@@ -1695,7 +1698,7 @@ export async function precontent(config, pack) {
                     else break;
                 };
                 if (!cards.length) return event.finish();
-                let cardx = { 'du': names.length }, num = [3, 4, 5].randomGet();
+                let cardx = { 'du': names.length }, num = [3, 4].randomGet();
                 for (const i of names) cardx[i] = num;//切牌数
                 await Promise.all(event.next);
                 if (_status.connectMode) event.time = lib.configOL.choose_timeout;
@@ -1947,7 +1950,7 @@ export async function precontent(config, pack) {
                                     };
                                 };
                             };
-                        }, 1500);
+                        }, 1000);
                         return dialog;
                     })(cardx);
                     event.switchToAuto = () => {

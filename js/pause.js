@@ -1,5 +1,9 @@
-"use strict";
-window.lm_import(function (lib, game, ui, get, ai, _status) {
+import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+if ((lib.config.show_log != "off") & lib.config.extension_星之梦_shoushalog) {
+	lib.init.css(lib.assetURL + "extension/星之梦/css", "shoushalog");
+}
+if (lib.config.extension_星之梦_pause) {
+	lib.init.css(lib.assetURL + "extension/星之梦/css", "pause");
 	//历史记录栏美化
 	ui.click.pauseClick = function (e) {
 		event.stopPropagation(); // 阻止事件冒泡
@@ -409,75 +413,8 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 		//     });
 		// };
 	};
-	// game.log = function () {
-	// 	let str = "",
-	// 		str2 = "",
-	// 		logvid = null;
-	// 	const color = new Map([
-	// 		["r", "fire"],
-	// 		["y", "yellow"],
-	// 		["g", "green"],
-	// 		["b", "blue"],
-	// 	]);
-	// 	Array.from(arguments).forEach(value => {
-	// 		const itemtype = get.itemtype(value);
-	// 		if (itemtype == "player" || itemtype == "players") {
-	// 			str += `<span class="bluetext">${get.translation(value)}</span>`;
-	// 			str2 += get.translation(value);
-	// 		} else if (itemtype == "cards" || itemtype == "card" || (typeof value == "object" && value && value.name)) {
-	// 			str += `<span class="yellowtext">${get.translation(value)}</span>`;
-	// 			str2 += get.translation(value);
-	// 		} else if (typeof value == "object") {
-	// 			if (value.parentNode == ui.historybar) logvid = value.logvid;
-	// 			else {
-	// 				str += get.translation(value);
-	// 				str2 += get.translation(value);
-	// 			}
-	// 		} else if (typeof value == "string") {
-	// 			if (value[0] == "【" && value[value.length - 1] == "】") {
-	// 				str += `<span class="greentext">${get.translation(value)}</span>`;
-	// 				str2 += get.translation(value);
-	// 			} else if (value[0] == "#") {
-	// 				str += `<span class="${color.get(value[1]) || ""}text">${get.translation(value.slice(2))}</span>`;
-	// 				str2 += get.translation(value.slice(2));
-	// 			} else {
-	// 				str += get.translation(value);
-	// 				str2 += get.translation(value);
-	// 			}
-	// 		} else {
-	// 			str += value;
-	// 			str2 += value;
-	// 		}
-	// 	});
-	// 	const node = ui.create.div();
-	// 	node.innerHTML = lib.config.log_highlight ? str : str2;
-	// 	ui.sidebar.appendChild(node);
-	// 	game.addVideo("log", null, lib.config.log_highlight ? str : str2);
-	// 	game.broadcast((str, str2) => game.log(lib.config.log_highlight ? str : str2), str, str2);
-	// 	if (!_status.video && !game.online) {
-	// 		if (logvid) game.logv(logvid, `<div class="text center">${lib.config.log_highlight ? str : str2}</div>`);
-	// 		else logvid = _status.event.getLogv();
-	// 	}
-	// 	if (lib.config.show_log == "off" || game.chess) return;
-	// 	const nodeentry = node.cloneNode(true);
-	// 	ui.arenalog.insertBefore(nodeentry, ui.arenalog.firstChild);
-	// 	if (!lib.config.clear_log)
-	// 		while (ui.arenalog.childNodes.length && ui.arenalog.scrollHeight > ui.arenalog.offsetHeight) {
-	// 			ui.arenalog.lastChild.remove();
-	// 		}
-	// 	if (!lib.config.low_performance) {
-	// 		nodeentry.style.transition = "all 0s";
-	// 		nodeentry.style.marginBottom = `-${nodeentry.offsetHeight}px`;
-	// 		ui.refresh(nodeentry);
-	// 		nodeentry.style.transition = "";
-	// 		nodeentry.style.marginBottom = "";
-	// 	}
-	// 	if (!lib.config.clear_log) return;
-	// 	nodeentry.timeout = setTimeout(() => nodeentry.delete(), 1000);
-	// 	Array.from(ui.arenalog.childNodes).forEach(value => {
-	// 		if (!value.timeout) value.remove();
-	// 	});
-	// };
+}
+if (lib.config.extension_星之梦_conciselog) {
 	//历史记录精简（联机适配）
 	game.log = function () {
 		var str = '', str2 = '', logvid = null, giveLog = false;
@@ -608,4 +545,4 @@ window.lm_import(function (lib, game, ui, get, ai, _status) {
 			}
 		}
 	};
-});
+}
