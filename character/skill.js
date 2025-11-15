@@ -6672,7 +6672,9 @@ let lmCharacter = {
                             }
                         }
                     }
-                    return ui.create.dialog("龙胆", [list, "vcard"], "hidden");
+                    const dialog = ui.create.dialog("龙胆", [list, "vcard"], "hidden");
+                    dialog.direct = true;
+                    return dialog;
                 },
                 check(button) {
                     if (_status.event.getParent().type != "phase") {
@@ -17108,6 +17110,338 @@ let lmCharacter = {
                 },
             },
         },
+        //魔孙权
+        old_olquanyu: {
+            audio: "olquanyu",
+            map: {
+                old_olquanyu_baihong: "白虹：伤害+1",
+                old_olquanyu_qingmin: "青冥：多指定一个目标",
+                old_olquanyu_bixie: "辟邪：无视防具",
+                old_olquanyu_zidian: "紫电：不可响应",
+                old_olquanyu_baili: "百里：多结算一次",
+                old_olquanyu_liuxing: "流星：无次数限制",
+            },
+            intro: {
+                markcount: () => 0,
+                content(storage, player, skill) {
+                    const map = get.info("old_olquanyu").map;
+                    const record = player.getStorage("old_olquanyu_record");
+                    let str = "<li>本轮选择效果<br>";
+                    if (storage?.length) {
+                        str += map[storage];
+                    } else {
+                        str += "无";
+                    }
+                    str += `<br><br><li>已选择过的效果：${record.map(i => map[i].slice(0, 2)).join("、")}`;
+                    return str;
+                },
+            },
+            trigger: {
+                global: "roundStart",
+            },
+            logTarget(event, player) {
+                return game.players;
+            },
+            forced: true,
+            chooseButton(target, list, map) {
+                const storage = target.getStorage("old_olquanyu_record");
+                const choices = list.filter(i => !storage.includes(i));
+                const next = target
+                    .chooseButton(
+                        [
+                            `权御：请选择一个效果`,
+                            [list.slice(0, 2).map(i => [i, map[i]]), "tdnodes"],
+                            [list.slice(2, 4).map(i => [i, map[i]]), "tdnodes"],
+                            [list.slice(4).map(i => [i, map[i]]), "tdnodes"],
+                            [
+                                dialog => {
+                                    dialog.buttons.forEach(i => {
+                                        i.style.setProperty("width", "200px", "important");
+                                        i.style.setProperty("text-align", "left", "important");
+                                    });
+                                },
+                                "handle",
+                            ],
+                        ],
+                        true
+                    )
+                    .set("choices", choices)
+                    .set("filterButton", button => get.event().choices.includes(button.link))
+                    .set("ai", button => Math.random())
+                    .set("_global_waiting", true);
+                return next;
+            },
+            async content(event, trigger, player) {
+                const { targets } = event;
+                const name = "old_olquanyu_record";
+                const map = get.info(event.name).map;
+                const list = Object.keys(map);
+                const result = await game.chooseAnyOL(targets.filter(target => target.getStorage(name).length < 6).sortBySeat(), get.info(event.name).chooseButton, [list, map]).forResult();
+                let num = 0,
+                    me;
+                if (result.has(player)) {
+                    const resultx = result.get(player);
+                    if (resultx?.links?.length) {
+                        me = resultx.links[0];
+                    }
+                }
+                for (const [target, resultx] of result.entries()) {
+                    if (resultx?.links?.length) {
+                        const {
+                            links: [link],
+                        } = resultx;
+                        target.markAuto(name, link);
+                        target.setStorage(event.name, link);
+                        target.markSkill(event.name);
+                        target.popup(map[link].slice(0, 2));
+                        if (link == me) {
+                            num++;
+                        }
+                        target
+                            .when("roundStart")
+                            .filter(evt => evt != trigger)
+                            .step(async (event, trigger, player) => {
+                                delete player.storage["old_olquanyu"];
+                                player.markSkill("old_olquanyu");
+                            });
+                    }
+                }
+                if (num > 0) {
+                    await player.draw(Math.min(num, 3));
+                }
+            },
+            group: "old_olquanyu_effect",
+            subSkill: {
+                effect: {
+                    trigger: { player: "useCardToPlayer" },
+                    filter(event, player) {
+                        if (event.card.name != "sha" || event.targets?.length != 1) {
+                            return false;
+                        }
+                        return player.storage.old_olquanyu?.length;
+                    },
+                    actionMap: {
+                        old_olquanyu_baihong: async (trigger, player) => {
+                            trigger.baseDamage ??= 1;
+                            trigger.baseDamage++;
+                            game.log(trigger.card, "基础伤害+1");
+                        },
+                        old_olquanyu_qingmin: async (trigger, player) => {
+                            const check = (card, player, target) => !trigger.targets.includes(target) && lib.filter.targetEnabled2(card, player, target) && lib.filter.targetInRange(card, player, target);
+                            if (game.hasPlayer(target => check(trigger.card, player, target))) {
+                                const result = await player
+                                    .chooseTarget(`权御：为${get.translation(trigger.card)}额外选择一个目标`, check)
+                                    .set("_get_card", trigger.card)
+                                    .set("ai", target => get.effect(target, get.card(), get.player(), get.player()))
+                                    .forResult();
+                                if (result?.targets?.length) {
+                                    const { targets } = result;
+                                    player.line(targets);
+                                    trigger.targets.addArray(targets);
+                                    game.log(targets, "也成为", trigger.card, "的目标");
+                                }
+                            }
+                        },
+                        old_olquanyu_bixie: async (trigger, player) => {
+                            trigger.card.storage.old_olquanyu_effect = true;
+                            game.log(trigger.card, "无视防具");
+                        },
+                        old_olquanyu_zidian: async (trigger, player) => {
+                            trigger.directHit.addArray(game.players);
+                            game.log(trigger.card, "不可被响应");
+                        },
+                        old_olquanyu_baili: async (trigger, player) => {
+                            trigger.effectCount++;
+                            game.log(trigger.card, "额外结算一次");
+                        },
+                        old_olquanyu_liuxing: async (trigger, player) => {
+                            if (trigger.addCount !== false) {
+                                trigger.addCount = false;
+                                const stat = player.getStat().card,
+                                    name = trigger.card.name;
+                                if (typeof stat[name] == "number") {
+                                    stat[name]--;
+                                }
+                                game.log(trigger.card, "不计入次数");
+                            }
+                        },
+                    },
+                    forced: true,
+                    async content(event, trigger, player) {
+                        const map = get.info(event.name).actionMap;
+                        await map[player.storage.old_olquanyu](trigger.getParent(), player);
+                    },
+                    mod: {
+                        cardUsable(card, player, num) {
+                            if (card.name == "sha" && player.storage.old_olquanyu == "old_olquanyu_liuxing") {
+                                return Infinity;
+                            }
+                        },
+                    },
+                    ai: {
+                        unequip: true,
+                        skillTagFilter(player, tag, arg) {
+                            if (tag == "unequip" && !arg?.card?.storage?.old_olquanyu_effect) {
+                                return false;
+                            }
+                        },
+                    },
+                },
+            },
+        },
+        old_oltianen: {
+            audio: "oltianen",
+            forced: true,
+            trigger: {
+                player: "useCardToPlayered",
+            },
+            filter(event, player) {
+                return event.targets.length === 1;
+            },
+            logTarget: "target",
+            async content(event, trigger, player) {
+                const {
+                    targets: [target],
+                } = event;
+                const bool = player.storage.old_olquanyu == target.storage.old_olquanyu;
+
+                if (!bool) {
+                    await target.randomDiscard().set("discarder", player);
+                    const result = {
+                        skill: "old_olquanyu",
+                        targets: [target],
+                    };
+                    await player.useResult(result, event);
+                } else {
+                    if (target != player) {
+                        player.tempBanSkill(event.name);
+                    }
+                    const card = get.cardPile2("sha");
+                    if (card) {
+                        player.addSkill("old_oltianen_effect");
+                        const next = player.gain(card, "gain2");
+                        next.gaintag.add("old_oltianen");
+                        await next;
+                    } else {
+                        player.chat("我的王之力啊！");
+                    }
+                }
+            },
+            subSkill: {
+                effect: {
+                    charlotte: true,
+                    mod: {
+                        ignoredHandcard(card, player) {
+                            if (card.hasGaintag("old_oltianen")) {
+                                return true;
+                            }
+                        },
+                        cardDiscardable(card, player, name) {
+                            if (name == "phaseDiscard" && card.hasGaintag("old_oltianen")) {
+                                return false;
+                            }
+                        },
+                    },
+                },
+            },
+            ai: {
+                combo: "old_olquanyu",
+            },
+        },
+        old_olqiangang: {
+            audio: "olqiangang",
+            derivation: ["olrumo"],
+            enable: "phaseUse",
+            filter(event, player) {
+                return !player.hasSkill("olrumo");
+            },
+            skillAnimation: true,
+            animationColor: "wood",
+            async content(event, trigger, player) {
+                player.addSkill("olrumo");
+                await player.removeSkills("old_oltianen");
+                player.addSkill(`${event.name}_effect`);
+            },
+            subSkill: {
+                effect: {
+                    charlotte: true,
+                    trigger: { player: "useCard" },
+                    filter(event, player) {
+                        return event.card.name == "sha" && event.targets.length == 1 && event.targets[0].getStorage("old_olquanyu_record").length > 0;
+                    },
+                    async cost(event, trigger, player) {
+                        const choices = trigger.targets[0].getStorage("old_olquanyu_record");
+                        const map = get.info("old_olquanyu").map;
+                        const list = Object.keys(map);
+                        /*const result = await player
+                            .chooseButton(
+                                [
+                                    `乾纲：请选择要额外执行的“权御”效果`,
+                                    [list.slice(0, 2).map(i => [i, map[i]]), "tdnodes"],
+                                    [list.slice(2, 4).map(i => [i, map[i]]), "tdnodes"],
+                                    [list.slice(4).map(i => [i, map[i]]), "tdnodes"],
+                                    [
+                                        dialog => {
+                                            dialog.buttons.forEach(i => {
+                                                i.style.setProperty("width", "200px", "important");
+                                                i.style.setProperty("text-align", "left", "important");
+                                            });
+                                        },
+                                        "handle",
+                                    ],
+                                ],
+                                [1, 6]
+                            )
+                            .set("choices", choices)
+                            .set("filterButton", button => {
+                                if (!get.event().choices.includes(button.link)) {
+                                    return false;
+                                }
+                                if (button.link == "old_olquanyu_qingmin") {
+                                    const trigger = get.event().getTrigger();
+                                    const card = trigger.card;
+                                    const player = get.player();
+                                    return game.hasPlayer(target => !trigger.targets.includes(target) && lib.filter.targetEnabled2(card, player, target) && lib.filter.targetInRange(card, player, target));
+                                }
+                                return true;
+                            })
+                            .set("ai", button => {
+                                const trigger = get.event().getTrigger();
+                                const card = trigger.card;
+                                const player = get.player();
+                                if (button.link == "old_olquanyu_qingmin") {
+                                    if (!game.hasPlayer(target => !trigger.targets.includes(target) && get.effect(target, card, player, player) > 0)) {
+                                        return 0;
+                                    }
+                                }
+                                return 1;
+                            })
+                            .forResult();*/
+                        event.result = { bool: true, cost_data: choices };
+                    },
+                    async content(event, trigger, player) {
+                        const { cost_data: list } = event;
+                        const map = get.info("old_olquanyu_effect").actionMap;
+                        for (const i of list) {
+                            await map[i](trigger, player);
+                        }
+                    },
+                },
+            },
+            ai: {
+                combo: "old_olquanyu",
+                order: 6,
+                result: {
+                    player(player) {
+                        if (game.hasPlayer(target => get.attitude(player, target) < 0 && target.getStorage("old_olquanyu_record").length > 3)) {
+                            return 1;
+                        }
+                        return 0;
+                    },
+                },
+            },
+        },
+
         //任婉
         old_dcjuanji: {
             trigger: {

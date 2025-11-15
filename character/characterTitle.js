@@ -107,6 +107,7 @@ let lmCharacter = {//武将称号
     old_clan_wangmingshan: "擅书多艺",
     old_strong_caochong: "端阳撼象",
     old_ol_sb_dengai: "曜威奋武",
+    //old_dm_sunquan: "",
     //十周年
     old_re_zhangchunhua: "冷血皇后",
     old_re_caorui: "天姿的明君",

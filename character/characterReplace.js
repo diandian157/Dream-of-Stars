@@ -19,7 +19,7 @@ let lmCharacter = {//武将切换
     jianggan: ["oldx_sp_jianggan"],
     huangzhong: ["old_sb_huangzhong"],
     gongsunzan: ["old_sb_gongsunzan"],
-    sunquan: ["old_sb_sunquan", "old_v_sunquan"],
+    sunquan: ["old_sb_sunquan", "old_v_sunquan", "old_dm_sunquan"],
     huanggai: ["old_sb_huanggai"],
     ganning: ["old_sb_ganning"],
     xiaoqiao: ["old_sb_xiaoqiao"],

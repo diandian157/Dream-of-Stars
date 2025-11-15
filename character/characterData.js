@@ -109,6 +109,7 @@ let lmCharacter = {//武将信息
     old_clan_wangmingshan: ["male", "wei", 3, ["old_clantanque", "old_clanshengmo", "clanzhongliu"], ["character:clan_wangmingshan", "die:clan_wangmingshan", "clan:太原王氏"]],
     old_strong_caochong: ["male", "wei", 4, ["strongduanti", "stronglianwu", "olchengxiang"], ["tempname:strong_caochong", "character:strong_caochong", "die:strong_caochong"]],
     old_ol_sb_dengai: ["male", "wei", "4/5", ["old_olsbjigu", "old_olsbjiewan"], ["character:ol_sb_dengai", "die:ol_sb_dengai"]],
+    old_dm_sunquan: ["male", "wu", 4, ["old_olquanyu", "old_oltianen", "old_olqiangang"], ["character:dm_sunquan", "die:dm_sunquan"]],
     //十周年
     old_re_zhangchunhua: ["female", "wei", 3, ["rejueqing", "reshangshi"], ["character:re_zhangchunhua", "die:re_zhangchunhua"]],
     old_re_caorui: ["male", "wei", 3, ["huituo", "remingjian", "rexingshuai"], ["character:re_caorui", "re_caorui", "zhu"]],
