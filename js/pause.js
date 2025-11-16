@@ -97,7 +97,7 @@ if (lib.config.extension_星之梦_pause) {
 										var style = window.getComputedStyle(element);
 										var backgroundImage = style.backgroundImage;
 										backgroundImage = decodeURIComponent(backgroundImage); // 将经过URL编码的字符串转换回其原始的UTF-8字符串
-										var url = backgroundImage.replace(/url\(["']?(.*?)["']?\)/i, "$1");
+										var url = backgroundImage.replace(/url\([""]?(.*?)[""]?\)/i, "$1");
 										url = url.slice(lib.assetURL.length);
 										identity.setBackgroundImage(url);
 									}
@@ -141,12 +141,12 @@ if (lib.config.extension_星之梦_pause) {
 		node.style.backgroundSize = "100% 100%";
 		var node_resume = ui.create.div(".resumedbg", node);
 		node_resume.style.backgroundSize = "100% 100%";
-		// node_resume.zIndex = '6';
-		// node.style["background-image"] = ('url("' + lib.assetURL + 'extension/星之梦/image/pause/43.png")');
-		// node.style["background-position"] = '0% 0%';
-		// node.style["background-repeat"] = 'no-repeat';
-		// node.style["background-size"] = '100% 100%';
-		// node.style["opacity"] = '1';
+		// node_resume.zIndex = "6";
+		// node.style["background-image"] = ("url("" + lib.assetURL + "extension/星之梦/image/pause/43.png")");
+		// node.style["background-position"] = "0% 0%";
+		// node.style["background-repeat"] = "no-repeat";
+		// node.style["background-size"] = "100% 100%";
+		// node.style["opacity"] = "1";
 		_status.pausing = true;
 		setTimeout(function () {
 			_status.pausing = false;
@@ -166,14 +166,14 @@ if (lib.config.extension_星之梦_pause) {
 
 		// var node2 = ui.create.div(node);
 		// if (_status.connectMode) {
-		//     node2.innerHTML = '';
+		//     node2.innerHTML = "";
 		// } else {
-		//     node2.innerHTML = '';
+		//     node2.innerHTML = "";
 		// };
 
 		// node2.listen(function () {
 		// 	_status.clicked = true;
-		// 	if (ui.sidebar.classList.contains('hidden')) {
+		// 	if (ui.sidebar.classList.contains("hidden")) {
 		// 		ui.sidebar.show();
 		// 		ui.sidebar3.show();
 		// 	} else {
@@ -348,7 +348,7 @@ if (lib.config.extension_星之梦_pause) {
 					} else {
 						var style = window.getComputedStyle(element);
 						var backgroundImage = style.backgroundImage;
-						var url = backgroundImage.replace(/url\(["']?(.*?)["']?\)/i, "$1");
+						var url = backgroundImage.replace(/url\([""]?(.*?)[""]?\)/i, "$1");
 						url = url.slice(lib.assetURL.length);
 						identity.setBackgroundImage(url);
 					}
@@ -404,145 +404,138 @@ if (lib.config.extension_星之梦_pause) {
 			scrollbutton.style.top = `${buttonPos}px`;
 		});
 		// 猜测身份按钮
-		// if (['identity', 'guozhan'].includes(get.mode())) {
+		// if (["identity", "guozhan"].includes(get.mode())) {
 		//     var identity_btn = ui.create.div(".identity_btn", node);
 		//     var identity_cai = ui.create.div(".identity_cai", identity_btn);
 		//     if (get.mode() == "guozhan") identity_cai.classList.add("guozhan");
-		//     identity_cai.addEventListener('click', function() {
+		//     identity_cai.addEventListener("click", function() {
 		//         event.stopPropagation(); // 阻止事件冒泡
 		//     });
 		// };
 	};
 }
-if (lib.config.extension_星之梦_conciselog) {
-	//历史记录精简（联机适配）
-	game.log = function () {
-		var str = '', str2 = '', logvid = null, giveLog = false;
-		for (var i = 0; i < arguments.length; i++) {
-			var itemtype = get.itemtype(arguments[i]);
-			if (itemtype == 'player' || itemtype == 'players') {
-				str += '<span class="bluetext">' + get.translation(arguments[i]) + '</span>';
-				str2 += get.translation(arguments[i]);
-			}
-			else if (itemtype == 'cards' || itemtype == 'card' || (typeof arguments[i] == 'object' && arguments[i] && arguments[i].name)) {
-				str += '<span class="yellowtext">' + get.translation(arguments[i]) + '</span>';
-				str2 += get.translation(arguments[i]);
-			}
-			else if (typeof arguments[i] == 'object') {
-				if (arguments[i]) {
-					if (arguments[i]['giveLP']) {
-						var list = [arguments[i]['giveLP'], arguments[i]['player'], arguments[i]['target'], arguments[i]['cards']]
-						if (list[3]?.length) {
-							giveLog = arguments[i];
-							if (list[1] == game.me || list[2] == game.me || arguments[i]['visible']) {
-								str += '<span class="bluetext">' + get.translation(list[1]) + '</span>';
-								str2 += get.translation(list[1]);
-								str += '从';
-								str2 += '从';
-								str += '<span class="bluetext">' + get.translation(list[2]) + '</span>';
-								str2 += get.translation(list[2]);
-								str += '处获得了';
-								str2 += '处获得了';
-								str += '<span class="yellowtext">' + get.translation(list[3]) + '</span>';
-								str2 += get.translation(list[3]);
-							}
-							else {
-								str += '<span class="bluetext">' + get.translation(list[1]) + '</span>';
-								str2 += get.translation(list[1]);
-								str += '从';
-								str2 += '从';
-								str += '<span class="bluetext">' + get.translation(list[2]) + '</span>';
-								str2 += get.translation(list[2]);
-								str += '处获得了' + get.translation(list[3].length) + '张牌。';
-								str2 += '处获得了' + get.translation(list[3].length) + '张牌。';
-							}
+
+//历史记录精简（联机适配）
+game.log = function () {
+	let str = "";
+	let str2 = "";
+	let logvid = null;
+	let giveLog = false;
+	const colorMap = new Map([
+		["r", "fire"],
+		["y", "yellow"],
+		["g", "green"],
+		["b", "blue"],
+	]);
+	Array.from(arguments).forEach(value => {
+		const itemtype = get.itemtype(value);
+		if (itemtype == "player" || itemtype == "players") {
+			str += `<span class="bluetext">${get.translation(value)}</span>`;
+			str2 += get.translation(value);
+		} else if (itemtype == "cards" || itemtype == "card" || (typeof value == "object" && value && value.name)) {
+			str += `<span class="yellowtext">${get.translation(value)}</span>`;
+			str2 += get.translation(value);
+		} else if (typeof value == "object") {
+			if (value) {
+				// 新增 giveLP 相关逻辑
+				if (value.giveLP) {
+					const list = [value.giveLP, value.player, value.target, value.cards];
+					if (list[3]?.length) {
+						giveLog = value;
+						if (list[1] == game.me || list[2] == game.me || value.visible) {
+							str += `<span class="bluetext">${get.translation(list[1])}</span>`;
+							str2 += get.translation(list[1]);
+							str += "从";
+							str2 += "从";
+							str += `<span class="bluetext">${get.translation(list[2])}</span>`;
+							str2 += get.translation(list[2]);
+							str += "处获得了";
+							str2 += "处获得了";
+							str += `<span class="yellowtext">${get.translation(list[3])}</span>`;
+							str2 += get.translation(list[3]);
+						} else {
+							str += `<span class="bluetext">${get.translation(list[1])}</span>`;
+							str2 += get.translation(list[1]);
+							str += "从";
+							str2 += "从";
+							str += `<span class="bluetext">${get.translation(list[2])}</span>`;
+							str2 += get.translation(list[2]);
+							str += `处获得了${get.translation(list[3].length)}张牌。`;
+							str2 += `处获得了${get.translation(list[3].length)}张牌。`;
 						}
 					}
-					else if (arguments[i].parentNode == ui.historybar) {
-						logvid = arguments[i].logvid;
-					}
-					else {
-						str += get.translation(arguments[i]);
-						str2 += get.translation(arguments[i]);
-					}
+				} else if (value.parentNode == ui.historybar) {
+					logvid = value.logvid;
+				} else {
+					str += get.translation(value);
+					str2 += get.translation(value);
 				}
 			}
-			else if (typeof arguments[i] == 'string') {
-				if (arguments[i][0] == '【' && arguments[i][arguments[i].length - 1] == '】') {
-					str += '<span class="greentext">' + get.translation(arguments[i]) + '</span>';
-					str2 += get.translation(arguments[i]);
-				}
-				else if (arguments[i][0] == '#') {
-					var color = '';
-					switch (arguments[i][1]) {
-						case 'b': color = 'blue'; break;
-						case 'y': color = 'yellow'; break;
-						case 'g': color = 'green'; break;
-					}
-					str += '<span class="' + color + 'text">' + get.translation(arguments[i].slice(2)) + '</span>';
-					str2 += get.translation(arguments[i].slice(2));
-				}
-				else {
-					str += get.translation(arguments[i]);
-					str2 += get.translation(arguments[i]);
-				}
+		} else if (typeof value == "string") {
+			if (value[0] == "【" && value[value.length - 1] == "】") {
+				str += `<span class="greentext">${get.translation(value)}</span>`;
+				str2 += get.translation(value);
+			} else if (value[0] == "#") {
+				str += `<span class="${colorMap.get(value[1]) || ""}text">${get.translation(value.slice(2))}</span>`;
+				str2 += get.translation(value.slice(2));
+			} else {
+				str += get.translation(value);
+				str2 += get.translation(value);
 			}
-			else {
-				str += arguments[i];
-				str2 += arguments[i];
-			}
-
+		} else {
+			str += value;
+			str2 += value;
 		}
-		var node = ui.create.div();
-		node.innerHTML = lib.config.log_highlight ? str : str2;
-		ui.sidebar.appendChild(node);
-		game.addVideo('log', null, lib.config.log_highlight ? str : str2);
-		if (giveLog) {
-			game.broadcast(function (arg) {
-				game.log(arg);
-			}, giveLog);
+	});
+	const node = ui.create.div();
+	node.innerHTML = lib.config.log_highlight ? str : str2;
+	// 改为新的记录在下面刷新
+	ui.sidebar.appendChild(node);
+	// ui.sidebar.insertBefore(node, ui.sidebar.firstChild);
+	game.addVideo("log", null, lib.config.log_highlight ? str : str2);
+	// 更新广播逻辑以支持 giveLog
+	if (giveLog) {
+		game.broadcast(arg => game.log(arg), giveLog);
+	} else {
+		game.broadcast((str, str2) => game.log(lib.config.log_highlight ? str : str2), str, str2);
+	}
+	if (!_status.video && !game.online) {
+		if (logvid) {
+			game.logv(logvid, `<div class="text center">${lib.config.log_highlight ? str : str2}</div>`);
+		} else {
+			logvid = _status.event.getLogv();
 		}
-		else game.broadcast(function (str, str2) {
-			game.log(lib.config.log_highlight ? str : str2);
-		}, str, str2);
-		if (!_status.video && !game.online) {
-			if (!logvid) {
-				logvid = _status.event.getLogv();
-			}
-			if (logvid) {
-				game.logv(logvid, '<div class="text center">' + lib.config.log_highlight ? str : str2 + '</div>');
-			}
-		}
+	}
+	// 精简历史记录
+	if (lib.config.extension_星之梦_conciselog) {
 		if (!_status.event.skill) return;
-		//这里，清除使用卡牌在中间的显示
-		if (_status.event == 'useCard') return;
-		//这里，清除重铸的显示
-		if (_status.event.skill == '_recasting') return;
-		if (lib.config.show_log != 'off' && !game.chess) {
-			var nodeentry = node.cloneNode(true);
-			ui.arenalog.insertBefore(nodeentry, ui.arenalog.firstChild);
-			if (!lib.config.clear_log) {
-				while (ui.arenalog.childNodes.length && ui.arenalog.scrollHeight > ui.arenalog.offsetHeight) {
-					ui.arenalog.lastChild.remove();
-				}
-			}
-			if (!lib.config.low_performance) {
-				nodeentry.style.transition = 'all 0s';
-				nodeentry.style.marginBottom = (-nodeentry.offsetHeight) + 'px';
-				ui.refresh(nodeentry);
-				nodeentry.style.transition = '';
-				nodeentry.style.marginBottom = '';
-			}
-			if (lib.config.clear_log) {
-				nodeentry.timeout = setTimeout(function () {
-					nodeentry.delete();
-				}, 1000);
-				for (var i = 0; i < ui.arenalog.childElementCount; i++) {
-					if (!ui.arenalog.childNodes[i].timeout) {
-						ui.arenalog.childNodes[i].remove();
-					}
-				}
-			}
+		if (_status.event === "useCard") return;
+		if (_status.event.skill === "_recasting") return;
+	}
+	if (lib.config.show_log == "off" || game.chess) {
+		return;
+	}
+	const nodeentry = node.cloneNode(true);
+	ui.arenalog.insertBefore(nodeentry, ui.arenalog.firstChild);
+	if (!lib.config.clear_log) {
+		while (ui.arenalog.childNodes.length && ui.arenalog.scrollHeight > ui.arenalog.offsetHeight) {
+			ui.arenalog.lastChild.remove();
 		}
-	};
-}
+	}
+	if (!lib.config.low_performance) {
+		nodeentry.style.transition = "all 0s";
+		nodeentry.style.marginBottom = `-${nodeentry.offsetHeight}px`;
+		ui.refresh(nodeentry);
+		nodeentry.style.transition = "";
+		nodeentry.style.marginBottom = "";
+	}
+	if (!lib.config.clear_log) {
+		return;
+	}
+	nodeentry.timeout = setTimeout(() => nodeentry.delete(), 1000);
+	Array.from(ui.arenalog.childNodes).forEach(value => {
+		if (!value.timeout) {
+			value.remove();
+		}
+	});
+};
