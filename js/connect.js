@@ -171,6 +171,30 @@ if (lib.config.extension_星之梦_lianji) {
 				uiintro.addText(get.colorspan(lib.characterAppend[node.name]));
 			}
 
+			if (lib.config.show_sortPack) {
+				for (let packname in lib.characterPack) {
+					if (node.name in lib.characterPack[packname]) {
+						let pack = lib.translate[packname + '_character_config'],
+							sort;
+						if (lib.characterSort[packname]) {
+							let sorted = lib.characterSort[packname];
+							for (let sortname in sorted) {
+								if (sorted[sortname].includes(node.name)) {
+									sort = `<span style = "font-size:small">${lib.translate[sortname]}</span>`;
+									break;
+								}
+							}
+						}
+						const sortPack = document.createElement("div");
+						sortPack.innerHTML = `${pack}${sort ? `<br>[${sort}]` : ""}`;
+						sortPack.appendChild(document.createElement("hr"));
+						sortPack.insertBefore(document.createElement("hr"), sortPack.firstChild);
+						uiintro.add(sortPack);
+						break;
+					}
+				}
+			}
+
 			if (get.characterInitFilter(node.name)) {
 				const initFilters = get.characterInitFilter(node.name).filter(tag => {
 					if (!lib.characterInitFilter[node.name]) {
@@ -582,6 +606,7 @@ if (lib.config.extension_星之梦_lianji) {
 			if (lib.config.show_favourite && lib.character[node.name] && game.players.includes(node) && (!modepack || !modepack[node.name]) && (!simple || get.is.phoneLayout())) {
 				var addFavourite = ui.create.div(".text.center.pointerdiv");
 				addFavourite.link = node.name;
+				addFavourite.style.marginRight = "15px";
 				if (lib.config.favouriteCharacter.includes(node.name)) {
 					addFavourite.innerHTML = "移除收藏";
 				} else {
@@ -589,6 +614,17 @@ if (lib.config.extension_星之梦_lianji) {
 				}
 				addFavourite.listen(ui.click.favouriteCharacter);
 				uiintro.add(addFavourite);
+			}
+			if (!simple || get.is.phoneLayout()) {
+				let viewInfo = ui.create.div(".text.center.pointerdiv");
+				viewInfo.link = node;
+				viewInfo.innerHTML = "查看资料";
+				viewInfo.listen(function () {
+					let player = this.link;
+					let audioName = player.skin.name || player.name1 || player.name;
+					ui.click.charactercard(player.name1 || player.name, null, null, true, player.node, audioName);
+				});
+				uiintro.add(viewInfo);
 			}
 			if (!simple || get.is.phoneLayout()) {
 				if ((lib.config.change_skin || lib.skin) && !node.isUnseen()) {
@@ -1025,6 +1061,30 @@ if (lib.config.extension_星之梦_lianji) {
 				uiintro.addText(get.colorspan(lib.characterAppend[node.link]));
 			}
 
+			if (lib.config.show_sortPack) {
+				for (let packname in lib.characterPack) {
+					if (node.link in lib.characterPack[packname]) {
+						let pack = lib.translate[packname + '_character_config'],
+							sort;
+						if (lib.characterSort[packname]) {
+							let sorted = lib.characterSort[packname];
+							for (let sortname in sorted) {
+								if (sorted[sortname].includes(node.link)) {
+									sort = `<span style = "font-size:small">[${lib.translate[sortname]}]</span>`;
+									break;
+								}
+							}
+						}
+						const sortPack = document.createElement("div");
+						sortPack.innerHTML = `${pack}${sort ? `<br>${sort}` : ""}`;
+						sortPack.appendChild(document.createElement("hr"));
+						sortPack.insertBefore(document.createElement("hr"), sortPack.firstChild);
+						uiintro.add(sortPack);
+						break;
+					}
+				}
+			}
+
 			if (get.characterInitFilter(node.link)) {
 				const initFilters = get.characterInitFilter(node.link).filter(tag => {
 					if (!lib.characterInitFilter[node.link]) {
@@ -1154,6 +1214,7 @@ if (lib.config.extension_星之梦_lianji) {
 					var addFavourite = ui.create.div(".text.center.pointerdiv");
 					addFavourite.link = node.link;
 					addFavourite.style.marginBottom = "15px";
+					addFavourite.style.marginRight = "15px";
 					if (lib.config.favouriteCharacter.includes(node.link)) {
 						addFavourite.innerHTML = "移除收藏";
 					} else {
@@ -1163,6 +1224,16 @@ if (lib.config.extension_星之梦_lianji) {
 					uiintro.add(addFavourite);
 				} else {
 					uiintro.add(ui.create.div(".placeholder.slim"));
+				}
+				if (!simple || get.is.phoneLayout()) {
+					let viewInfo = ui.create.div(".text.center.pointerdiv");
+					viewInfo.link = node.link;
+					viewInfo.innerHTML = "查看资料";
+					viewInfo.style.marginBottom = "15px";
+					viewInfo.listen(function () {
+						return ui.click.charactercard(this.link, this);
+					});
+					uiintro.add(viewInfo);
 				}
 				var addskin = false;
 				if (node.parentNode.classList.contains("menu-buttons")) {
