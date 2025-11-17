@@ -158,6 +158,7 @@ let lmCharacter = {//武将切换
     dengai: ["old_ol_sb_dengai"],
     ruiji: ["old_ruiji"],
     fuqian: ["old_fuqian"],
+    yinfuren: ["old_yinfuren"],
 
     shen_caopi: ["old_shen_caopi"],
     shen_huatuo: ["old_dc_shen_huatuo"],

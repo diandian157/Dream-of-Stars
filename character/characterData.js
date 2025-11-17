@@ -163,6 +163,7 @@ let lmCharacter = {//武将信息
     old_huan_caoang: ["male", "wei", "3/4", ["old_twchihui", "old_twfuxi"], ["character:huan_caoang", "die:huan_caoang"]],
     old_tw_gexuan: ["male", "qun", 3, ["old_twdanfa", "old_twlingbao", "old_twsidao"], ["character:tw_gexuan", "die:tw_gexuan"]],
     old_jsrg_huangfusong: ["male", "qun", 4, ["twguanhuo", "old_twjuxia"], ["character:jsrg_huangfusong", "die:jsrg_huangfusong", "name:皇甫|嵩"]],
+    old_yinfuren: ["female", "wei", 3, ["old_dcyingyu", "old_dcyongbi"], ["character:yinfuren", "die:yinfuren", "name: 尹|null"]],
     //其他
     diy_zhujun: ["male", "qun", 4, ["xinyangjie", "diy_juxiang", "houfeng"], ["character:sp_zhujun"]],
     diy_liaohua: ["male", "shu", 4, ["redangxian", "diy_fuli"], ["character:xin_liaohua"]],

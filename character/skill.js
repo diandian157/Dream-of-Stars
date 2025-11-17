@@ -2681,10 +2681,8 @@ let lmCharacter = {
                     let togive = player.getCards("h").filter(card => get.color(card) == control.slice(0, -1));
                     if (_status.connectMode) game.broadcastAll(() => (_status.noclearcountdown = true));
                     let given_map = [];
-                    while (togive.length) {
-                        const {
-                            result: { bool, cards, targets },
-                        } = await player.chooseCardTarget({
+                    while (togive.length && game.hasPlayer(current => current != player) && player.hasCard(card => !card.hasGaintag("olsujian_given"), "h")) {
+                        const { result } = await player.chooseCardTarget({
                             forced: true,
                             filterCard(card, player) {
                                 return get.event("togive").includes(card) && !card.hasGaintag("olsujian_given");
@@ -2703,10 +2701,14 @@ let lmCharacter = {
                                 return 0;
                             },
                             togive: togive,
+                            allowChooseAll: true,
                         });
-                        if (bool) {
+                        if (result?.cards?.length && result.targets?.length) {
+                            const {
+                                cards,
+                                targets: [target],
+                            } = result;
                             togive.removeArray(cards);
-                            const target = targets[0];
                             if (given_map.some(i => i[0] == target)) {
                                 given_map[given_map.indexOf(given_map.find(i => i[0] == target))][1].addArray(cards);
                             } else given_map.push([target, cards]);
@@ -7653,16 +7655,20 @@ let lmCharacter = {
                     cardx.preCard = card;
                     return cardx;
                 });
-                if (cardsx.length) player.directgains(cardsx, null, "old_sbhuanshi_tag");
-                let {
-                    result: { bool, cards },
-                } = await player
-                    .chooseCard(get.translation(trigger.player) + "的" + (trigger.judgestr || "") + "判定为" + get.translation(trigger.player.judging[0]) + "，" + get.prompt("old_sbhuanshi"), "hs", card => {
+                if (cardsx.length) {
+                    player.directgains(cardsx, null, "old_sbhuanshi_tag");
+                }
+                const { result } = await player
+                    .chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "hs", card => {
                         const player = _status.event.player;
                         const mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
-                        if (mod2 != "unchanged") return mod2;
+                        if (mod2 != "unchanged") {
+                            return mod2;
+                        }
                         const mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
-                        if (mod != "unchanged") return mod;
+                        if (mod != "unchanged") {
+                            return mod;
+                        }
                         return true;
                     })
                     .set("ai", card => {
@@ -7671,8 +7677,12 @@ let lmCharacter = {
                         const judging = _status.event.judging;
                         const result = trigger.judge(card) - trigger.judge(judging);
                         const attitude = get.attitude(player, trigger.player);
-                        if (attitude == 0 || result == 0) return 0;
-                        if (get.event("pile").includes(card)) return attitude > 0 ? result : -result;
+                        if (attitude == 0 || result == 0) {
+                            return 0;
+                        }
+                        if (get.event("pile").includes(card)) {
+                            return attitude > 0 ? result : -result;
+                        }
                         if (attitude > 0) {
                             return result - get.value(card) * 0.3;
                         } else {
@@ -7681,39 +7691,49 @@ let lmCharacter = {
                     })
                     .set("judging", trigger.player.judging[0])
                     .set("pile", cardsx);
-                const gain = bool && cards?.[0] && !cards[0].hasGaintag("old_sbhuanshi_tag");
-                cardsx = player.getCards("s", card => card.hasGaintag("old_sbhuanshi_tag"));
-                if (cardsx.length) {
-                    if (cards) {
-                        cards = cards.map(card => {
-                            if (cardsx.includes(card)) return card.preCard;
-                            return card;
-                        });
+                let cards = [];
+                if (result?.cards?.length) {
+                    cards = result.cards;
+                    cardsx = player.getCards("s", card => card.hasGaintag("old_sbhuanshi_tag"));
+                    if (cardsx.length) {
+                        if (cards) {
+                            cards = cards.map(card => {
+                                if (cardsx.includes(card)) {
+                                    return card.preCard;
+                                }
+                                return card;
+                            });
+                        }
+                        if (player.isOnline2()) {
+                            player.send(
+                                function (cards, player) {
+                                    cards.forEach(i => i.delete());
+                                    if (player == game.me) {
+                                        ui.updatehl();
+                                    }
+                                },
+                                cardsx,
+                                player
+                            );
+                        }
+                        cardsx.forEach(i => i.delete());
+                        if (player == game.me) {
+                            ui.updatehl();
+                        }
                     }
-                    if (player.isOnline2()) {
-                        player.send(
-                            function (cards, player) {
-                                cards.forEach(i => i.delete());
-                                if (player == game.me) ui.updatehl();
-                            },
-                            cardsx,
-                            player
-                        );
-                    }
-                    cardsx.forEach(i => i.delete());
-                    if (player == game.me) ui.updatehl();
                 }
-
                 event.result = {
-                    bool: bool,
+                    bool: result?.bool,
                     cards: cards,
-                    cost_data: gain,
+                    cost_data: result?.cards?.length && !result.cards[0].hasGaintag("old_sbhuanshi_tag"),
                 };
             },
             popup: false,
             async content(event, trigger, player) {
-                const cards = event.cards;
-                await player.respond(cards, "old_sbhuanshi", "highlight", "noOrdering");
+                const { cards } = await player.respond(event.cards, event.name, "highlight", "noOrdering");
+                if (!cards?.length) {
+                    return;
+                }
                 if (trigger.player.judging[0].clone) {
                     trigger.player.judging[0].clone.classList.remove("thrownhighlight");
                     game.broadcast(function (card) {
@@ -7723,14 +7743,11 @@ let lmCharacter = {
                     }, trigger.player.judging[0]);
                     game.addVideo("deletenode", player, get.cardsInfo([trigger.player.judging[0].clone]));
                 }
-                game.cardsDiscard(trigger.player.judging[0]);
-
-
-
-                if (event.cost_data) await player.gain(trigger.player.judging, "gain2");
-
-
-                else await game.cardsDiscard(trigger.player.judging);
+                if (event.cost_data) {
+                    await player.gain(trigger.player.judging, "gain2");
+                } else {
+                    await game.cardsDiscard(trigger.player.judging);
+                }
                 trigger.player.judging[0] = cards[0];
                 trigger.orderingCards.addArray(cards);
                 game.log(trigger.player, "的判定牌改为", cards[0]);
@@ -7739,15 +7756,15 @@ let lmCharacter = {
             locked: false,
             mod: {
                 cardRespondable(card, player) {
-                    if (!card.preCard) return;
+                    if (!card.preCard) {
+                        return;
+                    }
                     return _status.event?.getParent()?.name == "old_sbhuanshi_cost";
                 },
             },
             ai: {
                 rejudge: true,
-                tag: {
-                    rejudge: 1,
-                },
+                tag: { rejudge: 1 },
             },
         },
         old_sbhongyuan: {
@@ -15078,6 +15095,7 @@ let lmCharacter = {
                     },
                 },
                 {
+                    toIndex: 2,
                     name: "你可以打出一张手牌替换此判定牌",
                     filter: item => item.includes("判定牌生效前"),
                     effect: {
@@ -15085,51 +15103,57 @@ let lmCharacter = {
                             return player.countCards("hs");
                         },
                         async cost(event, trigger, player) {
-                            const {
-                                result: { bool, cards },
-                            } = await player
-                                .chooseCard(get.translation(trigger.player) + "的" + (trigger.judgestr || "") + "判定为" + get.translation(trigger.player.judging[0]) + "，" + get.prompt(event.skill), "hs", card => {
-                                    const player = _status.event.player;
+                            event.result = await player
+                                .chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "hs", card => {
+                                    const player = get.player();
                                     const mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
-                                    if (mod2 != "unchanged") return mod2;
+                                    if (mod2 != "unchanged") {
+                                        return mod2;
+                                    }
                                     const mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
-                                    if (mod != "unchanged") return mod;
+                                    if (mod != "unchanged") {
+                                        return mod;
+                                    }
                                     return true;
                                 })
                                 .set("ai", card => {
-                                    const trigger = _status.event.getTrigger();
-                                    const player = _status.event.player;
-                                    const judging = _status.event.judging;
+                                    const trigger = get.event().getTrigger();
+                                    const { player, judging } = get.event();
                                     const result = trigger.judge(card) - trigger.judge(judging);
                                     const attitude = get.attitude(player, trigger.player);
-                                    if (attitude == 0 || result == 0) return 0;
+                                    if (attitude == 0 || result == 0) {
+                                        return 0;
+                                    }
                                     if (attitude > 0) {
                                         return result - get.value(card) / 2;
                                     } else {
                                         return -result - get.value(card) / 2;
                                     }
                                 })
-                                .set("judging", trigger.player.judging[0]);
-                            if (bool) event.result = { bool, cost_data: { cards } };
+                                .set("judging", trigger.player.judging[0])
+                                .forResult();
                         },
                         popup: false,
                         async content(event, trigger, player) {
-                            const chooseCardResultCards = event.cost_data.cards;
-                            lib.skill.old_olhedao.tianshuClear(event.name, player);
-                            await player.respond(chooseCardResultCards, event.name, "highlight", "noOrdering");
-                            if (trigger.player.judging[0].clone) {
-                                trigger.player.judging[0].clone.classList.remove("thrownhighlight");
-                                game.broadcast(card => {
-                                    if (card.clone) card.clone.classList.remove("thrownhighlight");
-                                }, trigger.player.judging[0]);
-                                game.addVideo("deletenode", player, get.cardsInfo([trigger.player.judging[0].clone]));
+                            lib.skill.olhedao.tianshuClear(event.name, player);
+                            const { cards } = await player.respond(event.cards, event.name, "highlight", "noOrdering");
+                            if (cards?.length) {
+                                if (trigger.player.judging[0].clone) {
+                                    trigger.player.judging[0].clone.classList.remove("thrownhighlight");
+                                    game.broadcast(card => {
+                                        if (card.clone) {
+                                            card.clone.classList.remove("thrownhighlight");
+                                        }
+                                    }, trigger.player.judging[0]);
+                                    game.addVideo("deletenode", player, get.cardsInfo([trigger.player.judging[0].clone]));
+                                }
+                                player.$gain2(trigger.player.judging);
+                                await player.gain(trigger.player.judging);
+                                trigger.player.judging[0] = cards[0];
+                                trigger.orderingCards.addArray(cards);
+                                game.log(trigger.player, "的判定牌改为", cards);
+                                await game.delay(2);
                             }
-                            player.$gain2(trigger.player.judging);
-                            await player.gain(trigger.player.judging);
-                            trigger.player.judging[0] = chooseCardResultCards[0];
-                            trigger.orderingCards.addArray(chooseCardResultCards);
-                            game.log(trigger.player, "的判定牌改为", chooseCardResultCards[0]);
-                            await game.delay(2);
                         },
                         ai: {
                             rejudge: true,
@@ -24430,6 +24454,173 @@ let lmCharacter = {
             charlotte: true,
             onremove: true,
             intro: { content: "本回合内不能使用或打出$牌" },
+        },
+        //尹夫人
+        old_dcyingyu: {
+            audio: "dcyingyu",
+            trigger: { player: ["phaseZhunbeiBegin", "phaseJieshuBegin"] },
+            direct: true,
+            filter(event, player) {
+                if (event.name == "phaseJieshu" && !player.storage.old_dcyingyu) {
+                    return false;
+                }
+                return (
+                    game.countPlayer(function (current) {
+                        return current.countCards("h") > 0;
+                    }) > 1
+                );
+            },
+            content() {
+                "step 0";
+                player
+                    .chooseTarget(2, get.prompt("old_dcyingyu"), "展示两名角色的各一张手牌。若这两张牌花色不同，则你可以令其中一名角色获得另一名角色的展示牌。", function (card, player, target) {
+                        return target.countCards("h") > 0;
+                    })
+                    .set("ai", function (target) {
+                        var player = _status.event.player;
+                        if (!ui.selected.targets.length) {
+                            return get.attitude(player, target);
+                        }
+                        return 1 - get.attitude(player, target);
+                    });
+                "step 1";
+                if (result.bool) {
+                    var targets = result.targets.sortBySeat();
+                    event.targets = targets;
+                    event.cards = [];
+                    player.logSkill("old_dcyingyu", targets);
+                    player.choosePlayerCard(targets[0], true, "h");
+                } else {
+                    event.finish();
+                }
+                "step 2";
+                var card = result.cards[0];
+                player.line(targets[0]);
+                player.showCards(card, get.translation(player) + "对" + get.translation(targets[0]) + "发动了【媵予】");
+                event.cards.push(card);
+                player.choosePlayerCard(targets[1], true, "h");
+                "step 3";
+                var card = result.cards[0];
+                player.line(targets[1]);
+                player.showCards(card, get.translation(player) + "对" + get.translation(targets[1]) + "发动了【媵予】");
+                event.cards.push(card);
+                if (get.suit(cards[0], targets[0]) == get.suit(cards[1], targets[1])) {
+                    event.finish();
+                }
+                "step 4";
+                var str1 = get.translation(targets[0]),
+                    str2 = get.translation(targets[1]);
+                player
+                    .chooseControl("cancel2")
+                    .set("choiceList", ["令" + str1 + "获得" + str2 + "的" + get.translation(cards[1]), "令" + str2 + "获得" + str1 + "的" + get.translation(cards[0])])
+                    .set("goon", get.attitude(player, targets[0]) > 0 ? 0 : 1)
+                    .set("ai", () => _status.event.goon);
+                "step 5";
+                if (result.control != "cancel2") {
+                    var i = result.index;
+                    targets[1 - i].give(cards[1 - i], targets[i], "give");
+                }
+            },
+            onremove: true,
+        },
+        old_dcyongbi: {
+            audio: "dcyongbi",
+            enable: "phaseUse",
+            filter(event, player) {
+                return player.countCards("h") > 0 && game.hasPlayer(current => lib.skill.old_dcyongbi.filterTarget(null, player, current));
+            },
+            filterTarget(card, player, target) {
+                return target != player && target.hasSex("male");
+            },
+            selectCard: -1,
+            filterCard: true,
+            position: "h",
+            limited: true,
+            skillAnimation: true,
+            animationColor: "fire",
+            discard: false,
+            lose: false,
+            content() {
+                "step 0";
+                player.awakenSkill(event.name);
+                if (player.hasSkill("old_dcyingyu", null, null, false)) {
+                    player.storage.old_dcyingyu = true;
+                }
+                player.give(cards, target);
+                "step 1";
+                var list = [];
+                for (var i of cards) {
+                    list.add(get.suit(i, player));
+                    if (list.length >= 3) {
+                        break;
+                    }
+                }
+                if (list.length >= 2) {
+                    player.addMark("old_dcyongbi_eff1", 2, false);
+                    player.addSkill("old_dcyongbi_eff1");
+                    target.addMark("old_dcyongbi_eff1", 2, false);
+                    target.addSkill("old_dcyongbi_eff1");
+                }
+                if (list.length >= 3) {
+                    player.addMark("old_dcyongbi_eff2", 2, false);
+                    player.addSkill("old_dcyongbi_eff2");
+                    target.addMark("old_dcyongbi_eff2", 2, false);
+                    target.addSkill("old_dcyongbi_eff2");
+                }
+            },
+            ai: {
+                order(item, player) {
+                    if (player.hasUnknown()) {
+                        return 0;
+                    }
+                    let list = [];
+                    for (let i of player.getCards("h")) {
+                        list.add(get.suit(i, player));
+                        if (list.length >= 3) {
+                            return 10;
+                        }
+                    }
+                    return 0;
+                },
+                result: {
+                    player: 1.8,
+                    target(player, target) {
+                        let zhu = get.zhu(player);
+                        if (zhu && get.attitude(player, zhu) > 0) {
+                            if (target == zhu) {
+                                return 4;
+                            }
+                        }
+                        return 1.8;
+                    },
+                },
+            },
+            subSkill: {
+                eff1: {
+                    mod: {
+                        maxHandcard: (player, num) => num + player.countMark("old_dcyongbi_eff1"),
+                    },
+                    charlotte: true,
+                    onremove: true,
+                    marktext: "拥",
+                    intro: { content: "手牌上限+#" },
+                },
+                eff2: {
+                    audio: "old_dcyongbi",
+                    trigger: { player: "damageBegin4" },
+                    forced: true,
+                    filter(event, player) {
+                        return event.num > 1;
+                    },
+                    content() {
+                        trigger.num -= player.countMark("old_dcyongbi_eff2");
+                    },
+                    charlotte: true,
+                    onremove: true,
+                    marktext: "嬖",
+                    intro: { content: "受到大于1的伤害时，此伤害-#" },
+                },
+            },
         },
         //朱儁
         diy_juxiang: {

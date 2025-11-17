@@ -161,6 +161,7 @@ let lmCharacter = {//武将称号
     old_huan_caoang: "穿时寻冀",
     old_tw_gexuan: "冲应真人",
     old_jsrg_huangfusong: "安危定倾",
+    old_yinfuren: "委身允翕",
     //其他
     diy_zhujun: "功成师克",
     diy_liaohua: "历尽沧桑",
