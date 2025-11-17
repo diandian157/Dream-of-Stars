@@ -10,7 +10,9 @@ export let extensionDefaultPackage = async function () {
         // card: await basic.resolve(card)
         intro: (function () {
             var log = ["最低适配：v1.10.17.4",
-                "无名杀自用向扩展，主要保留在正式服削弱前的牢武将，牢武将基本支持单向联机。本扩展武将除神武外均客机没有装也能用；武将包关不掉可以关小包"
+                "自用向扩展，主要保留在正式服削弱前的牢武将。",
+                "本扩展武将除涉及本扩展装备外（如神武）的武将基本支持单向联机，即客机没有装本扩展也可使用。",
+                "水平有限，如关不掉武将包可以尝试关闭武将包里的小包或者单个武将。",
             ];
             return '<p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">' + log.join("<br>•") + "</p>";
         })(),
