@@ -227,17 +227,22 @@ export let config = {
 		clear: true,
 	},
 	scsEnhance: {
-		name: "增强【十常侍】",
+		name: "增强十常侍",
 		init: true,
 		intro: "开启后，将十常侍增强为最强版本。",
 	},
 	zxEnhance: {
-		name: "增强【郑玄】",
+		name: "增强郑玄",
 		init: true,
 		intro: "开启后，将郑玄，水果忍者的斗地主数值调整为与其他模式相同。",
 	},
+	syEnhance: {
+		name: "修改孙翊【凶疑】",
+		init: false,
+		intro: "开启后，将孙翊【凶疑】修改为可选择替换sp徐氏。",
+	},
 	zrEnhance: {
-		name: "增强【笮融】",
+		name: "增强笮融【浮图】",
 		init: false,
 		intro: "开启后，修改浮图的全场最高判定。",
 	},

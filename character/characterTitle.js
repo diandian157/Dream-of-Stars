@@ -1,6 +1,8 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
 let lmCharacter = {//武将称号
     //手杀
+    old_mb_shen_jiangwei: "燃魂孤忠",
+    oldx_mb_shen_jiangwei: "燃魂孤忠",
     old_new_simayi: "权控三势",
     old_mb_jushou: "监军谋国",
     old_mb_zhuzhi: "功崇信重",

@@ -162,7 +162,7 @@ let lmCharacter = {//武将切换
 
     shen_caopi: ["old_shen_caopi"],
     shen_huatuo: ["old_dc_shen_huatuo"],
-    shen_jiangwei: ["old_mb_shen_jiangwei"],
+    shen_jiangwei: ["old_mb_shen_jiangwei", "oldx_mb_shen_jiangwei"],
     shen_guanyu: ["sw_guanyu", "sw_tw_guanyu"],
     shen_lvmeng: ["old_tw_shen_lvmeng", "sw_lvmeng", "sw_tw_lvmeng"],
     shen_zhugeliang: ["sw_zhugeliang", "sw_wechat_zhugelian"],
