@@ -9979,7 +9979,7 @@ let lmCharacter = {
                 if (left.length && right.length) {
                     const shun = `顺时针：${left.map(i => get.translation(i)).join("、")}`,
                         ni = `逆时针：${right.map(i => get.translation(i)).join("、")}`,
-                        prompt = "令顺时针或逆时针上的角色同时展示并依次弃置一张牌，然后你可令弃置一种颜色牌的所有角色成为此【杀】额外目标";
+                        prompt = "令顺时针或逆时针上的角色同时展示并依次弃置一张手牌，然后你可令弃置一种颜色牌的所有角色成为此【杀】额外目标";
                     const result = await player
                         .chooseButton([
                             get.prompt(event.skill),
@@ -10006,25 +10006,27 @@ let lmCharacter = {
                         })
                         .forResult();
                     event.result = {
-                        bool: result.bool,
+                        bool: result?.bool,
                         targets: result?.links?.[0],
                     };
                 } else {
                     const targets = left.length ? left : right;
                     event.result = await player.chooseBool(get.prompt2(event.skill, targets)).forResult();
-                    event.result.targets = targets;
+                    if (event.result?.bool) {
+                        event.result.targets = targets;
+                    }
                 }
             },
             async content(event, trigger, player) {
-                const targets = event.targets.filter(target => target.countCards("he", card => lib.filter.cardDiscardable(card, target, "old_mbfeijing")));
+                const targets = event.targets.filter(target => target.countCards("h", card => lib.filter.cardDiscardable(card, target, "old_mbfeijing")));
                 if (targets.length) {
                     const next = player
-                        .chooseCardOL(targets, "he", true, "飞径：展示并弃置一张牌", (card, player) => {
+                        .chooseCardOL(targets, "h", true, "飞径：展示并弃置一张手牌", (card, player) => {
                             return lib.filter.cardDiscardable(card, player, "old_mbfeijing");
                         })
                         .set("ai", get.unuseful)
                         .set("aiCard", target => {
-                            const cards = target.getCards("he");
+                            const cards = target.getCards("h");
                             return { bool: true, cards: [cards.randomGet()] };
                         });
                     next._args.remove("glow_result");
@@ -11662,7 +11664,7 @@ let lmCharacter = {
                                 skill = "old_mbrunwei";
                             const cards = get.cards(num, true);
                             player.logSkill("old_mbrunwei", null, null, null, [get.rand(1, 2)]);
-                            await player.showCards(cards, `${get.translation(player)}发动了〖${get.translation(skill)}〗`);
+                            await player.showCards(cards, `${get.translation(player)}发动了【${get.translation(skill)}】`);
                             const used = player.hasSkill(skill + "_twice");
                             if (
                                 used &&

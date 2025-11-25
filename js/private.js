@@ -1,4 +1,252 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+
+//曹金玉显示优化
+lib.skill.yuqi = {
+    audio: 2,
+    trigger: { global: "damageEnd" },
+    getInfo(player) {
+        if (!player.storage.yuqi) {
+            player.storage.yuqi = [0, 3, 1, 1];
+        }
+        return player.storage.yuqi;
+    },
+    usable: 2,
+    filter(event, player) {
+        var list = lib.skill.yuqi.getInfo(player);
+        return event.player.isIn() && get.distance(player, event.player) <= list[0];
+    },
+    logTarget: "player",
+    content() {
+        "step 0";
+        event.list = lib.skill.yuqi.getInfo(player);
+        var cards = get.cards(event.list[1]);
+        event.cards = cards;
+        game.cardsGotoOrdering(cards);
+        var next = player.chooseToMove_new(true, "隅泣");
+        next.set("list", [
+            ["牌堆顶的牌", cards],
+            [["交给" + get.translation(trigger.player) + '<div class="text center">至少一张' + (event.list[2] > 1 ? "<br>至多" + get.cnNumber(event.list[2]) + "张" : "") + "</div>"], ['交给自己<div class="text center">至多' + get.cnNumber(event.list[3]) + "张</div>"]],
+        ]);
+        next.set("filterMove", function (from, to, moved) {
+            var info = lib.skill.yuqi.getInfo(_status.event.player);
+            if (to == 1) {
+                return moved[1].length < info[2];
+            }
+            if (to == 2) {
+                return moved[2].length < info[3];
+            }
+            return true;
+        });
+        next.set("processAI", function (list) {
+            var cards = list[0][1].slice(0).sort(function (a, b) {
+                return get.value(b, "raw") - get.value(a, "raw");
+            }),
+                player = _status.event.player,
+                target = _status.event.getTrigger().player;
+            var info = lib.skill.yuqi.getInfo(_status.event.player);
+            var cards1 = cards.splice(0, Math.min(info[3], cards.length - 1));
+            var card2;
+            if (get.attitude(player, target) > 0) {
+                card2 = cards.shift();
+            } else {
+                card2 = cards.pop();
+            }
+            return [cards, [card2], cards1];
+        });
+        next.set("filterOk", function (moved) {
+            return moved[1].length > 0;
+        });
+        "step 1";
+        if (result.bool) {
+            var moved = result.moved;
+            cards.removeArray(moved[1]);
+            cards.removeArray(moved[2]);
+            while (cards.length) {
+                ui.cardPile.insertBefore(cards.pop().fix(), ui.cardPile.firstChild);
+            }
+            var list = [[trigger.player, moved[1]]];
+            if (moved[2].length) {
+                list.push([player, moved[2]]);
+            }
+            game.loseAsync({
+                gain_list: list,
+                giver: player,
+                animate: "draw",
+            }).setContent("gaincardMultiple");
+        }
+    },
+    mark: true,
+    intro: {
+        content(storage, player) {
+            var info = lib.skill.yuqi.getInfo(player);
+            return '<div class="text center">距离：<span class=thundertext>' + info[0] + "</span><br>观看牌堆：<span class=firetext>" + info[1] + "</span><br>交给别人：<span class=greentext>" + info[2] + "</span><br>交给自己：<span class=yellowtext>" + info[3] + "</span></div>";
+        },
+    },
+    ai: {
+        threaten: 8.8,
+    },
+    init(player, skill) {
+        const list = lib.skill.yuqi.getInfo(player);
+        player.addTip(skill, get.translation(skill) + " " + list.slice().join(" "));
+    },
+    onremove: (player, skill) => player.removeTip(skill),
+};
+lib.skill.shanshen = {
+    audio: 2,
+    trigger: { global: "die" },
+    direct: true,
+    content() {
+        "step 0";
+        event.goon = !player.hasAllHistory("sourceDamage", function (evt) {
+            return evt.player == trigger.player;
+        });
+        var list = lib.skill.yuqi.getInfo(player);
+        player
+            .chooseControl("<span class=thundertext>距离</span>", "<span class=firetext>观看牌堆</span>", "<span class=greentext>交给别人</span>", "<span class=yellowtext>交给自己</span>", "cancel2")
+            .set("prompt", get.prompt("shanshen"))
+            .set("prompt2", "令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" + list[0] + "</span>]，则你可以观看牌堆顶的[<span class=firetext>" + list[1] + "</span>]张牌，你将其中至多[<span class=greentext>" + list[2] + "</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" + list[3] + "</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+2" + (event.goon ? "并回复1点体力" : ""))
+            .set("ai", function () {
+                var player = _status.event.player,
+                    info = lib.skill.yuqi.getInfo(player);
+                if (
+                    info[0] < info[3] &&
+                    game.countPlayer(function (current) {
+                        return get.distance(player, current) <= info[0];
+                    }) < Math.min(3, game.countPlayer())
+                ) {
+                    return 0;
+                }
+                if (info[3] < info[1] - 1) {
+                    return 3;
+                }
+                if (info[1] < 5) {
+                    return 1;
+                }
+                if (
+                    info[0] < 5 &&
+                    game.hasPlayer(function (current) {
+                        return current != player && get.distance(player, current) > info[0];
+                    })
+                ) {
+                    return 0;
+                }
+                return 2;
+            });
+        "step 1";
+        if (result.control != "cancel2") {
+            player.logSkill("shanshen", trigger.player);
+            var list = lib.skill.yuqi.getInfo(player);
+            list[result.index] = Math.min(5, list[result.index] + 2);
+            game.log(player, "将", result.control, "数字改为", "#y" + list[result.index]);
+            player.markSkill("yuqi");
+            lib.skill.yuqi.init(player, "yuqi");
+            if (event.goon) {
+                player.recover();
+            }
+        }
+    },
+    ai: {
+        combo: "yuqi",
+    },
+};
+lib.skill.xianjing = {
+    audio: 2,
+    trigger: { player: "phaseZhunbeiBegin" },
+    direct: true,
+    content() {
+        "step 0";
+        var list = lib.skill.yuqi.getInfo(player);
+        player
+            .chooseControl("<span class=thundertext>距离</span>", "<span class=firetext>观看牌堆</span>", "<span class=greentext>交给别人</span>", "<span class=yellowtext>交给自己</span>", "cancel2")
+            .set("prompt", get.prompt("xianjing"))
+            .set("prompt2", "令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" + list[0] + "</span>]，则你可以观看牌堆顶的[<span class=firetext>" + list[1] + "</span>]张牌，你将其中至多[<span class=greentext>" + list[2] + "</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" + list[3] + "</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1")
+            .set("ai", function () {
+                var player = _status.event.player,
+                    info = lib.skill.yuqi.getInfo(player);
+                if (
+                    info[0] < info[3] &&
+                    game.countPlayer(function (current) {
+                        return get.distance(player, current) <= info[0];
+                    }) < Math.min(3, game.countPlayer())
+                ) {
+                    return 0;
+                }
+                if (info[3] < info[1] - 1) {
+                    return 3;
+                }
+                if (info[1] < 5) {
+                    return 1;
+                }
+                if (
+                    info[0] < 5 &&
+                    game.hasPlayer(function (current) {
+                        return current != player && get.distance(player, current) > info[0];
+                    })
+                ) {
+                    return 0;
+                }
+                return 2;
+            });
+        "step 1";
+        if (result.control != "cancel2") {
+            player.logSkill("xianjing");
+            var list = lib.skill.yuqi.getInfo(player);
+            list[result.index] = Math.min(5, list[result.index] + 1);
+            game.log(player, "将", result.control, "数字改为", "#y" + list[result.index]);
+            player.markSkill("yuqi");
+            lib.skill.yuqi.init(player, "yuqi");
+            if (player.isDamaged()) {
+                event.finish();
+            }
+        } else {
+            event.finish();
+        }
+        "step 2";
+        var list = lib.skill.yuqi.getInfo(player);
+        player
+            .chooseControl("<span class=thundertext>距离</span>", "<span class=firetext>观看牌堆</span>", "<span class=greentext>交给别人</span>", "<span class=yellowtext>交给自己</span>", "cancel2")
+            .set("prompt", get.prompt("xianjing"))
+            .set("prompt2", "令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" + list[0] + "</span>]，则你可以观看牌堆顶的[<span class=firetext>" + list[1] + "</span>]张牌，你将其中至多[<span class=greentext>" + list[2] + "</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" + list[3] + "</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1")
+            .set("ai", function () {
+                var player = _status.event.player,
+                    info = lib.skill.yuqi.getInfo(player);
+                if (
+                    info[0] < info[3] &&
+                    game.countPlayer(function (current) {
+                        return get.distance(player, current) <= info[0];
+                    }) < Math.min(3, game.countPlayer())
+                ) {
+                    return 0;
+                }
+                if (info[3] < info[1] - 1) {
+                    return 3;
+                }
+                if (info[1] < 5) {
+                    return 1;
+                }
+                if (
+                    info[0] < 5 &&
+                    game.hasPlayer(function (current) {
+                        return current != player && get.distance(player, current) > info[0];
+                    })
+                ) {
+                    return 0;
+                }
+                return 2;
+            });
+        "step 3";
+        if (result.control != "cancel2") {
+            var list = lib.skill.yuqi.getInfo(player);
+            list[result.index] = Math.min(5, list[result.index] + 1);
+            game.log(player, "将", result.control, "数字改为", "#y" + list[result.index]);
+            player.markSkill("yuqi");
+            lib.skill.yuqi.init(player, "yuqi");
+        }
+    },
+    ai: {
+        combo: "yuqi",
+    },
+};
 //天命增强
 if (lib.config.extension_星之梦_tmEnhance) {
     lib.skill.tianming = {
@@ -20,7 +268,7 @@ if (lib.config.extension_星之梦_tmEnhance) {
             "step 0";
             player.chooseToDiscard(2, true, "he");
             player.draw(2);
-            ("step 1");
+            "step 1";
             player.chooseTarget("是否令一名角色弃置两张牌，然后摸两张牌？").set("ai", function (target) {
                 var cards = target.getCards("he");
                 if (cards.length <= 2) {
@@ -30,7 +278,7 @@ if (lib.config.extension_星之梦_tmEnhance) {
                 }
                 return get.attitude(player, target) * (target == player ? 1.2 : 1);
             });
-            ("step 2");
+            "step 2";
             if (result.bool) {
                 var target = result.targets[0];
                 player.line(target);
