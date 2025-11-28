@@ -2282,6 +2282,7 @@ let lmCharacter = {
                 }
             },
         },
+        //+手牌上限|火伤
         old_juejin: {
             persevereSkill: true,
             xiandingji: true,
@@ -2291,9 +2292,7 @@ let lmCharacter = {
                 content: "limited",
             },
             enable: "phaseUse",
-            trigger: {
-                player: "dying",
-            },
+            trigger: { player: "dying" },
             check(event, player) {
                 if (player.canSave(player) && player.countCards("hs", card => get.tag(card, "save")) > -player.hp) {
                     return false;
@@ -2431,7 +2430,6 @@ let lmCharacter = {
                             return num + player.getStorage("old_juejin_buff", 0);
                         },
                     },
-                    sourceSkill: "old_juejin",
                 },
             },
             ai: {
@@ -2448,22 +2446,15 @@ let lmCharacter = {
                     player: 1,
                 },
             },
-            skillAnimation: true,
-            init: (player, skill) => (player.storage[skill] = false),
         },
         old_huitian: {
             round: 1,
-            trigger: {
-                player: "phaseJieshuBegin",
-            },
+            trigger: { player: "phaseJieshuBegin" },
             filter(event, player) {
                 return player.getHp() <= 2 && player.hasHistory("sourceDamage", evt => evt.card?.name == "sha");
             },
             check(event, player) {
-                if (get.info("old_huitian_die").filter({}, player)) {
-                    return true;
-                }
-                return player.hasSha() && player.getUseValue("sha") > 0;
+                return player.countCards("sha") >= 1 && player.getUseValue("sha") > 0;
             },
             async content(event, tigger, player) {
                 const next = player.insertPhase(event.name);
@@ -2474,7 +2465,7 @@ let lmCharacter = {
                         player.addTempSkill("old_huitian_buff");
                     });
             },
-            group: ["old_huitian_die", "old_huitian_roundcount"],
+            group: ["old_huitian_die"],
             subSkill: {
                 buff: {
                     charlotte: true,
@@ -2507,12 +2498,9 @@ let lmCharacter = {
                             trigger.num++;
                         }
                     },
-                    sourceSkill: "old_huitian",
                 },
                 die: {
-                    trigger: {
-                        global: "roundStart",
-                    },
+                    trigger: { global: "roundStart" },
                     filter(event, player) {
                         return player.getAllHistory("useSkill", evt => evt.skill == "old_huitian").length > 2;
                     },
@@ -2520,10 +2508,10 @@ let lmCharacter = {
                     async content(event, tigger, player) {
                         await player.die();
                     },
-                    sourceSkill: "old_huitian",
                 },
             },
         },
+        //交换任意牌
         old_xingzhen: {
             usable: 1,
             enable: "phaseUse",
@@ -2700,14 +2688,13 @@ let lmCharacter = {
             },
         },
         //神姜维二版
+        //+体力上限|雷伤|三窟
         oldx_juejin: {
             persevereSkill: true,
             xiandingji: true,
             onremove: true,
             enable: "phaseUse",
-            trigger: {
-                player: "dying",
-            },
+            trigger: { player: "dying" },
             getNum(event, player) {
                 let dying = game.getAllGlobalHistory("everything", evt => {
                     if (evt.name != "dying" || evt.player != player) {
@@ -2769,14 +2756,14 @@ let lmCharacter = {
                     player.awakenSkill(event.name);
                     await player.logSkill(`${event.name}_animate`);
                     player.setStorage(event.name, true, true);
+                    if (result.links.includes(2)) {
+                        await player.gainMaxHp(num);
+                    }
                     if (result.links.includes(0)) {
                         await player.recover(num);
                     }
                     if (result.links.includes(1)) {
                         await player.draw(num);
-                    }
-                    if (result.links.includes(2)) {
-                        await player.gainMaxHp(num);
                     }
                     if (result.links.includes(3) && game.hasPlayer(current => current != player)) {
                         result = await player
@@ -2809,7 +2796,7 @@ let lmCharacter = {
                 } else if (trigger?.name == "dying" && check) {
                     await player.logSkill(event.name);
                     await player.loseMaxHp();
-                    await player.recoverTo();
+                    await player.recoverTo(1);
                 }
             },
             async contentx(event, trigger, player) {
@@ -2845,19 +2832,18 @@ let lmCharacter = {
                     charlotte: true,
                     skillAnimation: true,
                     animationColor: "orange",
-                    sourceSkill: "oldx_juejin",
                 },
             },
             ai: {
                 order(item, player) {
                     const event = get.event();
                     player = player || event.player;
+                    if (!player.hasStorage("oldx_juejin", true)) {
+                        return 0;
+                    }
                     let num = get.info("oldx_juejin").getNum(event, player);
                     if (num > 3) {
                         return 114514;
-                    }
-                    if (!player.hasStorage("oldx_juejin", true)) {
-                        return 0;
                     }
                     return 0;
                 },
@@ -2871,7 +2857,19 @@ let lmCharacter = {
                 },
             },
         },
+        //无限傲才
         oldx_xingzhen: {
+            hiddenCard(player, name) {
+                const type = get.type2(name);
+                if (!["basic", "trick"].includes(type)) {
+                    return false;
+                }
+                if (type == "basic" && _status.currentPhase != player) {
+                    return true;
+                } else if (type == "trick" && _status.currentPhase == player) {
+                    return true;
+                }
+            },
             clickable(player) {
                 if (player.isUnderControl(true)) {
                     const cards = lib.skill.oldx_xingzhen.getCards(player);
@@ -2899,12 +2897,11 @@ let lmCharacter = {
             },
             getCards(player) {
                 let cards = [];
-                const num = 7;
                 if (game.online) {
                     return game.requestSkillData("oldx_xingzhen", "getTopCards", 10000);
                 } else {
                     if (ui.cardPile.hasChildNodes !== false) {
-                        cards = Array.from(ui.cardPile.childNodes).slice(0, num);
+                        cards = Array.from(ui.cardPile.childNodes).slice(0, 7);
                     }
                 }
                 game.addCardKnower(cards, player);
@@ -2963,32 +2960,53 @@ let lmCharacter = {
                             }
                         },
                     },
+                    onChooseToUse(event) {
+                        if (game.online) {
+                            return;
+                        }
+                        const player = event.player;
+                        let cards = player.getCards("s", card => card.hasGaintag("oldx_xingzhen"));
+                        if (cards.length) {
+                            game.deleteFakeCards(cards);
+                        }
+                        if (ui.cardPile.hasChildNodes !== false) {
+                            cards = Array.from(ui.cardPile.childNodes).slice(0, 7);
+                            player.directgains(game.createFakeCards(cards), null, "oldx_xingzhen");
+                        }
+                    },
+                    onChooseToRespond(event) {
+                        if (game.online) {
+                            return;
+                        }
+                        const player = event.player;
+                        let cards = player.getCards("s", card => card.hasGaintag("oldx_xingzhen"));
+                        if (cards.length) {
+                            game.deleteFakeCards(cards);
+                        }
+                        if (ui.cardPile.hasChildNodes !== false) {
+                            cards = Array.from(ui.cardPile.childNodes).slice(0, 7);
+                            player.directgains(game.createFakeCards(cards), null, "oldx_xingzhen");
+                        }
+                    },
                     trigger: {
-                        player: ["chooseToUseBefore", "chooseToRespondBefore", "useCardBefore", "respondBefore", "chooseToUseAfter", "chooseToRespondAfter"],
+                        player: ["useCardBefore", "respondBefore", "chooseToUseAfter", "chooseToRespondAfter"],
                     },
                     filter(event, player) {
                         if (["useCard", "respond"].includes(event.name)) {
-                            const ss = player.getCards("s", card => card.hasGaintag("oldx_xingzhen"));
-                            return event.cards?.some(card => ss.includes(card));
+                            const pile = Array.from(ui.cardPile.childNodes).slice(0, 7);
+                            return event.cards?.some(card => pile.some(cardx => cardx.cardid == card._cardid));
                         }
-                        if (get.itemtype(_status.pileTop) != "card") {
-                            return false;
-                        }
-                        return lib.inpile.some(name => {
-                            const type = get.type2(name);
-                            if (type == "basic" && _status.currentPhase == player) {
-                                return false;
-                            } else if (type == "trick" && _status.currentPhase != player) {
-                                return false;
-                            }
-                            return event.filterCard(get.autoViewAs({ name }, "unsure"), player, event);
-                        });
+                        return true;
                     },
                     forced: true,
                     popup: false,
                     async content(event, trigger, player) {
                         if (["useCard", "respond"].includes(trigger.name)) {
-                            trigger.skill = "oldx_xingzhen";
+                            if (!trigger.skill) {
+                                trigger.skill = "oldx_xingzhen";
+                            } else {
+                                await player.logSkill("oldx_xingzhen");
+                            }
                             const cards = await get.info("oldx_xingzhen").getCards(player);
                             for (let i = 0; i < trigger.cards.length; i++) {
                                 const card = trigger.cards[i];
@@ -2996,24 +3014,16 @@ let lmCharacter = {
                                 if (cardx) {
                                     trigger.cards[i] = cardx;
                                     trigger.card.cards[i] = cardx;
-                                    trigger.throw = false;
                                 }
                             }
-                        } else {
-                            let cards = player.getCards("s", card => card.hasGaintag("oldx_xingzhen"));
-                            if (cards.length) {
-                                game.deleteFakeCards(cards);
-                            }
-                            if (event.triggername.endsWith("Before")) {
-                                cards = await get.info("oldx_xingzhen").getCards(player);
-                                player.directgains(game.createFakeCards(cards), null, "oldx_xingzhen");
-                            }
+                        }
+                        let cards = player.getCards("s", card => card.hasGaintag("oldx_xingzhen"));
+                        if (cards.length) {
+                            game.deleteFakeCards(cards);
                         }
                     },
-                    sourceSkill: "oldx_xingzhen",
                 },
             },
-
         },
         //手杀界沮授
         old_xinjianying: {
