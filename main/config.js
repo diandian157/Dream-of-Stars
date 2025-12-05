@@ -176,23 +176,18 @@ export let config = {
 	},
 	emotionsize: {
 		name: "聊天图片尺寸",
-		intro: "设置聊天图片尺寸。",
+		intro: "设置聊天图片尺寸（50-150）。",
 		init: "100",
-		item: {
-			50: "50*50",
-			60: "60*60",
-			70: "70*70",
-			80: "80*80",
-			90: "90*90",
-			100: "100*100",
-			110: "110*110",
-			120: "120*120",
-			130: "130*130",
-			140: "140*140",
-			150: "150*150",
+		input: true,
+		onblur: function () {
+			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
+			let value = parseInt(this.innerHTML.replace(/[^\d]/g, ''));
+			if (isNaN(value)) value = 100;
+			value = Math.max(50, Math.min(150, value));
+			this.innerHTML = value;
+			game.saveConfig("extension_星之梦_emotionsize", value);
 		},
 	},
-
 	fgx3: {//搬运自活动武将
 		name: "<font size='4'>---------游戏播报---------</font>",
 		clear: true,
