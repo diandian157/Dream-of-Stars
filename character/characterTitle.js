@@ -166,6 +166,8 @@ let lmCharacter = {//武将称号
     old_jsrg_huangfusong: "安危定倾",
     old_yinfuren: "委身允翕",
     old_tw_jiangji: "盛魏昌杰",
+    old_tw_zhangzhao: "功勋克举",
+    old_tw_zhanghong: "为世令器",
     //其他
     diy_zhujun: "功成师克",
     diy_liaohua: "历尽沧桑",
