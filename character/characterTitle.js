@@ -72,6 +72,7 @@ let lmCharacter = {//武将称号
     old_pot_xinxianying: "明鉴致节",
     old_sb_jiangwei: "见危授命",
     old_mb_zhangyan: "轻勇骇势",
+    old_mb_cuilingyi: "戴冠金尾",
     //OL
     old_shen_caopi: "诰天仰颂",
     oldx_clan_xuncai: "怀刃自誓",
@@ -99,7 +100,7 @@ let lmCharacter = {//武将称号
     old_ol_sb_dengai: "曜威奋武",
     old_ol_wangyi: "翳月之夷光",
     old_ol_xuelingyun: "红烛垂泪",
-    old_ol_sb_yl_luzhi: "国之桢干",
+    old_ol_sb_yl_luzhi: "人之望",
     old_ol_liubiao: "儁才秀拔",
     old_kongshu: "寄在璺",
     old_ol_madai: "临危受命",
@@ -109,7 +110,7 @@ let lmCharacter = {//武将称号
     old_clan_wangmingshan: "擅书多艺",
     old_strong_caochong: "端阳撼象",
     old_ol_sb_dengai: "曜威奋武",
-    //old_dm_sunquan: "",
+    old_dm_sunquan: "隳堕的英谋",
     //十周年
     old_re_zhangchunhua: "冷血皇后",
     old_re_caorui: "天姿的明君",

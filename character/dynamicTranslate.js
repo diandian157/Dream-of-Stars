@@ -43,5 +43,19 @@ let lmCharacter = {//动态翻译
             end = "。";
         return `${start}阳：${yang}；阴：${yin}${end}`;
     },
+    old_mbweizhuang(player, skill) {
+        if (!player) {
+            return lib.translate[`${skill}_info`];
+        }
+        if (get.nameList(player).includes("old_mb_cuilingyi")) {
+            const skin = player.skin[player.name2 === "old_mb_cuilingyi" ? "name2" : "name"],
+                index = lib.characterSubstitute["old_mb_cuilingyi"].map(i => i[0]).indexOf(skin);
+            if (index >= 0) {
+                const trueSkill = `${skill}_${skin.slice(13, -1)}x`;
+                return get.skillInfoTranslation(trueSkill, player, false);
+            }
+        }
+        return "这衣服，岂是你配穿的？";
+    },
 };
 export const dynamicTranslate = lmCharacter;

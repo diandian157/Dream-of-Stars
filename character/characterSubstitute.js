@@ -13,6 +13,17 @@ let lmCharacter = {//切换皮肤
         ["pot_weiyan_achieve", ["tempname:pot_weiyan_achieve"]],
         ["pot_weiyan_fail", ["tempname:pot_weiyan_fail"]],
     ],
+    old_mb_cuilingyi: [
+        ["mb_cuilingyi_guidian1", ["character:mb_cuilingyi", "die:mb_cuilingyi"]],
+        ["mb_cuilingyi_guidian2", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_guidian3", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_dongjiao1", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_dongjiao2", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_dongjiao3", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_xiuge1", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_xiuge2", ["die:mb_cuilingyi"]],
+        ["mb_cuilingyi_xiuge3", ["die:mb_cuilingyi"]],
+    ],
     old_huan_zhugeliang: [["huan_zhugeliang_shadow", ["tempname:huan_zhugeliang_shadow"]]],
     old_huan_caoang: [["huan_caoang_shadow", ["tempname:huan_caoang_shadow"]]],
     old_ol_sb_dongzhuo: [
