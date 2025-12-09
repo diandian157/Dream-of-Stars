@@ -92,7 +92,7 @@ export let config = {
 	conciselog: {
 		name: "精简历史记录",
 		init: true,
-		intro: "开启后，将精简化屏幕中间显示的出牌记录",
+		intro: "开启后，将精简化屏幕中间显示的出牌记录，联机建议关闭",
 	},
 	pause: {
 		//搬运自武将美化

@@ -57,7 +57,7 @@ let lmCharacter = {//武将信息
     old_sb_guojia: ["male", "wei", 3, ["sbtiandu", "old_sbyiji"], ["character:sb_guojia", "die:sb_guojia"]],
     old_sb_gaoshun: ["male", "qun", 4, ["old_sbxianzhen", "sbjinjiu"], ["character:sb_gaoshun", "die:sb_gaoshun"]],
     old_sb_xiahouyuan: ["male", "wei", 4, ["sbshensu", "old_sbzhengzi"], ["character:sb_xiahouyuan", "die:sb_xiahouyuan", "name:夏侯|渊"]],
-    old_sb_lvbu: ["male", "qun", 4, ["old_sbwushuang", "old_sbliyu"], ["character:sb_lvbu", "die:sb_lvbu"]],
+    old_sb_lvbu: ["male", "qun", 5, ["old_sbwushuang", "old_sbliyu"], ["character:sb_lvbu", "die:sb_lvbu"]],
     old_pot_taishici: ["male", "wu", 4, ["old_pothanzhan", "old_potzhanlie", "old_potzhenfeng"], ["character:pot_taishici", "die:pot_taishici", "太史|慈"]],
     old_pot_chendao: ["male", "shu", 4, ["old_potwanglie", "old_pothongyi"], ["character:pot_chendao", "die:pot_chendao"]],
     old_pot_yuji: ["male", "qun", 3, ["old_potdaozhuan", "old_potfuji"], ["character:pot_yuji", "die:pot_yuji"]],
