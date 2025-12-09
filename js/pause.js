@@ -504,7 +504,7 @@ if (lib.config.extension_星之梦_conciselog) {
 			}
 		}
 
-		if (!_status.event.skill) return;
+		if (!_status.event.skill && !/^(.+?)进行(.+?)判定，亮出的判定牌为(.+)$/.test(str)) return;
 		if (_status.event === "useCard") return;
 		if (_status.event.skill === "_recasting") return;
 
