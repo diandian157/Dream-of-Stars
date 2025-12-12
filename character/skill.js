@@ -11160,7 +11160,7 @@ let lmCharacter = {
                                                     [target, cards[1]],
                                                 ],
                                             })
-                                            .setContent("loseToDiscardpileMultiple");
+                                            .setContent(get.info("mbzengou").loseToDiscardpileMultiple);
                                     }
                                 }
                                 return;
