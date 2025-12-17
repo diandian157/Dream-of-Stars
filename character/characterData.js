@@ -2,6 +2,7 @@ import { lib, game, ui, get, ai, _status } from "../../../noname.js"
 let lmCharacter = {//武将信息
 
     //手杀
+    old_mb_caomao: ["male", "wei", 3, ["old_mbqianlong", "old_mbweitong"], ["character:mb_caomao", "die:mb_caomao", "zhu"]],
     old_new_simayi: ["male", "shen", 4, ["old_jilin", "old_yingyou", "old_yingtian"], ["character:new_simayi", "die:new_simayi", "wei", "name:司马|懿"]],
     old_mb_shen_jiangwei: ["male", "shen", 4, ["old_guxuan", "old_juejin", "old_huitian", "old_xingzhen"], ["shu"]],
     oldx_mb_shen_jiangwei: ["male", "shen", "1/4", ["old_guxuan", "oldx_juejin", "old_huitian", "oldx_xingzhen"], ["img:extension/星之梦/image/character/old_mb_shen_jiangwei.jpg", "shu"]],

@@ -151,6 +151,7 @@ let lmCharacter = {//武将切换
   tw_zhangzhao: ["tw_zhangzhao", "star_zhangzhao", "jy_zhangzhao", "old_tw_zhangzhao"],
   cuilingyi: ["cuilingyi", "mb_cuilingyi", "old_mb_cuilingyi"],
   liuhui: ["liuhui", "mb_liuhui", "old_mb_liuhui"],
+  caomao: ["caomao", "mb_caomao", "old_mb_caomao"],
 
 
   shen_huatuo: ["dc_shen_huatuo", "shen_huatuo", "old_dc_shen_huatuo"],

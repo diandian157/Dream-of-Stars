@@ -3,6 +3,10 @@ let lmCharacter = {//切换皮肤
     old_sb_sp_zhugeliang: [["sb_zhugeliang", ["tempname:sb_zhugeliang"]]],
     oldx_sb_sp_zhugeliang: [["sb_zhugeliang", ["tempname:sb_zhugeliang"]]],
     old_pot_yuji: [["pot_yuji_shadow", ["tempname:pot_yuji_shadow"]]],
+    old_mb_caomao: [
+        ["mb_caomao_shadow", ["die:mb_caomao"]],
+        ["mb_caomao_dead", ["die:mb_caomao"]],
+    ],
     old_pot_taishici: [
         ["pot_taishici_shadow1", ["die:pot_taishici"]],
         ["pot_taishici_shadow2", ["die:pot_taishici"]],
