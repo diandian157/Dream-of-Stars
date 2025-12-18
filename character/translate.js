@@ -1134,6 +1134,7 @@ let lmCharacter = {//翻译
     zc26_sp_xushi: "SP徐氏",
     zc26_sp_xushi_prefix: "SP",
 
+    "#ext:星之梦/audio/die/old_mb_caomao:die": "司马昭！朕宁舍身一死，以坐汝弑君之名。",
     "#ext:星之梦/audio/die/wangtaowangyue1:die": "落花有意，何人来摘……",
     "#ext:星之梦/audio/die/wangtaowangyue2:die": "这次比试不算，再来……",
 };

@@ -2406,7 +2406,7 @@ let lmCharacter = {
                     _status.tempMusic = "effect_caomaoBJM";
                     game.playBackgroundMusic();
                 });
-                player.changeSkin({ characterName: "old_mb_caomao" }, "mb_caomao_shadow");
+                player.changeSkin({ characterName: "old_mb_caomao" }, "old_mb_caomao_shadow");
                 player.awakenSkill(event.skill);
             },
             async content(event, trigger, player) {
