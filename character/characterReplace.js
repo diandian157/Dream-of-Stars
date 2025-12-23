@@ -19,7 +19,7 @@ let lmCharacter = {//武将切换
   jianggan: ["jianggan", "sp_jianggan", "std_jianggan", "sxrm_jianggan", "oldx_sp_jianggan"],
   huangzhong: ["re_huangzhong", "ol_huangzhong", "sb_huangzhong", "yj_huangzhong", "jsrg_huangzhong", "ty_huangzhong", "huangzhong", "old_sb_huangzhong"],
   gongsunzan: ["gongsunzan", "re_gongsunzan", "ol_sb_gongsunzan", "dc_gongsunzan", "xin_gongsunzan", "sb_gongsunzan", "sp_gongsunzan", "yy_gongsunzan", "old_sb_gongsunzan"],
-  sunquan: ["old_sb_sunquan", "old_v_sunquan", "old_dm_sunquan", "sunquan", "re_sunquan", "v_sunquan", "dc_sunquan", "xin_sunquan", "sb_sunquan", "jd_sb_sunquan", "ty_sunquan", "ps_sunquan", "pe_jun_sunquan", "dm_sunquan"],
+  sunquan: ["old_sb_sunquan", "old_v_sunquan", "old_dm_sunquan", "old_mb_sunquan", "sunquan", "re_sunquan", "v_sunquan", "dc_sunquan", "xin_sunquan", "sb_sunquan", "jd_sb_sunquan", "ty_sunquan", "ps_sunquan", "pe_jun_sunquan", "dm_sunquan"],
   huanggai: ["huanggai", "re_huanggai", "dc_sb_huanggai", "sb_huanggai", "huan_huanggai", "jy_huanggai", "old_sb_huanggai"],
   ganning: ["ganning", "re_ganning", "sb_ganning", "yj_ganning", "yongjian_ganning", "jd_sb_ganning", "sp_ganning", "ty_ganning", "old_sb_ganning"],
   xiaoqiao: ["old_sb_xiaoqiao", "xiaoqiao", "ol_xiaoqiao", "ol_sb_xiaoqiao", "yue_xiaoqiao", "re_xiaoqiao", "sb_xiaoqiao", "jd_sb_xiaoqiao", "old_xiaoqiao"],

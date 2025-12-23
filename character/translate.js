@@ -438,6 +438,12 @@ let lmCharacter = {//翻译
     old_mbgeyuan_info: "当你使用点数为X的牌时（X为圆周率中小数点后第一位的值），你可以摸Y张牌并令X改为后移一位的值（Y为你本技能发动的次数+1)。",
     old_mbchongcha: "重差",
     old_mbchongcha_info: "①你的点数大于等于10的牌不计入手牌上限，且使用时视为满足〖割圆〗中的点数0。②出牌阶段限一次，你可以弃置一张牌，令〖割圆〗中的X改为后移一位的值。",
+    old_mb_sunquan: "旧SP孙权",
+    old_mb_sunquan_prefix: "旧|SP",
+    old_mb_chulie: "出猎",
+    old_mb_chulie_info: "游戏开始时，你为【雕弓】从黑桃、梅花、红桃、方块中选择一个花色。",
+    old_mb_shehu: "射虎",
+    old_mb_shehu_info: "准备阶段，你可以令一名角色装备或升级【雕弓】。出牌阶段限一次，你可以视为对一名其他角色使用X张【杀】。（X为【雕引】的升级次数）",
 
     old_shen_caopi: "旧神曹丕",
     old_shen_caopi_prefix: "旧|神",

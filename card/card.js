@@ -512,6 +512,115 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                     equipValue: 5,
                 },
             },
+            DB_diaogong: {
+                fullskin: true,
+                type: "equip",
+                subtype: "equip1",
+                derivation: "old_mb_sunquan",
+                distance: { attackFrom: -4 },
+                ai: {
+                    basic: {
+                        equipValue: 5,
+                    },
+                },
+                skills: ["DB_diaogong_skill", "DB_diaogong_skill_effect", "DB_diaogong_skill_sha"],
+                cardPrompt(card, player) {
+                    const list = _status.DB_diaogong_improve || new Map();
+                    let num = Array.from(list.values()).reduce((sum, i) => sum + i, 0);
+                    if (num == 0) {
+                        return lib.translate.DB_diaogong_info;
+                    }
+                    const suitsList = lib.suit.slice().reverse();
+                    let triggerSuit = suitsList
+                        .filter((_, i) => list.get(i + 11))
+                        .map(i => get.translation(i))
+                        .join("/"),
+                        shaSuit = suitsList
+                            .filter((_, i) => list.get(i + 7))
+                            .map(i => get.translation(i))
+                            .join("/");
+                    let result = `当你使用杀指定目标时，你可以弃置目标角色${get.cnNumber(num + (list.get(0) || 0))}张${list.get(1) ? "" : "手"}牌，若其中的花色包含${triggerSuit}，则你可以升级此装备或摸${get.cnNumber(num)}张牌。`;
+                    const str2 = [`<br><span style="color: #8b2caeff" data-nature="graymm">升级效果</span>：`],
+                        improveList = get.info({ name: "DB_diaogong" }).improveList;
+
+                    for (let i in improveList) {
+                        let str = improveList[i];
+                        if (str.match(/\d+/g) && i != "0") {
+                            let numx = list.get(Number(i));
+                            if (numx > 0) {
+                                str2.push(str.replace(/\d+/g, numx));
+                            }
+                        }
+                    }
+                    if (shaSuit.length) {
+                        str2.push(`${shaSuit}牌可当杀使用`);
+                    }
+                    if (str2.length > 1) {
+                        return result + str2.join("<br>");
+                    }
+                    return result;
+                },
+                improveList: {
+                    0: "弃置牌数+1",
+                    1: "弃置手牌改为牌",
+                    2: "杀造成伤害+1",
+                    3: "出杀次数+1",
+                    4: "出杀目标+1",
+                    5: "杀需闪抵消数+1",
+                    6: "攻击范围+1",
+                    7: "红桃牌可当杀使用",
+                    8: "方片牌可当杀使用",
+                    9: "黑桃牌可当杀使用",
+                    10: "梅花牌可当杀使用",
+                    11: "弃红桃牌可触发升级",
+                    12: "弃方片牌可触发升级",
+                    13: "弃黑桃牌可触发升级",
+                    14: "弃梅花牌可触发升级",
+                },
+                improveContent(player) {
+                    const next = game.createEvent("DB_diaogong_improve", false);
+                    next.player = player;
+                    next.setContent(async function (event, trigger, player) {
+                        const list = _status.DB_diaogong_improve || new Map(),
+                            improveList = get.info({ name: "DB_diaogong" }).improveList;
+                        let choiceList = Object.entries(improveList)
+                            .filter(([_, str], i) => !list.get(i) || str.match(/\d+/g))
+                            .map(([num, str], i) => {
+                                if (str.match(/\d+/g)) {
+                                    str += `(${list.get(i) || 0})`;
+                                }
+                                return [num, str];
+                            });
+                        const { result } = await player
+                            .chooseButton(true, ["雕弓：请选择一项升级效果", [choiceList, "tdnodes"]])
+                            .set("ai", ({ link: num }) => {
+                                const { player, list } = get.event();
+                                if (num == 1 || num >= 11) {
+                                    return 1919810;
+                                } else if (num >= 7) {
+                                    return 114514;
+                                } else if (game.countPlayer(current => get.attitude(player, current) < 0) < (list.get(4) || 0) && num == 4) {
+                                    return 4;
+                                } else if ((list.get(0) || 0) < 5 && num == 0) {
+                                    return 10;
+                                }
+                                return get.event().getRand(String(num));
+                            })
+                            .set("list", list);
+                        if (result?.bool && result.links?.length) {
+                            const num = Number(result.links[0]);
+                            game.log(player, "为【雕弓】选择的升级效果为", "#r" + improveList[num]);
+                            game.broadcastAll(function (num) {
+                                const list = _status.DB_diaogong_improve || new Map();
+                                let numx = (list.get(num) || 0) + 1;
+                                list.set(num, numx);
+                                _status.DB_diaogong_improve = list;
+                            }, num);
+                        }
+                    });
+                    return next;
+                },
+            },
         },
         skill: {
             monkey: {
@@ -1302,6 +1411,156 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                     }
                 },
             },
+            DB_diaogong_skill: {
+                equipSkill: true,
+                mod: {
+                    cardUsable(card, player, num) {
+                        if (card.name == "sha") {
+                            const list = _status.DB_diaogong_improve || new Map();
+                            return num + (list.get(3) || 0);
+                        }
+                    },
+                    selectTarget(card, player, range) {
+                        if (card.name == "sha" && range[1] != -1) {
+                            const list = _status.DB_diaogong_improve || new Map();
+                            range[1] += list.get(4) || 0;
+                        }
+                    },
+                    attackRange(player, num) {
+                        const list = _status.DB_diaogong_improve || new Map();
+                        return num + (list.get(6) || 0);
+                    },
+                },
+                trigger: { player: "useCardToPlayer" },
+                filter(event, player) {
+                    if (event.card.name != "sha") {
+                        return false;
+                    }
+                    const list = _status.DB_diaogong_improve || new Map();
+                    if (!Array.from(list.keys()).length) {
+                        return false;
+                    }
+                    let position = list.get(1) ? "he" : "h";
+                    return event.target.countDiscardableCards(player, position);
+                },
+                async cost(event, trigger, player) {
+                    const list = _status.DB_diaogong_improve || new Map();
+                    let position = list.get(1) ? "he" : "h",
+                        num = Array.from(list.values()).reduce((sum, i) => sum + i, 0) + (list.get(0) || 0);
+                    num = Math.min(num, trigger.target.countDiscardableCards(player, position));
+                    const { result } = await player.discardPlayerCard(trigger.target, position, num, `雕弓：是否弃置${get.translation(trigger.target)}${get.cnNumber(num)}张${position == "h" ? "手" : ""}牌？`).set("chooseonly", true);
+                    event.result = {
+                        bool: result?.bool,
+                        targets: [trigger.target],
+                        cards: result?.cards?.length ? result.cards : [],
+                    };
+                },
+                async content(event, trigger, player) {
+                    const {
+                        cards,
+                        targets: [target],
+                    } = event;
+                    await target.discard(cards).set("discarder", player);
+                    const list = _status.DB_diaogong_improve || new Map(),
+                        suits = cards.map(card => get.suit(card, false)).unique();
+                    if (suits.some(suit => list.get(lib.suit.slice().reverse().indexOf(suit) + 11))) {
+                        let num = Array.from(list.values()).reduce((sum, i) => sum + i, 0);
+                        const { result } = await player
+                            .chooseControl("升级", "摸牌", "cancel2")
+                            .set("prompt", `是否升级【雕弓】或摸${get.cnNumber(num)}张牌？`)
+                            .set("ai", (event, player) => {
+                                const { num, list } = get.event();
+                                if (num < 2 || get.effect(player, { name: "draw" }, player, player) <= 0) {
+                                    return 0;
+                                } else if (
+                                    lib.suit
+                                        .slice()
+                                        .reverse()
+                                        .every((_, i) => list.get(i + 11))
+                                ) {
+                                    return 1;
+                                }
+                                return 0;
+                            })
+                            .set("num", num)
+                            .set("list", list);
+                        if (!result?.control || result.control == "cancel2") {
+                            return;
+                        }
+                        if (result?.control == "升级") {
+                            const next = get.info({ name: "DB_diaogong" }).improveContent(player);
+                            await next;
+                        } else if (num > 0) {
+                            await player.draw(num);
+                        }
+                    }
+                },
+                subSkill: {
+                    effect: {
+                        equipSkill: true,
+                        trigger: {
+                            player: "useCardToPlayered",
+                        },
+                        filter(event, player) {
+                            if (event.card.name != "sha") {
+                                return false;
+                            }
+                            const list = _status.DB_diaogong_improve || new Map();
+                            return list.get(2) || (list.get(5) && !event.getParent().directHit.includes(event.target));
+                        },
+                        forced: true,
+                        async content(event, trigger, player) {
+                            const list = _status.DB_diaogong_improve || new Map(),
+                                id = trigger.target.playerid,
+                                map = trigger.getParent().customArgs;
+                            map[id] ??= {};
+                            if (typeof map[id].extraDamage != "number") {
+                                map[id].extraDamage = 0;
+                            }
+                            map[id].extraDamage += list.get(2) || 0;
+                            if (typeof map[id].shaRequired != "number") {
+                                map[id].shaRequired = 0;
+                            }
+                            map[id].shaRequired += list.get(5) || 0;
+                        },
+                    },
+                    sha: {
+                        equipSkill: true,
+                        enable: "chooseToUse",
+                        filter(event, player) {
+                            if (!event.filterCard(get.autoViewAs({ name: "sha" }, "unsure"), player, event)) {
+                                return false;
+                            }
+                            const list = _status.DB_diaogong_improve || new Map(),
+                                suits = lib.suit.slice().reverse();
+                            return suits.some((suit, i) => list.get(i + 7) && player.countCards("hes", { suit }));
+                        },
+                        viewAs: {
+                            name: "sha",
+                        },
+                        prompt() {
+                            const list = _status.DB_diaogong_improve || new Map(),
+                                suits = lib.suit
+                                    .slice()
+                                    .reverse()
+                                    .filter((_, i) => list.get(i + 7))
+                                    .map(i => get.translation(i))
+                                    .join("/");
+                            return `你可以将一张${suits}牌当【杀】使用`;
+                        },
+                        position: "hes",
+                        filterCard(card, player) {
+                            const list = _status.DB_diaogong_improve || new Map(),
+                                suits = lib.suit.slice().reverse(),
+                                suit = get.suit(card, player);
+                            return suits.includes(suit) && list.get(suits.indexOf(suit) + 7);
+                        },
+                        check(card) {
+                            return 5 - get.value(card);
+                        },
+                    },
+                },
+            },
         },
         translate: {
             sw_guilongzhanyuedao: "鬼龙斩月刀",
@@ -1396,6 +1655,10 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
             huyi: "虎翼",
             huyi_skill: "虎翼",
             huyi_info: "你使用【杀】对目标造成属性伤害时，你可以横置至多两名角色。",
+            DB_diaogong: "雕弓",
+            DB_diaogong_info: "当你使用杀指定目标时，你可以弃置目标角色X张牌，若其中包含你选择的花色，则你可以升级此装备或摸X张牌。（X为升级次数）",
+            DB_diaogong_skill: "雕弓",
+            DB_diaogong_skill_info: "当你使用杀指定目标时，你可以弃置目标角色X张手牌，若其中包含你选择的花色，则你可以升级此装备或摸X张牌。（X为升级次数）",
         },
 
         list: [
