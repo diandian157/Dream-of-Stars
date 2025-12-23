@@ -115,7 +115,7 @@ let lmCharacter = {//武将切换
   yuji: ["old_pot_yuji", "xin_yuji", "re_yuji", "yuji", "pot_yuji", "ns_yuji", "ns_yujisp"],
   old_zhangbu: ["zhangbu", "old_zhangbu"],
   liubiao: ["old_ol_liubiao", "liubiao", "ol_liubiao", "xin_liubiao", "re_liubiao", "sb_liubiao", "jsrg_liubiao", "std_liubiao", "old_liubiao", "oldre_liubiao"],
-  xunyu: ["old_dc_sb_xunyu", "xunyu", "ol_xunyu", "dc_sb_xunyu", "star_xunyu", "re_xunyu", "sb_xunyu", "sxrm_xunyu", "xy_xunyu", "clan_xunyu"],
+  xunyu: ["old_dc_sb_xunyu", "xunyu", "ol_xunyu", "dc_sb_xunyu", "star_xunyu", "re_xunyu", "sb_xunyu", "sxrm_xunyu", "xy_xunyu", "old_clan_xunyu"],
   old_wuke: ["wuke", "old_wuke"],
   old_kongshu: ["old_kongshu", "kongshu"],
   xiahouxuan: ["old_dc_xiahouxuan", "xiahouxuan", "dc_xiahouxuan", "pe_xiahouxuan"],
@@ -152,8 +152,11 @@ let lmCharacter = {//武将切换
   cuilingyi: ["cuilingyi", "mb_cuilingyi", "old_mb_cuilingyi"],
   liuhui: ["liuhui", "mb_liuhui", "old_mb_liuhui"],
   caomao: ["caomao", "mb_caomao", "old_mb_caomao"],
+  xunyu: ["xunyu", "ol_xunyu", "dc_sb_xunyu", "star_xunyu", "re_xunyu", "sb_xunyu", "sxrm_xunyu", "xy_xunyu", "clan_xunyu", "old_clan_xunyu"],
+  yangfeng: ["ol_yangfeng", "yangfeng", "old_ol_yangfeng"],
+  old_hansong: ["hansong", "old_hansong"],
 
-
+  shen_sunquan: ["shen_sunquan", "junk_sunquan", "dc_shen_sunquan", "old_dc_shen_sunquan"],
   shen_huatuo: ["dc_shen_huatuo", "shen_huatuo", "old_dc_shen_huatuo"],
   shen_jiangwei: ["old_mb_shen_jiangwei", "oldx_mb_shen_jiangwei", "shen_jiangwei"],
   shen_guanyu: ["sw_guanyu", "sw_tw_guanyu"],
