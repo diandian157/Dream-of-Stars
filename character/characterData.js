@@ -85,7 +85,7 @@ let lmCharacter = {//武将信息
     old_clan_hanshao: ["male", "qun", 3, ["old_fangzhen", "old_liuju", "old_xumin"], ["character:clan_hanshao", "die:clan_hanshao", "clan:颍川韩氏"]],
     old_clan_xunshuang: ["male", "qun", 3, ["old_clanyangji", "old_clandandao", "old_clanqingli", "clandaojie"], ["tempname:clan_xunshuang", "character:clan_xunshuang", "die:clan_xunshuang", "clan:颍川荀氏"]],
     old_clan_yangxiu: ["male", "wei", 3, ["old_clanjiewu", "old_clangaoshi", "clanquhuo"], ["tempname:clan_yangxiu", "character:clan_yangxiu", "die:clan_yangxiu", "clan:弘农杨氏"]],
-    old_clan_wangmingshan: ["male", "wei", 3, ["old_clantanque", "old_clanshengmo", "clanzhongliu"], ["tempname:clan_wangmingshan", "die:clan_wangmingshan", "clan:太原王氏"]],
+    old_clan_wangmingshan: ["male", "wei", 3, ["old_clantanque", "old_clanshengmo", "clanzhongliu"], ["tempname:clan_wangmingshan", "character:clan_wangmingshan", "die:clan_wangmingshan", "clan:太原王氏"]],
     old_clan_xunyu: ["male", "qun", 3, ["old_clandingan", "old_clanfuning", "clandaojie"], ["tempname:clan_xunyu", "character:clan_xunyu", "die:clan_xunyu", "clan:颍川荀氏"]],
     old_zhanghua: ["male", "jin", 3, ["olbihun", "olchuanwu", "oljianhe"], ["character:zhanghua", "die:zhanghua"]],
     old_yuanji: ["female", "wu", 3, ["dcmengchi", "dcjiexing"], ["character:yuanji", "die:yuanji", "name:袁|null"]],
