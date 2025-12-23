@@ -86,7 +86,7 @@ let lmCharacter = {//武将信息
     old_clan_xunshuang: ["male", "qun", 3, ["old_clanyangji", "old_clandandao", "old_clanqingli", "clandaojie"], ["tempname:clan_xunshuang", "character:clan_xunshuang", "die:clan_xunshuang", "clan:颍川荀氏"]],
     old_clan_yangxiu: ["male", "wei", 3, ["old_clanjiewu", "old_clangaoshi", "clanquhuo"], ["tempname:clan_yangxiu", "character:clan_yangxiu", "die:clan_yangxiu", "clan:弘农杨氏"]],
     old_clan_wangmingshan: ["male", "wei", 3, ["old_clantanque", "old_clanshengmo", "clanzhongliu"], ["tempname:clan_wangmingshan", "die:clan_wangmingshan", "clan:太原王氏"]],
-    old_clan_xunyu: ["male", "qun", 3, ["old_clandingan", "old_clanfuning", "clandaojie"], , ["tempname:clan_xunyu", "character:clan_xunyu", "die:clan_xunyu", "clan:颍川荀氏"]],
+    old_clan_xunyu: ["male", "qun", 3, ["old_clandingan", "old_clanfuning", "clandaojie"], ["tempname:clan_xunyu", "character:clan_xunyu", "die:clan_xunyu", "clan:颍川荀氏"]],
     old_zhanghua: ["male", "jin", 3, ["olbihun", "olchuanwu", "oljianhe"], ["character:zhanghua", "die:zhanghua"]],
     old_yuanji: ["female", "wu", 3, ["dcmengchi", "dcjiexing"], ["character:yuanji", "die:yuanji", "name:袁|null"]],
     old_tengfanglan: ["female", "wu", 3, ["old_luochong", "old_aichen"], ["character:tengfanglan", "die:tengfanglan"]],
@@ -156,7 +156,6 @@ let lmCharacter = {//武将信息
     old_v_sunce: ["male", "wu", 4, ["old_dczhifeng", "old_dcweijing"], ["character:v_sunce", "die:v_sunce"]],
     old_dc_shen_sunquan: ["male", "shen", 4, ["old_dccangming", "old_dcchouxi", "old_dcjichao"], ["character:dc_shen_sunquan", "die:dc_shen_sunquan", "wu"]],
     old_hansong: ["male", "qun", 3, ["dcyinbi", "old_dcshuaiyan"], ["character:hansong", "die:hansong"]],
-
     //海外
     old_tw_huojun: ["male", "shu", 4, ["twsidai", "old_twjieyu"], ["character:tw_huojun", "die:tw_huojun"]],
     old_tw_guohuai: ["male", "wei", 4, ["old_twjingce", "old_yuzhang"], ["character:tw_guohuai", "die:tw_guohuai"]],
