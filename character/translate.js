@@ -347,6 +347,8 @@ let lmCharacter = {//翻译
     old_potzhuangshi_tag: "已选择弃置",
     old_mb_chenzhi: "旧势陈祗",
     old_mb_chenzhi_prefix: "旧|势",
+    old_mbrenxing: "任行",
+    old_mbrenxing_info: "每回合首次有牌不于弃牌阶段被弃置时，你可选择一项：1.与当前回合角色各摸一张牌；2.弃置一名本回合未使用或打出过【杀】的角色一张牌。",
     old_mb_luyusheng: "旧势陆郁生",
     old_mb_luyusheng_prefix: "旧|势",
     old_mbrunwei: "润微",

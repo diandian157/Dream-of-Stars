@@ -65,7 +65,7 @@ let lmCharacter = {//武将信息
     old_zhangbu: ["male", "wu", 4, ["old_mbchengxiong", "old_mbwangzhuang"], ["character:zhangbu", "die:zhangbu"]],
     old_wuke: ["female", "wu", 3, ["old_mbanda", "old_mbzhuguo"], ["character:wuke", "die:wuke", "吴|null"]],
     old_pot_weiyan: ["male", "shu", 4, ["old_potzhongao", "old_potzhuangshi", "potyinzhan"], ["character:pot_weiyan", "die:pot_weiyan"]],
-    old_mb_chenzhi: ["male", "shu", 4, ["mbquanchong", "mbrenxing"], ["character:mb_chenzhi"], "die:mb_chenzhi"],
+    old_mb_chenzhi: ["male", "shu", 4, ["mbquanchong", "old_mbrenxing"], ["character:mb_chenzhi"], "die:mb_chenzhi"],
     old_mb_luyusheng: ["female", "wu", 3, ["old_mbrunwei", "old_mbshuanghuai"], ["character:mb_luyusheng", "die:mb_luyusheng"]],
     old_guoyuan: ["male", "wei", 3, ["mbqingdao", "old_mbxiugeng", "old_mbchenshe"], ["character:guoyuan", "die:guoyuan"]],
     old_mb_caocao: ["male", "qun", 4, ["old_mblingfa", "twzhian"], ["tempname:mb_caocao", "character:mb_caocao", "die:mb_caocao"]],
