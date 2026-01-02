@@ -1639,8 +1639,8 @@ let lmCharacter = {
                                 .set("ai", button => {
                                     const player = get.player(),
                                         card = button.link,
-                                        suits = get.event("suits");
-                                    if (!get.event("goon")) return 0;
+                                        suits = get.event().suits;
+                                    if (!get.event().goon) return 0;
                                     if (!suits.includes(get.suit(card))) return 10;
                                     return 6 - get.value(card);
                                 })
@@ -1726,7 +1726,7 @@ let lmCharacter = {
                     .set("ai", button => {
                         const player = get.player(),
                             card = button.link,
-                            suits = get.event("suits");
+                            suits = get.event().suits;
                         const getNum = player => {
                             var list = [];
                             for (var i of lib.suit) list.push(player.countCards("h", { suit: i }) + 3);
@@ -3300,7 +3300,7 @@ let lmCharacter = {
                         const result = await player.chooseCardTarget({
                             forced: true,
                             filterCard(card, player) {
-                                return get.event("togive").includes(card) && !card.hasGaintag("olsujian_given");
+                                return get.event().togive.includes(card) && !card.hasGaintag("olsujian_given");
                             },
                             selectCard: [1, Infinity],
                             position: "h",
@@ -3310,7 +3310,7 @@ let lmCharacter = {
                                 return !ui.selected.cards.length && card.name == "du" ? 1 : 0;
                             },
                             ai2(target) {
-                                const player = get.event("player");
+                                const player = get.event().player;
                                 const card = ui.selected.cards[0];
                                 if (card) return get.value(card, target) * get.attitude(player, target);
                                 return 0;
@@ -4398,7 +4398,7 @@ let lmCharacter = {
                         .set("multitarget", true)
                         .set("targetprompt", ["伤害来源", "受伤角色"])
                         .set("ai", target => {
-                            return target == get.event("aiTargets")[ui.selected.targets.length] ? 10 : 0;
+                            return target == get.event().aiTargets[ui.selected.targets.length] ? 10 : 0;
                         })
                         .set("aiTargets", lib.skill.old_mbhuiyao.getUnrealDamageTargets(player, [game.filterPlayer(i => i != player), game.filterPlayer()], true));
                 "step 2";
@@ -4593,7 +4593,7 @@ let lmCharacter = {
                         return target !== player && target.hasEnabledSlot(1);
                     })
                     .set("ai", target => {
-                        const player = get.event("player");
+                        const player = get.event().player;
                         return (1 - get.attitude(player, target)) * Math.sqrt(get.distance(player, target));
                     })
                     .forResult();
@@ -4686,7 +4686,7 @@ let lmCharacter = {
                                 let val = get.value(card),
                                     att = get.attitude(player, target);
                                 if (val <= 4) {
-                                    if (get.event("used").includes(target)) return 0;
+                                    if (get.event().used.includes(target)) return 0;
                                     return 1 / target.getUseValue(card);
                                 }
                                 return att * (target.getUseValue(card) + 4);
@@ -4825,7 +4825,7 @@ let lmCharacter = {
                 const num = lib.skill.old_mbchengxiong.phaseUsed(trigger, player);
                 event.result = await player
                     .chooseTarget(get.prompt2("old_mbchengxiong"), function (card, player, target) {
-                        const num = get.event("num");
+                        const num = get.event().num;
                         return target.countCards("he") >= num;
                     })
                     .set("num", num)
@@ -4833,7 +4833,7 @@ let lmCharacter = {
                     .set("ai", function (target) {
                         let player = get.player(),
                             eff = get.effect(target, { name: "guohe_copy2" }, player, player);
-                        const color = get.event("color");
+                        const color = get.event().color;
                         if (target.getCards("e").some(card => get.color(card) == color)) eff += get.damageEffect(target, player, player) / 2;
                         return eff;
                     })
@@ -4846,7 +4846,7 @@ let lmCharacter = {
                     .set("ai", function (button) {
                         let val = get.buttonValue(button);
                         if (get.attitude(_status.event.player, get.owner(button.link)) > 0) val *= -1;
-                        if (get.position(button.link) == "e" && get.color(button.link) == get.event("color")) return (val *= 2);
+                        if (get.position(button.link) == "e" && get.color(button.link) == get.event().color) return (val *= 2);
                         return val;
                     })
                     .set("color", get.color(trigger.card))
@@ -4899,10 +4899,10 @@ let lmCharacter = {
                 //描述删掉力
                 if (target.isMaxHandcard()) {
                     const result = await player
-                        .chooseTarget("助国：选择一名其他角色，令" + get.translation(target) + "选择是否对其使用一张无距离限制的【杀】", (card, player, targetx) => ![player, get.event("target")].includes(targetx))
+                        .chooseTarget("助国：选择一名其他角色，令" + get.translation(target) + "选择是否对其使用一张无距离限制的【杀】", (card, player, targetx) => ![player, get.event().target].includes(targetx))
                         .set("ai", targetz => {
                             let player = get.player(),
-                                target = get.event("target");
+                                target = get.event().target;
                             return get.effect(targetz, { name: "sha" }, target, player);
                         })
                         .set("target", target)
@@ -4914,7 +4914,7 @@ let lmCharacter = {
                                 return get.name(card, player) === "sha" && lib.filter.filterCard.apply(this, arguments);
                             }, `助国：是否对${get.translation(result.targets[0])}使用【杀】？`)
                             .set("filterTarget", function (card, player, target) {
-                                const sourcex = get.event("sourcex");
+                                const sourcex = get.event().sourcex;
                                 if (target != sourcex && !ui.selected.targets.includes(sourcex)) {
                                     return false;
                                 }
@@ -4962,7 +4962,7 @@ let lmCharacter = {
                     .set("complexCard", true)
                     .set("ai", card => {
                         const player = get.player(),
-                            source = get.event("source");
+                            source = get.event().source;
                         if (["tao", "jiu"].includes(get.name(card, source))) {
                             return 0;
                         }
@@ -5243,7 +5243,7 @@ let lmCharacter = {
                     .set("prompt", get.prompt("old_sbqiaomeng"))
                     .set("choiceList", choiceList)
                     .set("ai", () => {
-                        return get.event("choice");
+                        return get.event().choice;
                     })
                     .set(
                         "choice",
@@ -7938,7 +7938,7 @@ let lmCharacter = {
                     .chooseControl(controls)
                     .set("choiceList", [`令所有攻击范围内含有你的角色依次弃置两张牌（${get.translation(targets)}）`, `你摸等同于攻击范围内含有你的角色数+2的牌（${get.cnNumber(count)}张牌）`, `背水！令${get.translation(player)}的〖解烦〗失效直到其杀死一名角色，然后你依次执行上述所有选项`])
                     .set("ai", () => {
-                        return get.event("choice");
+                        return get.event().choice;
                     })
                     .set(
                         "choice",
@@ -8021,7 +8021,7 @@ let lmCharacter = {
                     .chooseControl()
                     .set("choiceList", [`令${get.translation(player)}将${player === target ? get.translation(cards) : "其选择的牌"}分配给其他角色`, `弃置所有未被${get.translation(player)}选择的牌`])
                     .set("ai", () => {
-                        return get.event("goon") ? 0 : 1;
+                        return get.event().goon ? 0 : 1;
                     })
                     .set(
                         "goon",
@@ -8062,7 +8062,7 @@ let lmCharacter = {
                                 return target != get.event().getTrigger().player;
                             })
                             .set("ai", target => {
-                                return get.attitude(get.event("player"), target) * get.sgn(get.sgn(get.event("goon")) + 0.5);
+                                return get.attitude(get.event().player, target) * get.sgn(get.sgn(get.event().goon) + 0.5);
                             })
                             .set(
                                 "goon",
@@ -8133,7 +8133,7 @@ let lmCharacter = {
                             return lib.filter.filterCard.apply(this, arguments);
                         },
                         function (card, player, target) {
-                            if (player == target || target == get.event("targetx")) {
+                            if (player == target || target == get.event().targetx) {
                                 return false;
                             }
                             const dist = get.distance(player, target);
@@ -8146,7 +8146,7 @@ let lmCharacter = {
                         }
                     )
                     .set("ai2", function () {
-                        return get.effect_use.apply(this, arguments) - get.event("effect");
+                        return get.effect_use.apply(this, arguments) - get.event().effect;
                     })
                     .set("effect", get.effect(target, { name: "losehp" }, target, target))
                     .set("addCount", false)
@@ -8296,7 +8296,7 @@ let lmCharacter = {
                         if (attitude == 0 || result == 0) {
                             return 0;
                         }
-                        if (get.event("pile").includes(card)) {
+                        if (get.event().pile.includes(card)) {
                             return attitude > 0 ? result : -result;
                         }
                         if (attitude > 0) {
@@ -8719,7 +8719,7 @@ let lmCharacter = {
                             return !ui.selected.cards.length && card.name == "du" ? 1 : 0;
                         },
                         ai2(target) {
-                            const player = get.event("player");
+                            const player = get.event().player;
                             const card = ui.selected.cards[0];
                             if (card) return get.value(card, target) * get.attitude(player, target);
                             return 0;
@@ -11900,7 +11900,7 @@ let lmCharacter = {
                     })(),
                     filterButton(button) {
                         if (button.link == "discard") {
-                            return get.event("noShas")?.length;
+                            return get.event().noShas?.length;
                         }
                         return _status.currentPhase?.isIn();
                     },
@@ -11911,7 +11911,7 @@ let lmCharacter = {
                     filterTarget(card, player, target) {
                         const link = ui.selected.buttons?.[0]?.link;
                         if (link == "discard") {
-                            return get.event("noShas")?.includes(target);
+                            return get.event().noShas?.includes(target);
                         }
                         return target == _status.currentPhase || target == player;
                     },
@@ -12143,7 +12143,7 @@ let lmCharacter = {
                             .chooseControl([...lib.suit.slice(0).reverse(), "cancel2"])
                             .set("dialog", ["请选择一个花色", player.getCards("h")])
                             .set("ai", () => {
-                                const target = get.event("target");
+                                const target = get.event().target;
                                 const player = get.player();
                                 const att = get.attitude(player, target);
                                 if (att > 0) {
@@ -12721,7 +12721,7 @@ let lmCharacter = {
                                 }
                                 event.result = await player
                                     .chooseTarget(`###是否发动【褽装】？###令一名有明置牌的角色摸两张牌`, (card, player, target) => {
-                                        return get.event("targetx").includes(target);
+                                        return get.event().targetx.includes(target);
                                     })
                                     .set("targetx", targets)
                                     .set("ai", target => {
@@ -12741,7 +12741,7 @@ let lmCharacter = {
                                 }
                                 event.result = await player
                                     .chooseTarget(`###是否发动【褽装】？###获得一名目标角色一张牌`, (card, player, target) => {
-                                        return get.event("targetx").includes(target);
+                                        return get.event().targetx.includes(target);
                                     })
                                     .set("targetx", targets)
                                     .set("ai", target => {
@@ -13439,7 +13439,7 @@ let lmCharacter = {
                             .chooseTarget(
                                 `定安：与任意名不为此牌目标的其他角色各摸一张牌`,
                                 (card, player, target) => {
-                                    return get.event("targetx").includes(target);
+                                    return get.event().targetx.includes(target);
                                 },
                                 true,
                                 [1, targets.length]
@@ -15388,7 +15388,7 @@ let lmCharacter = {
                     .set("list", [["本次弃置的牌", get.info("old_olzongxuan").getCards(trigger, player)], ["牌堆顶"]])
                     .set("filterOk", moved => moved[1].length)
                     .set("processAI", list => {
-                        const player = get.event("player");
+                        const player = get.event().player;
                         const cards = list[0][1].slice(),
                             cards2 = cards.filter(card => {
                                 return game.hasPlayer(target => {
@@ -15430,8 +15430,8 @@ let lmCharacter = {
                 const { bool, targets } = await player
                     .chooseTarget(get.prompt2("old_olzhiyan"))
                     .set("ai", target => {
-                        const player = get.event("player"),
-                            cards = get.event("cards");
+                        const player = get.event().player,
+                            cards = get.event().cards;
                         if (!cards.length) return 0;
                         const card = cards[0],
                             att = get.attitude(player, target);
@@ -16225,7 +16225,7 @@ let lmCharacter = {
                 for (const target of event.targets) {
                     const { bool } = await target
                         .chooseToDiscard(`弃置一张${get.translation(suit)}牌，否则${get.translation(player)}对你造成1点伤害`, "he", (card, player) => {
-                            return get.event("suit") == get.suit(card);
+                            return get.event().suit == get.suit(card);
                         })
                         .set("ai", card => {
                             const player = get.player(),
@@ -16278,7 +16278,7 @@ let lmCharacter = {
                             .set("filterButton", button => {
                                 const { link } = button,
                                     map = get.event().getParent().given_map;
-                                if (!Object.values(map).flat().length) return get.event("cards").filter(card => get.suit(card) == get.suit(link)).length > 1;
+                                if (!Object.values(map).flat().length) return get.event().cards.filter(card => get.suit(card) == get.suit(link)).length > 1;
                                 return get.suit(link) == get.suit(Object.values(map).flat()[0]);
                             })
                             .set("ai", button => {
@@ -16296,7 +16296,7 @@ let lmCharacter = {
                         })
                         .set("ai", target => {
                             const att = get.attitude(get.player(), target);
-                            if (get.event("toEnemy")) return Math.max(0.01, 100 - att);
+                            if (get.event().toEnemy) return Math.max(0.01, 100 - att);
                             else if (att > 0) {
                                 if (player.getUseValue({ name: "jiu" }) && player != target) return 10;
                                 return Math.max(0.1, att / Math.sqrt(1 + target.countCards("h") + (get.event().getParent().given_map[target.playerid] || 0)));
@@ -17846,7 +17846,7 @@ let lmCharacter = {
                             .chooseControl()
                             .set("choiceList", ["获得" + get.translation(target) + "的一张牌", "发动一次【秘计】"])
                             .set("ai", () => {
-                                const player = get.event("player"),
+                                const player = get.event().player,
                                     target = get.event().getTrigger().player;
                                 return get.effect(target, { name: "shunshou_copy2" }, player, player) > get.effect(player, { name: "draw" }, player, player) * player.getDamagedHp() ? 0 : 1;
                             })
@@ -18512,7 +18512,7 @@ let lmCharacter = {
                             return "出杀次数";
                         })()
                     )
-                    .set("ai", () => get.event("resultx"))
+                    .set("ai", () => get.event().resultx)
                     .forResult();
                 event.result = {
                     bool: true,
@@ -18579,7 +18579,7 @@ let lmCharacter = {
                 while (!player.hasHistory("sourceDamage", evt => evt.getParent(4) === event) && player.getCards("h").some(card => cards.includes(card) && player.hasUseTarget(card))) {
                     const result = await player
                         .chooseToUse(function (card, player, event) {
-                            if (get.itemtype(card) != "card" || !get.event("cardsx").includes(card) || get.position(card) != "h") {
+                            if (get.itemtype(card) != "card" || !get.event().cardsx.includes(card) || get.position(card) != "h") {
                                 return false;
                             }
                             return lib.filter.filterCard.apply(this, arguments);
@@ -18834,7 +18834,7 @@ let lmCharacter = {
                 const delNum = Math.abs(curNum - prevNum);
                 event.result = await player
                     .chooseTarget(get.prompt(event.skill), `对一名体力值为${delNum}的角色造成1点伤害`, (card, player, target) => {
-                        return target.getHp() === get.event("delNum");
+                        return target.getHp() === get.event().delNum;
                     })
                     .set("delNum", delNum)
                     .set("ai", target => {
@@ -18928,7 +18928,7 @@ let lmCharacter = {
                 if (get.type(name) != "basic") {
                     return false;
                 }
-                if (!player.getStorage("old_clanshengmo").includes(name) && (get.event("old_clanshengmo_cards") || []).length > 0) {
+                if (!player.getStorage("old_clanshengmo").includes(name) && (get.event().old_clanshengmo_cards || []).length > 0) {
                     return true;
                 }
             },
@@ -18937,7 +18937,7 @@ let lmCharacter = {
                     return false;
                 }
                 const names = lib.inpile.filter(name => get.type(name) == "basic" && !player.getStorage("old_clanshengmo").includes(name)),
-                    cards = get.event("old_clanshengmo_cards") || [];
+                    cards = get.event().old_clanshengmo_cards || [];
                 return (
                     cards.length > 0 &&
                     names.some(name => {
@@ -19440,14 +19440,14 @@ let lmCharacter = {
                             : await player
                                 .chooseCardTarget({
                                     filterCard(card, player) {
-                                        const num = get.event("numx");
+                                        const num = get.event().numx;
                                         return num > 0 && lib.filter.cardDiscardable(card, player, "old_dcjuanji");
                                     },
                                     prompt: get.prompt(event.skill),
                                     prompt2: "将手牌调整至手牌上限，然后弃置一名角色区域里至多两张牌",
                                     numx: player.countCards("h") - player.getHandcardLimit(),
                                     selectCard() {
-                                        const num = get.event("numx");
+                                        const num = get.event().numx;
                                         if (num > 0) {
                                             return num;
                                         }
@@ -19573,7 +19573,7 @@ let lmCharacter = {
                         .set("prompt", `骤袭：请选择一项（还可选择${num}项）`)
                         .set("choiceList", choiceList)
                         .set("ai", () => {
-                            return get.event("res");
+                            return get.event().res;
                         })
                         .set(
                             "res",
@@ -20596,7 +20596,7 @@ let lmCharacter = {
                         return get.player().hasUseTarget(button.link);
                     })
                     .set("ai", button => {
-                        return get.event("player").getUseValue(button.link);
+                        return get.event().player.getUseValue(button.link);
                     })
                     .forResult();
                 if (bool) {
@@ -20682,8 +20682,8 @@ let lmCharacter = {
                     const { control } = await player
                         .chooseControl(types)
                         .set("ai", () => {
-                            const player = get.event("player"),
-                                types = get.event("controls").slice();
+                            const player = get.event().player,
+                                types = get.event().controls.slice();
                             const getNum = type => {
                                 const cards = player.getDiscardableCards(player, "h").filter(card => get.type2(card) == type);
                                 const countCards = (target, player, cards) => {
@@ -20722,7 +20722,7 @@ let lmCharacter = {
                         if (num) await player.draw(num);
                         if (cards.some(card => card.name != "shandian" && get.tag(card, "damage"))) {
                             const { bool, targets } = await player.chooseTarget("抚黎：是否令一名角色的攻击范围-1直到你的下个回合开始？").set("ai", target => {
-                                const player = get.event("player"),
+                                const player = get.event().player,
                                     num = target.getAttackRange();
                                 return -get.sgn(get.attitude(player, target)) * (target.getAttackRange() + (num <= 0 ? -num + 0.5 : num));
                             })
@@ -21360,7 +21360,7 @@ let lmCharacter = {
                 order: 1,
                 result: {
                     player(player) {
-                        if (get.event("dying")) return get.attitude(player, get.event("dying"));
+                        if (get.event().dying) return get.attitude(player, get.event().dying);
                         return 1;
                     },
                 },
@@ -21436,7 +21436,7 @@ let lmCharacter = {
                             .set("user", player)
                             .set("ai", button => {
                                 const player = get.player(),
-                                    user = get.event("user");
+                                    user = get.event().user;
                                 return user.getUseValue({ name: button.link[2], nature: button.link[3] }) * get.attitude(player, user);
                             })
                             .forResult();
@@ -21446,7 +21446,7 @@ let lmCharacter = {
                             cards = (await target
                                 .chooseToGive(player)
                                 .set("ai", card => {
-                                    const player = get.event("player"),
+                                    const player = get.event().player,
                                         target = get.event().getParent().player;
                                     if (get.attitude(player, target) <= 0) {
                                         return 0;
@@ -21685,7 +21685,7 @@ let lmCharacter = {
                         const player = get.player();
                         const eff1 = get.effect(target, { name: "guohe_copy2" }, player, player);
                         const eff2 = get.effect(target, { name: "draw" }, player, player);
-                        if (player == target && !get.event("drawed")) return eff2 * (1 + player.maxHp - player.countCards("h"));
+                        if (player == target && !get.event().drawed) return eff2 * (1 + player.maxHp - player.countCards("h"));
                         return eff1;
                     })
                     .forResult();
@@ -21699,7 +21699,7 @@ let lmCharacter = {
                     await target.lose(toLose.randomGet(), ui.cardPile);
                 } else {
                     const result = await player
-                        .chooseCard("h", card => get.event("toLose")?.includes(card), true)
+                        .chooseCard("h", card => get.event().toLose?.includes(card), true)
                         .set("toLose", toLose)
                         .set("ai", card => 10 - get.value(card))
                         .forResult();
@@ -23643,7 +23643,7 @@ let lmCharacter = {
                         .set("choiceList", ["弃置" + get.translation(target) + "的一张牌", "摸一张牌"])
                         .set("ai", () => {
                             const player = get.player();
-                            const eff1 = get.effect(get.event("target"), { name: "guohe_copy2" }, player, player);
+                            const eff1 = get.effect(get.event().target, { name: "guohe_copy2" }, player, player);
                             const eff2 = get.effect(player, { name: "draw" }, player, player);
                             return eff1 > eff2 ? 0 : 1;
                         })
@@ -23731,7 +23731,7 @@ let lmCharacter = {
             },
             selectTarget: 1,
             prompt() {
-                const player = get.event("player");
+                const player = get.event().player;
                 return lib.skill.old_dcsbshimou.intro.content(player.storage.old_dcsbshimou);
             },
             async content(event, trigger, player) {
@@ -23766,14 +23766,14 @@ let lmCharacter = {
                 const result = await player
                     .chooseButton([str, [list, "vcard"]], true)
                     .set("filterButton", button => {
-                        const source = get.event("source");
+                        const source = get.event().source;
                         return game.hasPlayer(target => {
                             return lib.filter.targetEnabled2({ name: button.link[2], isCard: true }, source, target);
                         });
                     })
                     .set("ai", button => {
                         const card = get.autoViewAs({ name: button.link[2], isCard: true });
-                        return get.event("source").getUseValue(card) * Math.sign(get.attitude(get.player(), get.event("source")));
+                        return get.event().source.getUseValue(card) * Math.sign(get.attitude(get.player(), get.event().source));
                     })
                     .set("source", target)
                     .forResult();
@@ -23784,7 +23784,7 @@ let lmCharacter = {
                     .chooseTarget(
                         `势谋：请为${get.translation(target)}选择${get.translation(card)}的目标`,
                         (card, player, target) => {
-                            return lib.filter.targetEnabled2(get.event("cardx"), get.event("source"), target);
+                            return lib.filter.targetEnabled2(get.event().cardx, get.event().source, target);
                         },
                         true,
                         range
@@ -23792,7 +23792,7 @@ let lmCharacter = {
                     .set("source", target)
                     .set("cardx", card)
                     .set("ai", target => {
-                        return get.effect(target, get.event("cardx"), get.event("source"), get.player());
+                        return get.effect(target, get.event().cardx, get.event().source, get.player());
                     })
                     .forResult();
                 const next = target.useCard(card, result2.targets, false);
@@ -25553,7 +25553,7 @@ let lmCharacter = {
                 event.result = await player
                     .chooseTarget(get.prompt2("old_twchuanshu"))
                     .set("ai", target => {
-                        if (!get.event("bool")) return 0;
+                        if (!get.event().bool) return 0;
                         let val = get.attitude(_status.event.player, target);
                         if (target.hasSkill("twchaofeng")) val += ai.guessTargetPoints(target).max;
                         return val * get.threaten(target);
@@ -25721,9 +25721,9 @@ let lmCharacter = {
                     .set("prompt", "忠义：请选择一项")
                     .set("choiceList", choiceList)
                     .set("ai", () => {
-                        const player = get.event("player");
-                        const num = get.event("num"),
-                            num2 = get.event("num2");
+                        const player = get.event().player;
+                        const num = get.event().num,
+                            num2 = get.event().num2;
                         if (player.isHealthy()) return "摸牌";
                         return player.hp + player.countCards("hs", card => player.canSaveCard(card, player)) - num2 > 0 && num > num2 ? "背水！" : "回血";
                     })
@@ -25761,7 +25761,7 @@ let lmCharacter = {
                         return !trigger.targets.includes(target) && player.canUse(trigger.card, target);
                     })
                     .set("ai", target => {
-                        const player = get.event("player"),
+                        const player = get.event().player,
                             trigger = _status.event.getTrigger();
                         return get.effect(target, trigger.card, player, player);
                     })
@@ -25830,7 +25830,7 @@ let lmCharacter = {
                                         return !trigger.targets.includes(target) && player.canUse(trigger.card, target);
                                     })
                                     .set("ai", target => {
-                                        const player = get.event("player"),
+                                        const player = get.event().player,
                                             trigger = _status.event.getTrigger();
                                         return get.effect(target, trigger.card, player, player);
                                     });
@@ -26613,7 +26613,7 @@ let lmCharacter = {
                     console.log(chooseList);
                     const { bool, links } = await player.chooseButton(chooseList, [1, 2])
                         .set("filterButton", button => {
-                            let st2 = get.event("st2");
+                            let st2 = get.event().st2;
                             if (st2.includes(button.link[2])) {
                                 return false;
                             }
