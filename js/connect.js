@@ -1220,17 +1220,17 @@ if (lib.config.extension_星之梦_lianji) {
 }
 //图片大小
 lib.element.player.emotion = function (pack, id) {
-	var emotionsize = lib.config.extension_星之梦_emotionsize;
-	var str = '<img src="##assetURL##image/emotion/' + pack + "/" + id + '.gif" width="' + parseInt(emotionsize) + '" height="' + parseInt(emotionsize) + '">';
+	var emotionsize = lib.config.extension_星之梦_emotionsize || 50;
+	var str = `<img src="##assetURL##image/emotion/${pack}/${id}" width="${emotionsize}" height="${emotionsize}">`;
 	this.say(str);
 	game.broadcast(
-		function (id, str) {
-			if (lib.playerOL[id]) {
-				lib.playerOL[id].say(str);
+		function (id2, str2) {
+			if (lib.playerOL[id2]) {
+				lib.playerOL[id2].say(str2);
 			} else if (game.connectPlayers) {
 				for (var i = 0; i < game.connectPlayers.length; i++) {
-					if (game.connectPlayers[i].playerid == id) {
-						game.connectPlayers[i].say(str);
+					if (game.connectPlayers[i].playerid == id2) {
+						game.connectPlayers[i].say(str2);
 						return;
 					}
 				}
@@ -1240,4 +1240,3 @@ lib.element.player.emotion = function (pack, id) {
 		str
 	);
 };
-
