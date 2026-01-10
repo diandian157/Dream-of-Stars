@@ -591,7 +591,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                                 }
                                 return [num, str];
                             });
-                        const { result } = await player
+                        const result = await player
                             .chooseButton(true, ["雕弓：请选择一项升级效果", [choiceList, "tdnodes"]])
                             .set("ai", ({ link: num }) => {
                                 const { player, list } = get.event();
@@ -606,7 +606,8 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                                 }
                                 return get.event().getRand(String(num));
                             })
-                            .set("list", list);
+                            .set("list", list)
+                            .forResult();
                         if (result?.bool && result.links?.length) {
                             const num = Number(result.links[0]);
                             game.log(player, "为【雕弓】选择的升级效果为", "#r" + improveList[num]);
@@ -1448,7 +1449,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                     let position = list.get(1) ? "he" : "h",
                         num = Array.from(list.values()).reduce((sum, i) => sum + i, 0) + (list.get(0) || 0);
                     num = Math.min(num, trigger.target.countDiscardableCards(player, position));
-                    const { result } = await player.discardPlayerCard(trigger.target, position, num, `雕弓：是否弃置${get.translation(trigger.target)}${get.cnNumber(num)}张${position == "h" ? "手" : ""}牌？`).set("chooseonly", true);
+                    const result = await player.discardPlayerCard(trigger.target, position, num, `雕弓：是否弃置${get.translation(trigger.target)}${get.cnNumber(num)}张${position == "h" ? "手" : ""}牌？`).set("chooseonly", true).forResult();
                     event.result = {
                         bool: result?.bool,
                         targets: [trigger.target],
@@ -1465,7 +1466,7 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                         suits = cards.map(card => get.suit(card, false)).unique();
                     if (suits.some(suit => list.get(lib.suit.slice().reverse().indexOf(suit) + 11))) {
                         let num = Array.from(list.values()).reduce((sum, i) => sum + i, 0);
-                        const { result } = await player
+                        const result = await player
                             .chooseControl("升级", "摸牌", "cancel2")
                             .set("prompt", `是否升级【雕弓】或摸${get.cnNumber(num)}张牌？`)
                             .set("ai", (event, player) => {
@@ -1483,7 +1484,8 @@ game.import("card", (lib, game, ui, get, ai, _status) => {
                                 return 0;
                             })
                             .set("num", num)
-                            .set("list", list);
+                            .set("list", list)
+                            .forResult();
                         if (!result?.control || result.control == "cancel2") {
                             return;
                         }

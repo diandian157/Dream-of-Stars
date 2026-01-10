@@ -1060,7 +1060,7 @@ let lmCharacter = {
                     return;
                 }
                 const list = get.addNewRowList(target.getCards("h"), "suit", target);
-                let { result } = await player
+                let result = await player
                     .chooseButton(
                         [
                             [
@@ -1088,7 +1088,8 @@ let lmCharacter = {
                     .set("ai", button => {
                         const player = get.player();
                         return button.links.length;
-                    });
+                    })
+                    .forResult();
                 if (!result?.links?.length) {
                     return;
                 }
@@ -1872,7 +1873,7 @@ let lmCharacter = {
                     if (!game.hasPlayer(current => current != player && !doneList.includes(current) && current.countDiscardableCards(player, pos))) {
                         break;
                     }
-                    let { result } = await player
+                    let result = await player
                         .chooseTarget(`孤悬：选择一名其他角色，弃置其${{ h: "手牌区", e: "装备区", j: "判定区" }[pos]}内的一张牌`)
                         .set("filterTarget", (_, player, target) => target != player && !get.event().doneList.includes(target) && target.countDiscardableCards(player, get.event().pos))
                         .set("ai", target => {
@@ -1880,13 +1881,14 @@ let lmCharacter = {
                             return get.effect(target, { name: "guohe_copy", position: pos }, player, player);
                         })
                         .set("doneList", doneList)
-                        .set("pos", pos);
+                        .set("pos", pos)
+                        .forResult();
                     if (!result?.bool || !result.targets?.length) {
                         break;
                     }
                     const target = result.targets[0];
                     player.line(target);
-                    ({ result } = await player.discardPlayerCard(target, pos));
+                    result = await player.discardPlayerCard(target, pos).forResult();
                     if (result?.bool) {
                         doneList.add(target);
                     }
@@ -13817,7 +13819,7 @@ let lmCharacter = {
                 await player.drawTo(seatnum);
                 await player.addMark("old_fangzhen", 1, false);
                 if (target != player) {
-                    let { result } = await player.chooseCard("he", [1, Infinity], "是否交给" + get.translation(target) + "任意张牌？").set("ai", card => 0.1 - get.value(card));
+                    let result = await player.chooseCard("he", [1, Infinity], "是否交给" + get.translation(target) + "任意张牌？").set("ai", card => 0.1 - get.value(card)).forResult();
                     if (result.bool) {
                         player.give(result.cards, target, "give");
                     }
@@ -13848,7 +13850,7 @@ let lmCharacter = {
             },
             async content(event, trigger, player) {
                 let target = event.targets[0];
-                let { result } = await player.chooseToCompare(target).set("small", true);
+                let result = await player.chooseToCompare(target).set("small", true).forResult();
                 let flag = false;
                 if (result.tie || !result.bool) flag = true;
                 let distance = [get.distance(player, target), get.distance(target, player)];
@@ -13864,14 +13866,15 @@ let lmCharacter = {
                 while (cards.length) {
                     let cardsx = cards.filter(i => get.position(i, true) == "d" && player.hasUseTarget(i));
                     if (!cardsx.length) break;
-                    let { result } = await player
+                    let result = await player
                         .chooseButton(["留驹：是否使用其中的一张牌？", cardsx])
                         .set("filterButton", button => {
                             return _status.event.player.hasUseTarget(button.link);
                         })
                         .set("ai", button => {
                             return _status.event.player.getUseValue(button.link) + 0.1;
-                        });
+                        })
+                        .forResult();
                     if (result.bool) {
                         let card = result.links[0];
                         cards.remove(card);
@@ -13882,11 +13885,11 @@ let lmCharacter = {
                 }
                 if (get.distance(player, target) != distance[0] || get.distance(target, player) != distance[1]) flag = true;
                 if (flag) {
-                    let { result } = await player.chooseControl(["复原武将牌", "复原武将牌上一个技能", "cancel2"]).set(ai, function () {
+                    let result = await player.chooseControl(["复原武将牌", "复原武将牌上一个技能", "cancel2"]).set(ai, function () {
                         let player = _status.event.player;
                         if (player.isTurnedOver()) return 0;
                         else return 1;
-                    });
+                    }).forResult();
                     if (result.index == 0) {
                         if (player.isTurnedOver()) player.turnOver();
                         player.link(false);
@@ -17973,7 +17976,7 @@ let lmCharacter = {
                     ) {
                         break;
                     }
-                    const { result: result2 } = await player
+                    const result2 = await player
                         .chooseCardButton(cards, true, "思泣：请选择要使用的牌")
                         .set("filterButton", button => {
                             const card = button.link;
@@ -17984,7 +17987,8 @@ let lmCharacter = {
                         })
                         .set("ai", button => {
                             return get.player().getUseValue(button.link);
-                        });
+                        })
+                        .forResult();
                     if (result2.bool) {
                         const card = result2.links[0];
                         game.broadcastAll(card => {
@@ -18705,9 +18709,9 @@ let lmCharacter = {
                         const target = event.targets[0];
                         let cards;
                         if (target === player) {
-                            cards = await player.chooseCard("h", true, `捷悟：展示你的一张手牌`).forResultCards();
+                            cards = (await player.chooseCard("h", true, `捷悟：展示你的一张手牌`).forResult()).cards;
                         } else {
-                            cards = await player.choosePlayerCard(target, true, "h", `捷悟：展示${get.translation(target)}的一张手牌`).forResultCards();
+                            cards = (await player.choosePlayerCard(target, true, "h", `捷悟：展示${get.translation(target)}的一张手牌`).forResult()).cards;
                         }
                         if (!cards?.length) {
                             return;
@@ -18729,9 +18733,9 @@ let lmCharacter = {
                                     return;
                                 }
                                 if (player !== putee) {
-                                    cardsx = await player.choosePlayerCard(putee, true, "he", "捷悟：将" + get.translation(putee) + "的一张牌置于牌堆顶").forResultCards();
+                                    cardsx = (await player.choosePlayerCard(putee, true, "he", "捷悟：将" + get.translation(putee) + "的一张牌置于牌堆顶").forResult()).cards;
                                 } else {
-                                    cardsx = await player.chooseCard("he", true, "捷悟：将你的一张牌置于牌堆顶").forResultCards();
+                                    cardsx = (await player.chooseCard("he", true, "捷悟：将你的一张牌置于牌堆顶").forResult()).cards;
                                 }
                                 const card = cardsx[0];
                                 putee.$throw(get.position(card) == "h" ? 1 : card, 1000);
