@@ -23490,7 +23490,7 @@ let lmCharacter = {
                 },
                 backup(links, player) {
                     return {
-                        audio: "dcjichao"
+                        audio: "dcjichao",
                         choice: links[0],
                         manualConfirm: true,
                         filterTarget(card, player, target) {
