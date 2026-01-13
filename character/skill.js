@@ -23355,7 +23355,8 @@ let lmCharacter = {
                     },
                     forced: true,
                     async content(event, trigger, player) {
-                        await player.gain(player.getExpansions("old_dccangming"), "giveAuto");
+                        game.log(player, "获得了", get.cnNumber(player.countExpansions("old_dccangming")), "张牌");
+                        await player.gain(player.getExpansions("old_dccangming"), "draw");
                     },
                 },
             },
@@ -23489,6 +23490,7 @@ let lmCharacter = {
                 },
                 backup(links, player) {
                     return {
+                        audio: "dcjichao"
                         choice: links[0],
                         manualConfirm: true,
                         filterTarget(card, player, target) {
