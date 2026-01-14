@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+import { lib, game, ui, get, ai, _status } from "noname";
 import { character } from "../character/index.js";
 import { skill } from "../character/skill.js";
 import { } from "../js/pause.js";

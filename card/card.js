@@ -1,5 +1,5 @@
 game.import("card", (lib, game, ui, get, ai, _status) => {
-    let swCard = {
+    const swCard = {
         name: "swCard",
         connect: true,
         //部分搬运修改自猫猫叹气、民间卡牌

@@ -1,25 +1,25 @@
-import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-import { characterData } from './characterData.js'
-import { characterIntro } from './characterIntro.js'
-import { characterReplace } from './characterReplace.js'
-import { characterSort } from './characterSort.js'
-import { characterSubstitute } from './characterSubstitute.js'
-import { characterTitle } from './characterTitle.js'
-import { perfectPair } from './perfectPair.js'
-import { dynamicTranslate } from './dynamicTranslate.js'
-import { translate } from './translate.js'
-let lmCharacter = {
-    name: 'mode_extension_星之梦',
+import { lib, game, ui, get, ai, _status } from "noname";
+import characters from "./character.js"
+import characterIntros from "./intro.js"
+import characterReplaces from "./replace.js"
+import characterSorts from "./sort.js"
+import characterSubstitute from "./characterSubstitute.js"
+import characterTitles from "./characterTitle.js"
+import perfectPairs from "./perfectPairs.js"
+import dynamicTranslates from "./dynamicTranslate.js"
+import translates from "./translate.js"
+const lmCharacter = {
+    name: "lmCharacter",
     connect: true,
-    character: { ...characterData },//武将信息
-    characterIntro: { ...characterIntro },//武将简介
-    characterReplace: { ...characterReplace },//武将切换
-    characterSort: { ...characterSort },//武将分类
-    characterTitle: { ...characterTitle },//武将称号
+    character: { ...characters },//武将信息
+    characterIntro: { ...characterIntros },//武将简介
+    characterReplace: { ...characterReplaces },//武将切换
+    characterSort: { ...characterSorts },//武将分类
+    characterTitle: { ...characterTitles },//武将称号
     characterSubstitute: { ...characterSubstitute },//转换技切换皮肤
-    perfectPair: { ...perfectPair },//珠联璧合
-    dynamicTranslate: { ...dynamicTranslate },//动态翻译
-    translate: translate,//翻译信息
+    perfectPair: { ...perfectPairs },//珠联璧合
+    dynamicTranslate: { ...dynamicTranslates },//动态翻译
+    translate: { ...translates },//翻译信息
 };
 if (lib.device || lib.node) {
     if (!_status.postReconnect.LM) _status.postReconnect.LM = [function (list, info) {
@@ -28,11 +28,9 @@ if (lib.device || lib.node) {
         };
         for (let i in info) if (!lib.translate[i]) lib.translate[i] = info[i];
     }, {}, {}]
-    for (let name in characterData) {
-        //添加原画
-        characterData[name][4].push("ext:星之梦/image/character/" + name + ".jpg");
-        //添加阵亡语音
-        characterData[name][4].push('die:ext:星之梦/image/audio/' + name + '.mp3');
+    for (let i in characters) {
+        characters[i].img = characters[i].img || "extension/星之梦/image/character/" + i + ".jpg";
+        characters[i].dieAudios = characters[i].dieAudios || ["ext:星之梦/audio/die/" + i + ".mp3"];
     };
 };
 export const character = lmCharacter;

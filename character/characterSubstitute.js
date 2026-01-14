@@ -1,5 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-let lmCharacter = {//切换皮肤
+const characterSubstitute = {//切换皮肤
     old_sb_sp_zhugeliang: [["sb_zhugeliang", ["tempname:sb_zhugeliang"]]],
     oldx_sb_sp_zhugeliang: [["sb_zhugeliang", ["tempname:sb_zhugeliang"]]],
     old_pot_yuji: [["pot_yuji_shadow", ["tempname:pot_yuji_shadow"]]],
@@ -37,4 +37,4 @@ let lmCharacter = {//切换皮肤
     old_dc_sb_xunyu: [["dc_sb_xunyu_shadow", ["tempname:dc_sb_xunyu_shadow"]]],
     old_dc_sb_luxun: [["dc_sb_luxun_shadow", ["tempname:dc_sb_luxun_shadow"]]],
 };
-export const characterSubstitute = lmCharacter;
+export default characterSubstitute;

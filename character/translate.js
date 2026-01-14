@@ -1,5 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-let lmCharacter = {//翻译
+const translates = {//翻译
     mb_old: "手杀怀旧",
     ol_old: "OL怀旧",
     xin_old: "新杀怀旧",
@@ -1095,4 +1095,4 @@ let lmCharacter = {//翻译
     "#ext:星之梦/audio/die/wangtaowangyue1:die": "落花有意，何人来摘……",
     "#ext:星之梦/audio/die/wangtaowangyue2:die": "这次比试不算，再来……",
 };
-export const translate = lmCharacter;
+export default translates;

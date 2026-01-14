@@ -1,5 +1,5 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
-let lmCharacter = {//武将分类
+import { lib, game, ui, get, ai, _status } from "noname";
+const characterSorts = {//武将分类
     mode_extension_星之梦: {
         mb_old: ["old_new_simayi", "old_mb_shen_jiangwei", "oldx_mb_shen_jiangwei", "old_mb_jushou", "old_mb_zhuzhi", "old_mb_sp_zhenji", "old_fuqian", "old_mb_guozhao", "old_mb_chengui", "old_yangfu", "old_wangling", "old_sp_wangshuang", "old_wujing", "old_sp_xinpi", "old_qiaogong", "old_sp_lvfan", "old_xin_zhangzhongjing", "old_sp_zhujun", "old_yj_zhoubuyi", "old_liwei", "old_shenpei", "old_mb_sp_guanqiujian", "old_mb_wangjing", "oldx_sp_jianggan",
             "old_sb_huangzhong", "old_sb_gongsunzan", "old_sb_sunquan", "old_sb_huanggai", "old_sb_ganning", "old_sb_xiaoqiao", "old_sb_daqiao", "old_sb_sunce", "old_sb_sp_zhugeliang", "old_sb_zhugeliang", "oldx_sb_sp_zhugeliang", "oldx_sb_zhugeliang", "old_sb_menghuo", "old_sb_zhurong", "old_sb_guanyu", "old_sb_zhaoyun", "old_sb_fazheng", "old_sb_xuhuang", "old_sb_yuanshao", "old_sb_handang", "old_sb_huaxiong", "old_sb_jiaxu", "old_sb_zhugejin", "old_sb_zhangliao", "old_sb_guojia", "old_sb_gaoshun", "old_sb_xiahouyuan", "old_sb_lvbu",
@@ -16,4 +16,4 @@ let lmCharacter = {//武将分类
         lmCharacter_other: ["unlock_dongzhao", "unlock_tianchuan", "zhangjian", "lm_jikang"],
     },
 };
-export const characterSort = lmCharacter;
+export default characterSorts;

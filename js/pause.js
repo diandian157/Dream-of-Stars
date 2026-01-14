@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+import { lib, game, ui, get, ai, _status } from "noname";
 if ((lib.config.show_log != "off") & lib.config.extension_星之梦_shoushalog) {
 	lib.init.css(lib.assetURL + "extension/星之梦/css", "shoushalog");
 }

@@ -1,5 +1,5 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
-let lmCharacter = {
+import { lib, game, ui, get, ai, _status } from "noname";
+const lmCharacter = {
     //技能
     skill: {
         //虎翼徐荣

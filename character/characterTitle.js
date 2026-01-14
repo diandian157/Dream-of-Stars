@@ -1,5 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-let lmCharacter = {//武将称号
+const characterTitles = {//武将称号
     //手杀
     old_mb_caomao: "向死存魏",
     old_mb_shen_jiangwei: "燃魂孤忠",
@@ -221,4 +221,4 @@ let lmCharacter = {//武将称号
     lm_guosheng: "毋同岁凤",
     lm_gaowang: "龙凤交欢",
 };
-export const characterTitle = lmCharacter;
+export default characterTitles;

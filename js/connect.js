@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+import { lib, game, ui, get, ai, _status } from "noname";
 if (lib.config.extension_星之梦_lianji) {
 	//聊天
 	lib.translate.hehua = "荷花";

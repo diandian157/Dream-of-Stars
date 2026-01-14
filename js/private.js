@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js"
+import { lib, game, ui, get, ai, _status } from "noname";
 
 //曹金玉显示优化
 lib.skill.yuqi = {

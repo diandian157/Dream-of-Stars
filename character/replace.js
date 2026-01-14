@@ -1,5 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-let lmCharacter = {//武将切换
+const characterReplaces = {//武将切换
   yj_jushou: ["old_mb_jushou", "yj_jushou", "ol_sb_jushou", "re_jushou", "dc_sb_jushou", "xin_jushou", "std_jushou"],
   zhuzhi: ["old_mb_zhuzhi", "zhuzhi", "re_zhuzhi", "xin_zhuzhi", "tw_zhuzhi", "old_zhuzhi"],
   guozhao: ["old_mb_guozhao", "ol_guozhao", "guozhao", "xin_guozhao", "jsrg_guozhao", "std_guozhao", "pe_guozhao"],
@@ -175,4 +175,4 @@ let lmCharacter = {//武将切换
   shen_zhangjiao: ["sw_zhangjiao"],
   shen_diaochan: ["shen_diaochan", "sw_diaochan"],
 };
-export const characterReplace = lmCharacter;
+export default characterReplaces;
