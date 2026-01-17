@@ -8269,9 +8269,7 @@ const lmCharacter = {
             },
             async cost(event, trigger, player) {
                 let cardsx = get.cards(player.hp, true).map(card => {
-                    var cardx = ui.create.card();
-                    cardx.init(get.cardInfo(card));
-                    cardx._cardid = card.cardid;
+                    const cardx = game.createFakeCards(card)[0];
                     cardx.preCard = card;
                     return cardx;
                 });
@@ -8325,24 +8323,9 @@ const lmCharacter = {
                                 return card;
                             });
                         }
-                        if (player.isOnline2()) {
-                            player.send(
-                                function (cards, player) {
-                                    cards.forEach(i => i.delete());
-                                    if (player == game.me) {
-                                        ui.updatehl();
-                                    }
-                                },
-                                cardsx,
-                                player
-                            );
-                        }
-                        cardsx.forEach(i => i.delete());
-                        if (player == game.me) {
-                            ui.updatehl();
-                        }
                     }
                 }
+                game.deleteFakeCards(cardsx);
                 event.result = {
                     bool: result?.bool,
                     cards: cards,
