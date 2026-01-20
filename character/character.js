@@ -714,6 +714,14 @@ const characters = {//武将信息
         clans: ["颍川荀氏"],
         tempname: ["clan_xunyu"],
     },
+    old_clan_xunshi: {
+        sex: "female",
+        group: "wei",
+        hp: 3,
+        skills: ["old_clanqingjue", "old_clanxsyingxiang", "clandaojie"],
+        clans: ["颍川荀氏"],
+        tempname: ["clan_xunshi"],
+    },
     old_zhanghua: {
         sex: "male",
         group: "jin",

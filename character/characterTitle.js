@@ -82,6 +82,7 @@ const characterTitles = {//武将称号
     old_clan_zhonghui: "百巧惎",
     old_clan_hanrong: "虎口扳渡",
     old_clan_hanshao: "分投急所",
+    old_clan_xunshi: "屏后点香谱",
     old_zhanghua: "连理分枝",
     old_yuanji: "文明皇后",
     old_tengfanglan: "铃兰凋落",
@@ -180,8 +181,8 @@ const characterTitles = {//武将称号
     diy_liaohua: "历尽沧桑",
     diy_zhangfei: "当阳怒吼",
     //改
-    wangtaowangyue: "",
-    lm_old_caocao: "",
+    wangtaowangyue: "春悦桃秾",
+    lm_old_caocao: "挟汉临诸夏",
     //神武
     sw_guanyu: "鬼神再临",
     sw_lvmeng: "圣光之国士",
