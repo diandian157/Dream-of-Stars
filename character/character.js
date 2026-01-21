@@ -439,6 +439,14 @@ const characters = {//武将信息
         img: "image/character/sb_zhangliao.jpg",
         dieAudios: ["sb_zhangliao"],
     },
+    old_sb_zhanghe: {
+        sex: "male",
+        group: "wei",
+        hp: 4,
+        skills: ["old_sbqiaobian"],
+        img: "image/character/sb_zhanghe.jpg",
+        dieAudios: ["sb_zhanghe"],
+    },
     old_sb_guojia: {
         sex: "male",
         group: "wei",
@@ -605,6 +613,14 @@ const characters = {//武将信息
         skills: ["old_mbxuye", "old_mbkuangxiang"],
         img: "image/character/pangxi.jpg",
         dieAudios: ["pangxi"],
+    },
+    old_pot_dengai: {
+        sex: "male",
+        group: "wei",
+        hp: 3,
+        skills: ["old_pottuntian", "old_potjixi", "old_potzaoxian"],
+        img: "image/character/pot_dengai.jpg",
+        dieAudios: ["pot_dengai"],
     },
     old_mb_liuhui: {
         sex: "male",

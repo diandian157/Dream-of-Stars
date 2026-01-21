@@ -54,6 +54,7 @@ const characterTitles = {//武将称号
     old_sb_jiaxu: "计深似海",
     old_sb_zhugejin: "才猷蕴借",
     old_sb_zhangliao: "古之召虎",
+    old_sb_zhanghe: "料敌机先",
     old_sb_guojia: "翼谋奇佐",
     old_sb_gaoshun: "攻无不克",
     old_sb_xiahouyuan: "虎步关右",
@@ -76,6 +77,7 @@ const characterTitles = {//武将称号
     old_pangxi: "壁玉佐君",
     //old_mb_liuhui: "",
     //old_mb_sunquan: "",
+    //old_pot_dengai: "",
     //OL
     old_shen_caopi: "诰天仰颂",
     oldx_clan_xuncai: "怀刃自誓",

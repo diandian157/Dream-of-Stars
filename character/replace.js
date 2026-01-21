@@ -38,8 +38,9 @@ const characterReplaces = {//武将切换
   shenpei: ["old_shenpei", "shenpei", "sp_shenpei", "ns_shenpei"],
   majun: ["majun", "yj_majun", "std_majun", "cx_majun", "qq_majun", "old_yj_majun"],
   nanhualaoxian: ["ol_nanhualaoxian", "re_nanhualaoxian", "nanhualaoxian", "jsrg_nanhualaoxian", "hm_nanhualaoxian", "std_nanhualaoxian", "ns_nanhua", "ns_xinnanhua", "old_ol_nanhualaoxian"],
-  dengai: ["old_ol_sb_dengai", "oldx_ol_sb_dengai", "old_dc_sb_dengai", "dengai", "ol_dengai", "ol_sb_dengai", "re_dengai", "jsrg_dengai", "ren_dengai", "dc_sb_dengai", "bigsb_dengai", "pot_dengai"],
+  dengai: ["old_pot_dengai", "old_ol_sb_dengai", "oldx_ol_sb_dengai", "old_dc_sb_dengai", "dengai", "ol_dengai", "ol_sb_dengai", "re_dengai", "jsrg_dengai", "ren_dengai", "dc_sb_dengai", "bigsb_dengai", "pot_dengai"],
   zhangliao: ["old_sb_zhangliao", "zhangliao", "re_zhangliao", "sp_zhangliao", "v_zhangliao", "yj_zhangliao", "sb_zhangliao", "jsrg_zhangliao", "eu_zhangliao", "ol_jsrg_zhangliao"],
+  zhanghe: ["old_sb_zhanghe", "zhanghe", "re_zhanghe", "sp_ol_zhanghe", "yj_zhanghe", "sp_zhanghe", "sb_zhanghe", "tw_yj_zhanghe", "huan_zhanghe", "jsrg_zhanghe", "wn_zhanghe", "zc26_zhanghe", "star_zhanghe"],
   guojia: ["old_sb_guojia", "guojia", "re_guojia", "yj_sb_guojia", "sb_guojia", "jsrg_guojia", "ps1059_guojia", "ps2070_guojia", "ol_sb_guojia"],
   oldx_clan_xuncai: ["clan_xuncai", "oldx_clan_xuncai"],
   zhonghui: ["old_clan_zhonghui", "old_xin_zhonghui", "zhonghui", "clan_zhonghui", "xin_zhonghui", "re_zhonghui", "std_zhonghui", "yj_zhonghui", "pe_zhonghui", "old_zhonghui", "zj_zhonghui", "sp_zhonghui", "hfdiy_zhonghui"],
@@ -154,6 +155,7 @@ const characterReplaces = {//武将切换
   caomao: ["caomao", "mb_caomao", "old_mb_caomao"],
   yangfeng: ["ol_yangfeng", "yangfeng", "old_ol_yangfeng"],
   old_hansong: ["hansong", "old_hansong"],
+  old_clan_xunshiang: ["old_clan_xunshang", "clan_xunshang"],
 
   shen_sunquan: ["shen_sunquan", "junk_sunquan", "dc_shen_sunquan", "old_dc_shen_sunquan"],
   shen_huatuo: ["dc_shen_huatuo", "shen_huatuo", "old_dc_shen_huatuo"],
