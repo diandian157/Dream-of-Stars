@@ -15318,9 +15318,7 @@ const lmCharacter = {
                 if (bool) {
                     let cards = moved[1].slice();
                     game.log(player, "将", cards, "置于了牌堆顶");
-                    while (cards.length) {
-                        ui.cardPile.insertBefore(cards.pop().fix(), ui.cardPile.firstChild);
-                    }
+                    await game.cardsGotoPile(cards.reverse(), "insert");
                 }
             },
             getCards(event, player) {
@@ -27063,19 +27061,25 @@ const lmCharacter = {
                     },
                     forced: true,
                     locked: false,
-                    content() {
-                        "step 0";
+                    async content(event, trigger, player) {
                         player.addTempSkill("old_twshelie_round", "roundStart");
-                        player.chooseControl("摸牌阶段", "出牌阶段").set("prompt", "涉猎：请选择要执行的额外阶段");
-                        "step 1";
+                        let result;
+                        if (typeof player.storage.twshelie == "number") {
+                            result = { index: player.storage.twshelie };
+                        } else {
+                            result = await player.chooseControl("摸牌阶段", "出牌阶段").set("prompt", "涉猎：请选择要执行的额外阶段").forResult();
+                        }
+                        player.setStorage("old_twshelie", 1 - result.index);
                         const evt = trigger.getParent("phase", true, true);
                         if (result.index == 0) {
-                            if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|old_twshelie");
+                            if (evt?.phaseList) {
+                                evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|old_twshelie");
+                            }
                         }
                         if (result.index == 1) {
-                            var next = player.phaseUse();
-                            event.next.remove(next);
-                            if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseUse|old_twshelie");
+                            if (evt?.phaseList) {
+                                evt.phaseList.splice(evt.num + 1, 0, "phaseUse|old_twshelie");
+                            }
                         }
                     },
                 },
