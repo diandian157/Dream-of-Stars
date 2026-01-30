@@ -5156,13 +5156,24 @@ const lmCharacter = {
                 block: {
                     mod: {
                         cardEnabled(card, player) {
-                            if (!player.storage.old_sbliegong_blocker) return;
+                            if (!player.storage.old_sbliegong_blocker) {
+                                return;
+                            }
                             const suit = get.suit(card);
-                            if (suit == "none") return;
+                            if (suit == "none") {
+                                return;
+                            }
                             let evt = _status.event;
-                            if (evt.name != "chooseToUse") evt = evt.getParent("chooseToUse");
-                            if (!evt || !evt.respondTo || evt.respondTo[1].name != "sha") return;
-                            if (player.storage.old_sbliegong_blocker.includes(suit)) return false;
+                            if (evt.name != "chooseToUse") {
+                                evt = evt.getParent("chooseToUse");
+                            }
+                            const cards = player.storage.old_sbliegong_block.map(i => i[0]);
+                            if (!evt || !evt.respondTo || !cards.includes(evt.respondTo[1])) {
+                                return;
+                            }
+                            if (player.storage.old_sbliegong_blocker.includes(suit)) {
+                                return false;
+                            }
                         },
                     },
                     trigger: {
