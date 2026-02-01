@@ -2929,7 +2929,7 @@ const lmCharacter = {
                             player,
                             get.suit(trigger.card, player)
                         );
-                        player.when("phaseUseAfter").then(() => {
+                        player.when("phaseUseAfter").step(async () => {
                             player.unmarkSkill("jianying_mark");
                             delete player.storage.jianying_mark;
                         });
@@ -3616,7 +3616,7 @@ const lmCharacter = {
                 var target = game.findPlayer(current => current.hasSkill("old_yichong_" + player.playerid));
                 if (!target) return false;
                 if (event.name == "damage") return target.hp > 1 && target.hp > player.hp;
-                return event.isFirstTarget && (event.card.name == "sha" || (get.type(event.card) == "trick" && get.tag(event.card, "damage")));
+                return event.isFirstTarget && (event.card.name == "sha" || (get.type(event.card) == "trick" && get.is.damageCard(card)));
             },
             direct: true,
             content() {
@@ -4623,7 +4623,7 @@ const lmCharacter = {
                     },
                     filter(event, player) {
                         if (!player.isPhaseUsing()) return false;
-                        if (!get.tag(event.card, "damage")) return false;
+                        if (!get.is.damageCard(card)) return false;
                         const target = event.target;
                         return target !== player && target.countCards("h") >= target.getHp() && target.hasEnabledSlot(1);
                     },
@@ -8970,7 +8970,7 @@ const lmCharacter = {
                             game.log(card, "无视防具且不计入次数限制");
                             if (!player.storage.old_sbxianzhen_damaged) {
                                 player.storage.old_sbxianzhen_damaged = (player.storage.old_sbxianzhen_damaged || 0) + 1;
-                                player.when("phaseAfter").then(() => {
+                                player.when("phaseAfter").step(async () => {
                                     delete player.storage.old_sbxianzhen_damaged;
                                 });
                             }
@@ -9033,7 +9033,7 @@ const lmCharacter = {
                             if (evt && evt.hs && evt.hs.length) targets.add(current);
                         });
                         if (!player.storage.old_sbxianzhen_recorded) {
-                            player.when("old_sbxianzhen_attackAfter").then(() => {
+                            player.when("old_sbxianzhen_attackAfter").step(async () => {
                                 delete player.storage.old_sbxianzhen_recorded;
                             });
                         }
@@ -10367,8 +10367,8 @@ const lmCharacter = {
                                         player
                                             .when("useCard2")
                                             .filter(evt => evt === trigger)
-                                            .then(() => {
-                                                player
+                                            .step(async (event, trigger, player) => {
+                                                const result = await player
                                                     .chooseTarget("是否为" + get.translation(trigger.card) + "增加一个目标？", (card, player, target) => {
                                                         const evt = get.event().getTrigger();
                                                         return !evt.targets.includes(target) && lib.filter.targetEnabled2(evt.card, player, target) && lib.filter.targetInRange(evt.card, player, target);
@@ -10377,9 +10377,8 @@ const lmCharacter = {
                                                         const player = get.player(),
                                                             evt = get.event().getTrigger();
                                                         return get.effect(target, evt.card, player);
-                                                    });
-                                            })
-                                            .then(() => {
+                                                    })
+                                                    .forResult();
                                                 if (result?.bool && result.targets?.length) {
                                                     const [target] = result.targets;
                                                     player.line(target, trigger.card.nature);
@@ -10400,7 +10399,7 @@ const lmCharacter = {
                                         player
                                             .when("useCardAfter")
                                             .filter(evt => evt === trigger)
-                                            .then(() => player.draw(2));
+                                            .step(async () => await player.draw(2));
                                         break;
                                 }
                             }
@@ -11285,17 +11284,20 @@ const lmCharacter = {
                                 player.addTempSkill("old_potfuji_clear", { player: "phaseBegin" });
                                 await player.addAdditionalSkills("old_potfuji_" + player.playerid, ["old_potfuji_sha", "old_potfuji_shan"], true);
                             }
-                            player.when({ player: "phaseBegin" }).then(() => {
-                                player.changeSkin({ characterName: "old_pot_yuji" }, "pot_yuji");
-                                game.broadcastAll(function (player) {
-                                    if (player.node.old_potfuji_dynamic) {
-                                        player.node.old_potfuji_dynamic.delete();
-                                        player.node.old_potfuji_dynamic2.delete();
-                                        delete player.node.old_potfuji_dynamic;
-                                        delete player.node.old_potfuji_dynamic2;
-                                    }
-                                }, player);
-                            });
+                            player
+                                .when({ player: ["phaseBegin"] }, false)
+                                .step(async () => {
+                                    player.changeSkin({ characterName: "old_pot_yuji" }, "pot_yuji");
+                                    game.broadcastAll(function (player) {
+                                        if (player.node.old_potfuji_dynamic) {
+                                            player.node.old_potfuji_dynamic.delete();
+                                            player.node.old_potfuji_dynamic2.delete();
+                                            delete player.node.old_potfuji_dynamic;
+                                            delete player.node.old_potfuji_dynamic2;
+                                        }
+                                    }, player);
+                                })
+                                .finish();
                         },
                         dynamic(player) {
                             game.broadcastAll(function (player) {
@@ -13064,7 +13066,7 @@ const lmCharacter = {
                     silent: true,
                     trigger: { player: "useCard1" },
                     filter(event, player) {
-                        return get.tag(event.card, "damage");
+                        return get.is.damageCard(card);
                     },
                     async content(event, trigger, player) {
                         player.removeSkill(event.name);
@@ -17792,14 +17794,14 @@ const lmCharacter = {
             logTarget: "player",
             check: function (event, player) {
                 if (event.getParent().excluded.includes(player)) return false;
-                if (get.attitude(player, event.player) > 0 || (player.hp < 2 && !get.tag(event.card, "damage"))) return false;
+                if (get.attitude(player, event.player) > 0 || (player.hp < 2 && !get.is.damageCard(card))) return false;
                 let evt = event.getParent(),
                     directHit = (evt.nowuxie && get.type(event.card, "trick") === "trick") || (evt.directHit && evt.directHit.includes(player)) || (evt.customArgs && evt.customArgs.default && evt.customArgs.default.directHit2);
                 if (get.tag(event.card, "respondSha")) {
                     if (directHit || player.countCards("h", { name: "sha" }) === 0) return true;
                 } else if (get.tag(event.card, "respondShan")) {
                     if (directHit || player.countCards("h", { name: "shan" }) === 0) return true;
-                } else if (get.tag(event.card, "damage")) {
+                } else if (get.is.damageCard(card)) {
                     if (event.card.name === "huogong") return event.player.countCards("h") > 4 - player.hp - player.hujia;
                     if (event.card.name === "shuiyanqijunx") return player.countCards("e") === 0;
                     return true;
@@ -17927,7 +17929,7 @@ const lmCharacter = {
                         player
                             .when("chooseToUseBegin")
                             .filter(evt => evt === next)
-                            .then(() => (trigger.filterCard = () => false));
+                            .step(async (event, trigger, player) => (trigger.filterCard = () => false));
                         const result3 = await next.forResult();
                         player.removeSkill("old_olsiqi_target");
                         if (result3.bool) {
@@ -18053,8 +18055,8 @@ const lmCharacter = {
                 global: "useCardAfter",
             },
             filter(event, player, name) {
-                if (name == "useCardToPlayer") return get.tag(event.card, "damage") > 0.5 && event.targets.length == 1 && player.countDiscardableCards(player, "he", card => get.color(card, player) == "red");
-                return get.tag(event.card, "damage") > 0.5 && event.targets.includes(player) && !player.hasHistory("damage", evt => evt.getParent("useCard") == event) && player.countDiscardableCards(player, "he", card => get.color(card, player) == "black") && player.hasUseTarget({ name: "sha", isCard: true }, false, false);
+                if (name == "useCardToPlayer") return get.is.damageCard(card) > 0.5 && event.targets.length == 1 && player.countDiscardableCards(player, "he", card => get.color(card, player) == "red");
+                return get.is.damageCard(card) > 0.5 && event.targets.includes(player) && !player.hasHistory("damage", evt => evt.getParent("useCard") == event) && player.countDiscardableCards(player, "he", card => get.color(card, player) == "black") && player.hasUseTarget({ name: "sha", isCard: true }, false, false);
             },
             logTarget(event, player, name) {
                 if (name == "useCardToPlayer") return [event.target];
@@ -18176,7 +18178,7 @@ const lmCharacter = {
                 player
                     .when("phaseJieshuBegin")
                     .filter(evt => evt.getParent() == trigger.getParent() && player.hasHistory("sourceDamage", evtx => evtx.player != player) && player.countCards("he"))
-                    .then(() => {
+                    .step(async () => {
                         player.chooseToDiscard("he", game.countGroup(), true);
                     });
             },
@@ -18596,7 +18598,7 @@ const lmCharacter = {
                 player
                     .when({ global: "phaseUseAfter" })
                     .filter(evt => evt === trigger)
-                    .then(() => player.removeSkill("old_clanjiewu_effect"));
+                    .step(async () => player.removeSkill("old_clanjiewu_effect"));
             },
             subSkill: {
                 effect: {
@@ -19909,7 +19911,7 @@ const lmCharacter = {
                         player
                             .when({ global: "roundStart" })
                             .filter(evt => evt != trigger)
-                            .then(() => {
+                            .step(async () => {
                                 player.unmarkSkill("old_dcsbchuanyu");
                                 delete player.storage.old_dcsbchuanyu;
                             });
@@ -20865,7 +20867,7 @@ const lmCharacter = {
                                 target.addMark("old_dcfuli_range", 1, false);
                                 player
                                     .when(["phaseBegin", "dieBegin"])
-                                    .then(() => {
+                                    .step(async () => {
                                         target.removeMark("old_dcfuli_range", 1, false);
                                         if (!target.hasMark("old_dcfuli_range")) target.removeSkill("old_dcfuli_range");
                                     })
@@ -22003,7 +22005,7 @@ const lmCharacter = {
                         .assign({
                             firstDo: true,
                         })
-                        .then(() => delete player.storage.old_jingyu_used);
+                        .step(async () => delete player.storage.old_jingyu_used);
                 }
                 let skill = trigger.sourceSkill || trigger.skill,
                     info = get.info(skill);
@@ -25944,12 +25946,12 @@ const lmCharacter = {
                         player.removeMark("old_twchue", num);
                         const card = new lib.element.VCard({ name: "sha" });
                         player
-                            .when("useCard2")
+                            .when("useCard2", false)
                             .filter(evt => evt.getParent(2) == event)
                             .assign({
                                 firstDo: true,
                             })
-                            .then(() => {
+                            .step(async (event, trigger, player) => {
                                 trigger.baseDamage++;
                                 if (
                                     !game.hasPlayer(target => {
@@ -25957,7 +25959,7 @@ const lmCharacter = {
                                     })
                                 )
                                     return;
-                                player
+                                const result = await player
                                     .chooseTarget("额外指定至多" + get.cnNumber(num) + "名目标", [1, num], (card, player, target) => {
                                         const trigger = _status.event.getTrigger();
                                         return !trigger.targets.includes(target) && player.canUse(trigger.card, target);
@@ -25966,16 +25968,15 @@ const lmCharacter = {
                                         const player = get.event().player,
                                             trigger = _status.event.getTrigger();
                                         return get.effect(target, trigger.card, player, player);
-                                    });
-                            })
-                            .then(() => {
+                                    })
+                                    .forResult();
                                 if (result.bool) {
                                     const targets = result.targets;
                                     player.line(targets);
                                     trigger.targets.addArray(targets);
                                 }
                             })
-                            .vars({ num: num });
+                            .finish();
                         player.chooseUseTarget("视为使用造成的伤害+1且可以额外指定" + num + "个目标的【杀】", card, false, true);
                     },
                 },
@@ -26416,14 +26417,10 @@ const lmCharacter = {
                 if (!_status.currentPhase) return;
                 player
                     .when({ global: "phaseAfter" })
-                    .then(() => {
+                    .step(async (event, trigger, player) => {
                         player.insertPhase();
-                    })
-                    .then(() => {
                         const num = Math.min(7, player.getStorage("twbeiding").length);
-                        if (num > 0) player.draw(num);
-                    })
-                    .then(() => {
+                        if (num > 0) await player.draw(num);
                         player.storage.isInHuan = true;
                         player.changeSkin({ characterName: "old_huan_zhugeliang" }, "huan_zhugeliang_shadow");
                         player.changeSkills(get.info("old_twhunyou").derivation, ["old_twhunyou"]);
