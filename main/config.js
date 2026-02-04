@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from '../../../noname.js'
+import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 export let config = {
 	//部分功能搬运自各扩展，侵删
 	fgx0: {
@@ -186,14 +186,15 @@ export let config = {
 		input: true,
 		onblur: function () {
 			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
-			let value = parseInt(this.innerHTML.replace(/[^\d]/g, ''));
+			let value = parseInt(this.innerHTML.replace(/[^\d]/g, ""));
 			if (isNaN(value)) value = 100;
 			value = Math.max(50, Math.min(150, value));
 			this.innerHTML = value;
 			game.saveConfig("extension_星之梦_emotionsize", value);
 		},
 	},
-	fgx3: {//搬运自活动武将
+	fgx3: {
+		//搬运自活动武将
 		name: "<font size='4'>---------游戏播报---------</font>",
 		clear: true,
 	},

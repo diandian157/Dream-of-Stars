@@ -6,40 +6,26 @@ export async function content(config, pack) {
 		var rank = {
 			rarity: {
 				//传说
-				legend: [
-				],
+				legend: [],
 				//史诗
-				epic: [
-				],
+				epic: [],
 				//稀有
-				rare: [
-				],
+				rare: [],
 				//普通
-				common: [
-				],
+				common: [],
 				//平凡
-				junk: [
-				],
+				junk: [],
 			},
 			//出场率
-			s: [
-			],
-			ap: [
-			],
-			a: [
-			],
-			am: [
-			],
-			bp: [
-			],
-			b: [
-			],
-			bm: [
-			],
-			c: [
-			],
-			d: [
-			],
+			s: [],
+			ap: [],
+			a: [],
+			am: [],
+			bp: [],
+			b: [],
+			bm: [],
+			c: [],
+			d: [],
 		};
 		//总置
 		var addRank = function (rank) {
@@ -64,20 +50,24 @@ export async function content(config, pack) {
 	// 扩展导入完成后，再次重启时，检测扩展文件夹名是否正确，新增为防出现bug请修正的提示
 	for (var i in lib.extensionPack) {
 		if (!lib.config.extensions.includes(i)) {
-			alert("检测到扩展文件夹名不正确！\r将会引起很多跟路径相关的bug，而且这样导入的扩展无法在游戏内删除。\n\r为防出现bug，请依照如下路径修正扩展文件夹名:\n游戏目录/extension/" + i);
+			alert(
+				"检测到扩展文件夹名不正确！\r将会引起很多跟路径相关的bug，而且这样导入的扩展无法在游戏内删除。\n\r为防出现bug，请依照如下路径修正扩展文件夹名:\n游戏目录/extension/" +
+					i
+			);
 		}
 	}
-	if (lib.config.extensions && game.getFileList && game.readFile && game.writeFile && lib.config.extension_星之梦_fileimport) { //添加交互素材
+	if (lib.config.extensions && game.getFileList && game.readFile && game.writeFile && lib.config.extension_星之梦_fileimport) {
+		//添加交互素材
 		game.getFileList("extension/星之梦/copy/throw_emotion/", (folders, files) => {
 			game.getFileList("image/emotion/throw_emotion/", (targetFolders, targetFiles) => {
 				for (let img of files) {
 					if (targetFiles.includes(img)) continue;
 					game.readFile(
 						"extension/星之梦/copy/throw_emotion/" + img,
-						(data) => {
-							game.writeFile(data, "image/emotion/throw_emotion/", img, () => { });
+						data => {
+							game.writeFile(data, "image/emotion/throw_emotion/", img, () => {});
 						},
-						(err) => {
+						err => {
 							alert("复制『星之梦』交互素材时出现问题：\n" + err);
 						}
 					);
@@ -90,10 +80,10 @@ export async function content(config, pack) {
 					if (targetFiles.includes(audio)) continue;
 					game.readFile(
 						"extension/星之梦/copy/effect/" + audio,
-						(data) => {
-							game.writeFile(data, "audio/effect/", audio, () => { });
+						data => {
+							game.writeFile(data, "audio/effect/", audio, () => {});
 						},
-						(err) => {
+						err => {
 							alert("复制『星之梦』交互素材时出现问题：\n" + err);
 						}
 					);
@@ -101,4 +91,4 @@ export async function content(config, pack) {
 			});
 		});
 	}
-};
+}

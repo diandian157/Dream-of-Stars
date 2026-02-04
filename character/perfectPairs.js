@@ -1,4 +1,5 @@
-import { lib, game, ui, get, ai, _status } from '../../../noname.js'
-const perfectPairs = {//珠联璧合
+import { lib, game, ui, get, ai, _status } from "../../../noname.js";
+const perfectPairs = {
+	//珠联璧合
 };
 export default perfectPairs;
