@@ -28,10 +28,10 @@ lib.skill.yuqi = {
 			[
 				[
 					"交给" +
-						get.translation(trigger.player) +
-						'<div class="text center">至少一张' +
-						(event.list[2] > 1 ? "<br>至多" + get.cnNumber(event.list[2]) + "张" : "") +
-						"</div>",
+					get.translation(trigger.player) +
+					'<div class="text center">至少一张' +
+					(event.list[2] > 1 ? "<br>至多" + get.cnNumber(event.list[2]) + "张" : "") +
+					"</div>",
 				],
 				['交给自己<div class="text center">至多' + get.cnNumber(event.list[3]) + "张</div>"],
 			],
@@ -48,8 +48,8 @@ lib.skill.yuqi = {
 		});
 		next.set("processAI", function (list) {
 			var cards = list[0][1].slice(0).sort(function (a, b) {
-					return get.value(b, "raw") - get.value(a, "raw");
-				}),
+				return get.value(b, "raw") - get.value(a, "raw");
+			}),
 				player = _status.event.player,
 				target = _status.event.getTrigger().player;
 			var info = lib.skill.yuqi.getInfo(_status.event.player);
@@ -132,15 +132,15 @@ lib.skill.shanshen = {
 			.set(
 				"prompt2",
 				"令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" +
-					list[0] +
-					"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
-					list[1] +
-					"</span>]张牌，你将其中至多[<span class=greentext>" +
-					list[2] +
-					"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
-					list[3] +
-					"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+2" +
-					(event.goon ? "并回复1点体力" : "")
+				list[0] +
+				"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
+				list[1] +
+				"</span>]张牌，你将其中至多[<span class=greentext>" +
+				list[2] +
+				"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
+				list[3] +
+				"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+2" +
+				(event.goon ? "并回复1点体力" : "")
 			)
 			.set("ai", function () {
 				var player = _status.event.player,
@@ -205,14 +205,14 @@ lib.skill.xianjing = {
 			.set(
 				"prompt2",
 				"令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" +
-					list[0] +
-					"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
-					list[1] +
-					"</span>]张牌，你将其中至多[<span class=greentext>" +
-					list[2] +
-					"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
-					list[3] +
-					"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1"
+				list[0] +
+				"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
+				list[1] +
+				"</span>]张牌，你将其中至多[<span class=greentext>" +
+				list[2] +
+				"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
+				list[3] +
+				"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1"
 			)
 			.set("ai", function () {
 				var player = _status.event.player,
@@ -269,14 +269,14 @@ lib.skill.xianjing = {
 			.set(
 				"prompt2",
 				"令“当有角色受到伤害后，若你至其的距离不大于[<span class=thundertext>" +
-					list[0] +
-					"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
-					list[1] +
-					"</span>]张牌，你将其中至多[<span class=greentext>" +
-					list[2] +
-					"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
-					list[3] +
-					"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1"
+				list[0] +
+				"</span>]，则你可以观看牌堆顶的[<span class=firetext>" +
+				list[1] +
+				"</span>]张牌，你将其中至多[<span class=greentext>" +
+				list[2] +
+				"</span>]张牌交给受伤角色，然后可以获得剩余牌中的至多[<span class=yellowtext>" +
+				list[3] +
+				"</span>]张牌，并将其余牌以原顺序放回牌堆顶。”中的一个数字+1"
 			)
 			.set("ai", function () {
 				var player = _status.event.player,
@@ -485,11 +485,11 @@ if (lib.config.extension_星之梦_scsEnhance) {
 				result = { bool: true, links: others };
 			} else {
 				const map = {
-						scs_bilan: "scs_hankui",
-						scs_hankui: "scs_bilan",
-						scs_duangui: "scs_guosheng",
-						scs_guosheng: "scs_duangui",
-					},
+					scs_bilan: "scs_hankui",
+					scs_hankui: "scs_bilan",
+					scs_duangui: "scs_guosheng",
+					scs_guosheng: "scs_duangui",
+				},
 					map2 = lib.skill.mbdanggu.conflictMap(player);
 				const conflictList = others.filter(changshi => {
 					if (map[first] && others.some(changshi2 => map[first] == changshi2)) {
@@ -670,7 +670,21 @@ if (lib.config.extension_星之梦_scsEnhance) {
 						//trigger.includeOut = true;
 						trigger.reserveOut = true;
 					} else {
-						player.changeSkin("mbmowang", "shichangshi_dead");
+						game.broadcastAll(function (player) {
+							player.name1 = player.name;
+							player.skin.name = player.name + "_dead";
+							player.smoothAvatar(false);
+							player.node.avatar.setBackground(player.name + "_dead", "character");
+							player.node.name.innerHTML = get.slimName(player.name);
+							delete player.name2;
+							delete player.skin.name2;
+							player.classList.remove("fullskin2");
+							player.node.avatar2.classList.add("hidden");
+							player.node.name2.innerHTML = "";
+							if (player == game.me && ui.fakeme) {
+								ui.fakeme.style.backgroundImage = player.node.avatar.style.backgroundImage;
+							}
+						}, player);
 					}
 				}
 			}
@@ -684,7 +698,7 @@ if (lib.config.extension_星之梦_scsEnhance) {
 				audio: "mbmowang",
 				trigger: { player: "phaseAfter" },
 				forced: true,
-				forceDie: true,
+				// forceDie: true,
 				async content(event, trigger, player) {
 					if (lib.skill.mbdanggu.isSingleShichangshi(player)) {
 						if (!player.getStorage("mbdanggu").length) {
