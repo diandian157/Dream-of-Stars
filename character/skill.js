@@ -1900,6 +1900,7 @@ const lmCharacter = {
 		//神姜维初版 --by XiaZhiliao
 		//光速去世
 		old_guxuan: {
+			audio: "mbtiantao",
 			trigger: {
 				target: "useCardToTargeted",
 			},
@@ -1984,6 +1985,7 @@ const lmCharacter = {
 		},
 		//+手牌上限|火伤
 		old_juejin: {
+			audio: "mbshenpei",
 			persevereSkill: true,
 			xiandingji: true,
 			limited: true,
@@ -2148,6 +2150,7 @@ const lmCharacter = {
 			},
 		},
 		old_huitian: {
+			audio: "mbhuitian",
 			round: 1,
 			trigger: { player: "phaseJieshuBegin" },
 			filter(event, player) {
@@ -2213,6 +2216,7 @@ const lmCharacter = {
 		},
 		//交换任意牌
 		old_xingzhen: {
+			audio: "mbxinghun",
 			usable: 1,
 			enable: "phaseUse",
 			async content(event, trigger, player) {
@@ -2390,6 +2394,7 @@ const lmCharacter = {
 		//神姜维二版 --by XiaZhiliao
 		//+体力上限|雷伤|三窟
 		oldx_juejin: {
+			audio: "mbshenpei",
 			persevereSkill: true,
 			xiandingji: true,
 			onremove: true,
@@ -2562,6 +2567,7 @@ const lmCharacter = {
 		},
 		//无限傲才
 		oldx_xingzhen: {
+			audio: "mbxingzhen",
 			hiddenCard(player, name) {
 				const type = get.type2(name);
 				if (!["basic", "trick"].includes(type)) {
@@ -2644,6 +2650,7 @@ const lmCharacter = {
 			group: "oldx_xingzhen_aocai",
 			subSkill: {
 				aocai: {
+					audio: "mbxingzhen",
 					mod: {
 						cardEnabled2(card, player) {
 							if (card?.hasGaintag?.("oldx_xingzhen")) {
