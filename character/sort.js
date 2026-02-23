@@ -236,18 +236,6 @@ const characterSorts = {
 			"zhangjian",
 			"lm_jikang",
 		],
-		hfdiy_Character: [
-			"hfdiy_guansuo",
-			"hfdiy_xiahouba",
-			"hfdiy_zhonghui",
-			"hfdiy_shen_caopi",
-			"hfdiy_shen_sunquan",
-			"hfdiy_shen_zhaoyun",
-			"hfdiy_wu_huangfusong",
-			"hfdiy_re_zuoci",
-			"hfdiy_renwan",
-			"hfdiy_ceshi",
-		],
 	},
 };
 export default characterSorts;
