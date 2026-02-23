@@ -185,7 +185,12 @@ const characterSorts = {
 			"old_tw_zhangzhao",
 			"old_tw_zhanghong",
 		],
-		other_old: ["old_gaowang", "diy_zhujun", "diy_liaohua", "diy_zhangfei"],
+		other_old: [
+			"old_gaowang",
+			"diy_zhujun",
+			"diy_liaohua",
+			"diy_zhangfei"
+		],
 		lm_scs: [
 			"lm_shichangshi",
 			"lm_zhangrang",
@@ -221,8 +226,16 @@ const characterSorts = {
 			"sw_wechat_zhugeliang",
 			"lm_xurong",
 		],
-		lmCharacter_diy: ["wangtaowangyue", "lm_old_caocao"],
-		lmCharacter_other: ["unlock_dongzhao", "unlock_tianchuan", "zhangjian", "lm_jikang"],
+		lmCharacter_diy: [
+			"wangtaowangyue",
+			"lm_old_caocao",
+		],
+		lmCharacter_other: [
+			"unlock_dongzhao",
+			"unlock_tianchuan",
+			"zhangjian",
+			"lm_jikang",
+		],
 	},
 };
 export default characterSorts;
