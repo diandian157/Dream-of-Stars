@@ -2097,10 +2097,10 @@ lib.skill.olfangquan = {
 		return player.countCards("h") > 0 && !player.hasSkill("olfangquan3");
 	},
 	direct: true,
-	content() {
-		"step 0";
+	async content(event, trigger, player) {
+		// step 0
 		var fang = player.countMark("olfangquan2") == 0 && player.hp >= 2 && player.countCards("h") <= player.hp + 2;
-		player
+		const result = await player
 			.chooseBool(get.prompt2("olfangquan"))
 			.set("ai", function () {
 				if (!_status.event.fang) {
@@ -2116,8 +2116,9 @@ lib.skill.olfangquan = {
 					return false;
 				});
 			})
-			.set("fang", fang);
-		("step 1");
+			.set("fang", fang)
+			.forResult();
+		// step 1
 		if (result.bool) {
 			player.logSkill("olfangquan");
 			trigger.cancel();
@@ -2170,22 +2171,23 @@ lib.skill.rezhiheng = {
 		}
 		return 6 - get.value(card);
 	},
-	content() {
-		"step 0";
-		player.discard(cards);
+	async content(event, trigger, player) {
+		// step 0
+		const { cards } = event;
+		await player.discard(cards);
 		event.num = 1;
-		var hs = player.getCards("h");
+		const hs = player.getCards("h");
 		if (!hs.length) {
 			event.num = 0;
 		}
-		for (var i = 0; i < hs.length; i++) {
+		for (let i = 0; i < hs.length; i++) {
 			if (!cards.includes(hs[i])) {
 				event.num = 0;
 				break;
 			}
 		}
-		("step 1");
-		player.draw(event.num + cards.length);
+		// step 1
+		await player.draw(event.num + cards.length);
 	},
 	//group:'rezhiheng_draw',
 	subSkill: {
@@ -2206,7 +2208,7 @@ lib.skill.rezhiheng = {
 				}
 				return false;
 			},
-			content() {
+			async content(event, trigger, player) {
 				player.addTempSkill("rezhiheng_delay", trigger.getParent(2).skill + "After");
 			},
 		},
