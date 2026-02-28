@@ -117,6 +117,7 @@ const characterTitles = {
 	old_strong_caochong: "端阳撼象",
 	old_ol_sb_dengai: "曜威奋武",
 	old_dm_sunquan: "隳堕的英谋",
+	old_ol_sb_zhangrang: "侵威乱天常",
 	//old_clan_xunyu: "",
 	//old_ol_yangfeng: "",
 	//十周年
@@ -158,6 +159,7 @@ const characterTitles = {
 	old_v_sunce: "勇冠三江势",
 	old_dc_shen_sunquan: "瀚海碧君",
 	old_hansong: "楚国之望",
+	old_liuyijun: "恶嫉蔑死",
 	//海外
 	old_tw_huojun: "葭萌铁狮",
 	old_tw_guohuai: "屡破羌胡",
