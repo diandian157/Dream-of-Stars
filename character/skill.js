@@ -30397,6 +30397,7 @@ const lmCharacter = {
 		old_dcshuaiyan_info: "锁定技，其他角色手牌数变化后，若与你相等，你弃置其一张牌或摸一张牌。",
 		old_liuyijun: "旧刘懿君",
 		old_liuyijun_prefix: "旧",
+		old_dcfuji: "缚己",
 		old_dcfuji_info:
 			"你的回合结束时，可令一名其他角色观看你的手牌。若如此做，其使用牌指定你为目标时，你可交给其这些牌中的任意张牌并令此牌无效；你的下个回合开始时，若这些牌仍在你手牌中，其获得这些牌并回复1点体力。",
 
